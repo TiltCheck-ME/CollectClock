@@ -52,7 +52,7 @@ app.get('/', (req, res) => {
 app.get('/auth/discord', passport.authenticate('discord'));
 app.get('/auth/discord/callback', passport.authenticate('discord', {
     failureRedirect: '/auth/failure',
-    successRedirect: '/auth/success'
+    successRedirect: '/'
 }));
 
 app.get('/auth/success', (req, res) => {
@@ -133,8 +133,12 @@ app.post('/api/user/settings', async (req, res) => {
 
     req.user.casinoSettings = casinoSettings;
     req.user.globalSettings = globalSettings;
-    await req.user.save();
-    res.json({ message: 'Settings saved' });
+    try {
+        await req.user.save();
+        res.json({ message: 'Settings saved' });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to save settings' });
+    }
 });
 
 app.post('/api/submit-casino', async (req, res) => {

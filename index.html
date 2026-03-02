@@ -691,12 +691,28 @@
 
   <script>
     let searchTerm = "";
-    let selectedState = "";
+    let selectedState = localStorage.getItem("collectClockState") || "";
+
+    function esc(str) {
+      const d = document.createElement("div");
+      d.textContent = str;
+      return d.innerHTML;
+    }
 
     function updateStateFilter() {
       selectedState = document.getElementById("stateFilter").value;
+      localStorage.setItem("collectClockState", selectedState);
       render();
+      renderPaid();
     }
+
+    // Restore state filter dropdown on load
+    document.addEventListener("DOMContentLoaded", () => {
+      if (selectedState) {
+        const sel = document.getElementById("stateFilter");
+        if (sel) sel.value = selectedState;
+      }
+    });
 
     document.getElementById("searchInp").addEventListener("input", (e) => {
       searchTerm = e.target.value.toLowerCase();
@@ -943,10 +959,10 @@
 
         card.innerHTML = `
           <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <h3>${c.name}</h3>
+            <h3>${esc(c.name)}</h3>
             ${c.needsVPN ? '<span style="background: #ff5c5c; color: white; font-size: 8px; padding: 2px 6px; border-radius: 4px; font-weight: 800;">VPN REQUIRED</span>' : ''}
           </div>
-          ${c.bonusAmount ? `<div class="bonus-amt">${c.bonusAmount}</div>` : ""}
+          ${c.bonusAmount ? `<div class="bonus-amt">${esc(c.bonusAmount)}</div>` : ""}
           <div class="status-badge ${badgeClass}">
             ${statusText}
           </div>
@@ -954,10 +970,10 @@
             <div class="progress-bar" style="width: ${progress}%"></div>
           </div>
           <div class="meta">
-            <span>Next: ${c.cooldownHours}h${bonusText}</span>
+            <span>Next: ${c.cooldownHours}h${esc(bonusText)}</span>
             <span style="opacity: 0.7;">${c.lastCollected ? `Last: ${new Date(c.lastCollected).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}` : 'Never'}</span>
           </div>
-          ${c.notes ? `<div class="card-notes">${c.notes}</div>` : ""}
+          ${c.notes ? `<div class="card-notes">${esc(c.notes)}</div>` : ""}
           <a href="discord://discord.com/channels/1206686161175052338/1349602720780390423" class="discord-link" onclick="event.stopPropagation();" title="View live bonus drops on Discord">
             <span>💬 Live Drops</span>
           </a>
@@ -966,19 +982,36 @@
       }
 
       // Check for newly ready bonuses to notify
-      checkNotifications();
+      checkNotifications(filtered);
 
       // compute next ready time if none ready
       if (readyCount) {
-        document.getElementById("nextReady").textContent = 
+        document.getElementById("nextReady").textContent =
         `${readyCount} bonuses ready to collect`;
       } else {
-        const visibleSorted = state.filter(c => !c.hidden).sort((a,b) => remaining(a) - remaining(b));
-        const nextSel = visibleSorted.map(s => ({s, r: remaining(s)})).filter(x => x.r > 0).sort((a,b)=>a.r-b.r)[0];
+        const nextSel = filtered.map(s => ({s, r: remaining(s)})).filter(x => x.r > 0).sort((a,b)=>a.r-b.r)[0];
         if (nextSel) {
           document.getElementById("nextReady").textContent = `Next ready in ${fmt(nextSel.r)} — ${nextSel.s.name}`;
         } else {
           document.getElementById("nextReady").textContent = `All clear`;
+        }
+      }
+    }
+
+    let notifiedSet = new Set();
+    function checkNotifications(filtered) {
+      if (!window.Notification || Notification.permission !== "granted") return;
+      for (const c of filtered) {
+        if (remaining(c) === 0 && !notifiedSet.has(c.name)) {
+          notifiedSet.add(c.name);
+          new Notification(`${c.name} is ready to collect!`);
+          if (globalSettings.soundEnabled) {
+            const snd = new Audio("./assets/audio/800976__sadiquecat__other-uwu-2.wav");
+            snd.volume = globalSettings.notificationVolume;
+            snd.play().catch(() => {});
+          }
+        } else if (remaining(c) > 0) {
+          notifiedSet.delete(c.name);
         }
       }
     }
@@ -1035,23 +1068,24 @@
       const alphaState = [...state].sort((a,b) => a.name.localeCompare(b.name));
 
       for (const c of alphaState) {
+        const safeName = c.name.replace(/'/g, "\\'");
         const tr = document.createElement("tr");
         tr.innerHTML = `
           <td>
             <label class="toggle-switch">
-              <input type="checkbox" ${c.hidden ? "" : "checked"} onchange="toggleCasino('${c.name}', this.checked)">
+              <input type="checkbox" ${c.hidden ? "" : "checked"} onchange="toggleCasino('${safeName}', this.checked)">
               <span class="slider"></span>
             </label>
           </td>
-          <td>${c.name}</td>
+          <td>${esc(c.name)}</td>
           <td>
-            <input type="number" value="${c.cooldownHours}" min="1" onchange="updateInterval('${c.name}', this.value)">
+            <input type="number" value="${c.cooldownHours}" min="1" onchange="updateInterval('${safeName}', this.value)">
           </td>
           <td>
-            <input type="text" value="${c.bonusAmount}" placeholder="e.g. $1.00" onchange="updateBonusAmount('${c.name}', this.value)">
+            <input type="text" value="${esc(c.bonusAmount)}" placeholder="e.g. $1.00" onchange="updateBonusAmount('${safeName}', this.value)">
           </td>
           <td>
-            <input type="text" value="${c.notes}" placeholder="e.g. Check email" onchange="updateNotes('${c.name}', this.value)">
+            <input type="text" value="${esc(c.notes)}" placeholder="e.g. Check email" onchange="updateNotes('${safeName}', this.value)">
           </td>
         `;
         tbody.appendChild(tr);
@@ -1123,7 +1157,7 @@
         try {
           const imported = JSON.parse(e.target.result);
           if (Array.isArray(imported)) {
-            state = imported;
+            mergeState(imported);
             save();
             render();
             renderSettingsTable();
@@ -1136,10 +1170,12 @@
       reader.readAsText(file);
     };
 
-    // Close modal when clicking outside content
+    // Close modals when clicking outside content
     window.onclick = (event) => {
       const settingsModal = document.getElementById("settingsModal");
-      if (event.target == settingsModal) closeSettings();
+      const configModal = document.getElementById("configModal");
+      if (event.target === settingsModal) closeSettings();
+      if (event.target === configModal) { configModal.style.display = "none"; }
     };
 
     // Render paid sites without any cooldown/lastCollected logic.
@@ -1160,7 +1196,7 @@
         card.onclick = () => window.open(s.url, "_blank");
 
         card.innerHTML = `
-          <h3>${s.name}</h3>
+          <h3>${esc(s.name)}</h3>
           <div class="status-badge badge-ready">REFERRAL</div>
           <div class="meta">Get Paid Site</div>
         `;
@@ -1208,13 +1244,14 @@
     function bootstrap() {
       try {
         load();
+        render();
+        renderPaid();
         checkAuth().finally(() => {
           render();
           renderPaid();
         });
       } catch (e) {
         console.error("Bootstrap failed:", e);
-        // Fallback render
         render();
         renderPaid();
       }
