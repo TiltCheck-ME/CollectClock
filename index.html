@@ -992,7 +992,8 @@
       render();
     }
 
-    window.markCollected = (name) => {
+    window.markCollectedByEl = (btn) => {
+      const name = btn.getAttribute('data-casino');
       const c = state.find(x => x.name === name);
       if (c) {
         c.lastCollected = Date.now();
@@ -1023,10 +1024,14 @@
         baseFiltered = baseFiltered.filter(c => !c.restricted || !c.restricted.includes(selectedState));
       }
 
-      // Compute stats from full base (before tab filter)
-      const readyCount = baseFiltered.filter(c => remaining(c) === 0).length;
-      const soonCount  = baseFiltered.filter(c => { const r = remaining(c); return r > 0 && r < 3600000; }).length;
-      const laterCount = baseFiltered.filter(c => remaining(c) >= 3600000).length;
+      // Compute stats from full base in a single pass (before tab filter)
+      let readyCount = 0, soonCount = 0, laterCount = 0;
+      for (const c of baseFiltered) {
+        const r = remaining(c);
+        if (r === 0) readyCount++;
+        else if (r < 3600000) soonCount++;
+        else laterCount++;
+      }
 
       // Update filter stats label
       const statsEl = document.getElementById("filterStats");
@@ -1062,7 +1067,6 @@
         const elapsed = totalMs - r;
         const progress = Math.min(100, Math.max(0, (elapsed / totalMs) * 100));
         const domain = getDomain(c.url);
-        const safeName = c.name.replace(/'/g, "\\'");
 
         const card = document.createElement("div");
         const statusClass = r ? (r < 3600000 ? "soon" : "later") : "ready";
@@ -1086,12 +1090,12 @@
         card.innerHTML = `
           <div style="display:flex; justify-content:space-between; align-items:center; gap:8px;">
             <div style="display:flex; align-items:center; gap:8px; flex:1; min-width:0;">
-              ${domain ? `<img src="https://www.google.com/s2/favicons?domain=${esc(domain)}&size=32" class="card-favicon" alt="" onerror="this.style.display='none'">` : ''}
+              ${domain ? `<img src="https://www.google.com/s2/favicons?domain=${esc(domain)}&size=32" class="card-favicon" alt="${esc(c.name)} favicon" onerror="this.style.display='none'">` : ''}
               <h3 style="margin:0; font-size:16px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${esc(c.name)}</h3>
             </div>
             <div style="display:flex; align-items:center; gap:4px; flex-shrink:0;">
               ${c.needsVPN ? '<span style="background:#ff5c5c;color:white;font-size:8px;padding:2px 5px;border-radius:4px;font-weight:800;">VPN</span>' : ''}
-              <button class="mark-btn" title="Mark as collected without opening the site" onclick="event.stopPropagation(); markCollected('${safeName}')">✓</button>
+              <button class="mark-btn" data-casino="${esc(c.name)}" aria-label="Mark as collected" title="Mark as collected without opening the site" onclick="event.stopPropagation(); markCollectedByEl(this)">✓</button>
             </div>
           </div>
           ${c.bonusAmount ? `<div class="bonus-amt">${esc(c.bonusAmount)}</div>` : ""}
