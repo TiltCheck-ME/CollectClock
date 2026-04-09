@@ -731,7 +731,7 @@
         const domain = new URL(url).hostname;
         return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
       } catch {
-        return "/favicon.ico";
+        return "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><rect width='64' height='64' rx='12' fill='%23212d4d'/><text x='50%25' y='54%25' text-anchor='middle' font-size='30' fill='%23e8ebff'>🎰</text></svg>";
       }
     }
 
@@ -1011,6 +1011,7 @@
             <span>Next: ${c.cooldownHours}h${esc(bonusText)}</span>
             <span style="opacity: 0.7;">${c.lastCollected ? `Last: ${new Date(c.lastCollected).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}` : 'Never'}</span>
           </div>
+          ${Array.isArray(c.restricted) && c.restricted.length ? `<div class="card-notes">Restricted in: ${esc(c.restricted.join(", "))}</div>` : ""}
           ${c.notes ? `<div class="card-notes">${esc(c.notes)}</div>` : ""}
           <a href="discord://discord.com/channels/1206686161175052338/1349602720780390423" class="discord-link" onclick="event.stopPropagation();" title="View live bonus drops on Discord">
             <span>💬 Live Drops</span>
