@@ -159,6 +159,12 @@
       background: rgba(255, 255, 255, 0.08);
     }
 
+    .card-restrictions {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
     #loginBtn,
     #userProfile,
     #stateFilter {
@@ -996,7 +1002,7 @@
         card.innerHTML = `
           <div style="display: flex; justify-content: space-between; align-items: flex-start;">
             <div class="card-title">
-              <img class="card-favicon" src="${faviconFor(c.url)}" alt="" loading="lazy" />
+              <img class="card-favicon" src="${faviconFor(c.url)}" alt="Site icon" loading="lazy" />
               <h3>${esc(c.name)}</h3>
             </div>
             ${c.needsVPN ? '<span style="background: #ff5c5c; color: white; font-size: 8px; padding: 2px 6px; border-radius: 4px; font-weight: 800;">VPN REQUIRED</span>' : ''}
@@ -1012,7 +1018,7 @@
             <span>Next: ${c.cooldownHours}h${esc(bonusText)}</span>
             <span style="opacity: 0.7;">${c.lastCollected ? `Last: ${new Date(c.lastCollected).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}` : 'Never'}</span>
           </div>
-          ${Array.isArray(c.restricted) && c.restricted.length ? `<div class="card-notes">Restricted in: ${esc(c.restricted.join(", "))}</div>` : ""}
+          ${Array.isArray(c.restricted) && c.restricted.length ? `<div class="card-restrictions">Restricted in: ${esc(c.restricted.join(", "))}</div>` : ""}
           ${c.notes ? `<div class="card-notes">${esc(c.notes)}</div>` : ""}
           <a href="discord://discord.com/channels/1206686161175052338/1349602720780390423" class="discord-link" onclick="event.stopPropagation();" title="View live bonus drops on Discord">
             <span>💬 Live Drops</span>
@@ -1237,7 +1243,7 @@
 
         card.innerHTML = `
           <div class="card-title">
-            <img class="card-favicon" src="${faviconFor(s.url)}" alt="" loading="lazy" />
+            <img class="card-favicon" src="${faviconFor(s.url)}" alt="Site icon" loading="lazy" />
             <h3>${esc(s.name)}</h3>
           </div>
           <div class="status-badge badge-ready">REFERRAL</div>
