@@ -929,8 +929,7 @@
         return remA - remB;
       });
 
-      let readyCasinos = filtered.filter(c => remaining(c) === 0);
-      let readyCount = readyCasinos.length;
+      let readyCount = filtered.filter(c => remaining(c) === 0).length;
 
       for (const c of sorted){
         const r = remaining(c);
