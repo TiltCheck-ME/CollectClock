@@ -138,6 +138,33 @@
       letter-spacing: -0.5px;
     }
 
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .card-title h3 {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .card-favicon {
+      width: 18px;
+      height: 18px;
+      border-radius: 4px;
+      flex-shrink: 0;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    #loginBtn,
+    #userProfile,
+    #stateFilter {
+      display: none !important;
+    }
+
     .status-badge {
       display: inline-flex;
       align-items: center;
@@ -677,7 +704,7 @@
         </div>
         <div>
           <h3 style="color: var(--text); font-size: 14px; margin-bottom: 8px;">🌍 Restrictions</h3>
-          <p>Some casinos require a <b>VPN</b> or are restricted in certain <b>US States</b>. Use the dropdown at the top to filter the list for your location.</p>
+          <p>Some casinos require a <b>VPN</b> or are restricted in certain <b>US States</b>. Check each card's details before collecting.</p>
         </div>
         <div>
           <h3 style="color: var(--text); font-size: 14px; margin-bottom: 8px;">➕ Add a Casino</h3>
@@ -697,6 +724,15 @@
       const d = document.createElement("div");
       d.textContent = str;
       return d.innerHTML;
+    }
+
+    function faviconFor(url) {
+      try {
+        const domain = new URL(url).hostname;
+        return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
+      } catch {
+        return "https://www.google.com/s2/favicons?domain=example.com&sz=64";
+      }
     }
 
     function updateStateFilter() {
@@ -958,7 +994,10 @@
 
         card.innerHTML = `
           <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <h3>${esc(c.name)}</h3>
+            <div class="card-title">
+              <img class="card-favicon" src="${faviconFor(c.url)}" alt="" loading="lazy" />
+              <h3>${esc(c.name)}</h3>
+            </div>
             ${c.needsVPN ? '<span style="background: #ff5c5c; color: white; font-size: 8px; padding: 2px 6px; border-radius: 4px; font-weight: 800;">VPN REQUIRED</span>' : ''}
           </div>
           ${c.bonusAmount ? `<div class="bonus-amt">${esc(c.bonusAmount)}</div>` : ""}
@@ -1195,7 +1234,10 @@
         card.onclick = () => window.open(s.url, "_blank");
 
         card.innerHTML = `
-          <h3>${esc(s.name)}</h3>
+          <div class="card-title">
+            <img class="card-favicon" src="${faviconFor(s.url)}" alt="" loading="lazy" />
+            <h3>${esc(s.name)}</h3>
+          </div>
           <div class="status-badge badge-ready">REFERRAL</div>
           <div class="meta">Get Paid Site</div>
         `;
