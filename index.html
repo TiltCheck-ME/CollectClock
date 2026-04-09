@@ -704,7 +704,7 @@
         </div>
         <div>
           <h3 style="color: var(--text); font-size: 14px; margin-bottom: 8px;">🌍 Restrictions</h3>
-          <p>Some casinos require a <b>VPN</b> or are restricted in certain <b>US States</b>. Please verify your eligibility before collecting.</p>
+          <p>Some casinos require a <b>VPN</b> or are restricted in certain <b>US States</b>. State restrictions are shown on each card.</p>
         </div>
         <div>
           <h3 style="color: var(--text); font-size: 14px; margin-bottom: 8px;">➕ Add a Casino</h3>
@@ -719,6 +719,7 @@
   <script>
     let searchTerm = "";
     let selectedState = localStorage.getItem("collectClockState") || "";
+    const FALLBACK_FAVICON = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><rect width='64' height='64' rx='12' fill='%23212d4d'/><text x='50%25' y='54%25' text-anchor='middle' font-size='30' fill='%23e8ebff'>🎰</text></svg>";
 
     function esc(str) {
       const d = document.createElement("div");
@@ -731,7 +732,7 @@
         const domain = new URL(url).hostname;
         return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
       } catch {
-        return "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><rect width='64' height='64' rx='12' fill='%23212d4d'/><text x='50%25' y='54%25' text-anchor='middle' font-size='30' fill='%23e8ebff'>🎰</text></svg>";
+        return FALLBACK_FAVICON;
       }
     }
 
