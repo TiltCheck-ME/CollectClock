@@ -725,7 +725,7 @@
   <script>
     let searchTerm = "";
     let selectedState = localStorage.getItem("collectClockState") || "";
-    const FALLBACK_FAVICON = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><title>Casino icon</title><rect width='64' height='64' rx='12' fill='%23212d4d'/><text x='50%25' y='54%25' text-anchor='middle' font-size='30' fill='%23e8ebff'>🎰</text></svg>";
+    const FALLBACK_FAVICON = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='64' height='64'><title>Casino icon</title><rect width='64' height='64' rx='12' fill='%23212d4d'/><text x='50%25' y='58%25' text-anchor='middle' font-size='24' font-family='Arial,sans-serif' fill='%23e8ebff'>CC</text></svg>";
 
     function esc(str) {
       const d = document.createElement("div");
@@ -1002,7 +1002,7 @@
         card.innerHTML = `
           <div style="display: flex; justify-content: space-between; align-items: flex-start;">
             <div class="card-title">
-              <img class="card-favicon" src="${faviconFor(c.url)}" alt="${esc(c.name)} favicon" loading="lazy" />
+              <img class="card-favicon" src="${faviconFor(c.url)}" alt="${esc(c.name)}" loading="lazy" />
               <h3>${esc(c.name)}</h3>
             </div>
             ${c.needsVPN ? '<span style="background: #ff5c5c; color: white; font-size: 8px; padding: 2px 6px; border-radius: 4px; font-weight: 800;">VPN REQUIRED</span>' : ''}
@@ -1243,7 +1243,7 @@
 
         card.innerHTML = `
           <div class="card-title">
-            <img class="card-favicon" src="${faviconFor(s.url)}" alt="${esc(s.name)} favicon" loading="lazy" />
+            <img class="card-favicon" src="${faviconFor(s.url)}" alt="${esc(s.name)}" loading="lazy" />
             <h3>${esc(s.name)}</h3>
           </div>
           <div class="status-badge badge-ready">REFERRAL</div>
