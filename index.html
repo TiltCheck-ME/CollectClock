@@ -704,7 +704,7 @@
         </div>
         <div>
           <h3 style="color: var(--text); font-size: 14px; margin-bottom: 8px;">🌍 Restrictions</h3>
-          <p>Some casinos require a <b>VPN</b> or are restricted in certain <b>US States</b>. Check each card's details before collecting.</p>
+          <p>Some casinos require a <b>VPN</b> or are restricted in certain <b>US States</b>. Please verify your eligibility before collecting.</p>
         </div>
         <div>
           <h3 style="color: var(--text); font-size: 14px; margin-bottom: 8px;">➕ Add a Casino</h3>
@@ -731,7 +731,7 @@
         const domain = new URL(url).hostname;
         return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(domain)}&sz=64`;
       } catch {
-        return "https://www.google.com/s2/favicons?domain=example.com&sz=64";
+        return "/favicon.ico";
       }
     }
 
