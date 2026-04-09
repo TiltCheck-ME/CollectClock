@@ -27,6 +27,17 @@ CollectClock is a lightweight, mobile-friendly web app that helps you discover a
 - PWA-friendly static site
 - localStorage for user preferences
 
+## TiltCheck Integration
+
+CollectClock is part of the [TiltCheck Ecosystem](https://tiltcheck.me).
+
+CollectClock handles daily bonus tracking. TiltCheck handles session auditing, RTP analysis, casino trust scoring, and responsible gaming tools.
+
+Use them together:
+- Collect your daily bonuses here
+- Audit your session at [tiltcheck.me](https://tiltcheck.me)
+- Check if a casino is trustworthy before you play
+
 ## License
 
 This project is licensed under the **Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0)**. You can view the full license at [https://creativecommons.org/licenses/by-nc/4.0/](https://creativecommons.org/licenses/by-nc/4.0/).
