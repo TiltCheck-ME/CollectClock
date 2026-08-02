@@ -13,6 +13,7 @@
             --text-accent: #00ff66; /* Neon green */
             --text-secondary: #596585; /* Muted purple-blue */
             --border-color: #151c2b;
+            --clicked-border: #8a2be2; /* BlueViolet - color for clicked links */
         }
 
         * {
@@ -91,6 +92,18 @@
             color: var(--text-accent);
         }
 
+        /* --- NEW: Style for links clicked today --- */
+        .card.clicked-today {
+            border-color: var(--clicked-border);
+            opacity: 0.6; /* Dims the card slightly so you know it's done */
+        }
+        
+        .card.clicked-today:hover {
+            border-color: var(--text-accent);
+            opacity: 1; /* Brightens back up on hover */
+        }
+        /* ------------------------------------------ */
+
         .footer {
             text-align: center;
             padding: 4rem 1rem 2rem 1rem;
@@ -137,21 +150,21 @@
     </main>
 
     <footer class="footer">
-        <p><a href="https://jmenichole.github.io/Portfolio/" target="_blank" rel="noopener noreferrer">made for degens by degens <3 </a></p>
+        <p><a href="https://jmenichole.github.io/Portfolio/" target="_blank" rel="noopener noreferrer">made for degens by degens &lt;3 </a></p>
     </footer>
 
     <script>
         const bonusLinks = [
             { name: "Stake.us", url: "https://stake.us/?c=Jmenichole" },
             { name: "CardCrush", url: "https://www.cardcrush.com/lp/raf?r=db061927%2F45375369" },
-            { name: "Crown Coins", url: "https://crowncoinscasino.com/?utm_campaign=59048bf4-dbeb-4c58-b690-d7ad11bdb847&utm_source=friends" },
             { name: "Yotta", url: "https://join.withyotta.com/JMENICHOLE0" },
+            { name: "Coverd", url: "https://apps.apple.com/us/app/coverd/id6741347396" },
             { name: "Winera", url: "https://winera.us?referralCode=Vf8jRF#signup" },
             { name: "Acebet", url: "https://acebet.cc/welcome/r/jmenichole" },
-            { name: "MyPrize.us", url: "https://myprize.us/invite/jmenichole" },
             { name: "Nuts.gg", url: "https://nuts.gg/play/jmenichole" },
             { name: "Sharkroll", url: "https://www.sharkroll.io/en/?ref=A120A9538458" },
             { name: "Coinsback Casino", url: "https://www.coinsbackcasino.com/invite/1556026?utm_source=copy&utm_medium=referral&utm_campaign=member-referral" },
+            { name: "Winna", url: "https://winna.com/?r=jmenichole" },
             { name: "Qzino", url: "https://qzino.ai?r=QZER6326443" },
             { name: "FireSevens", url: "https://firesevens.com/?invited_by=BEQM7P" },
             { name: "Jumbo88", url: "https://www.jumbo88.com/signup?referralCode=6uff79" },
@@ -163,6 +176,7 @@
             { name: "Pulsz", url: "https://www.pulsz.com/?invited_by=utfk4r" },
             { name: "Modo", url: "https://modo.us?referralCode=61MN6A" },
             { name: "McLuck", url: "https://www.mcluck.com/lp/raf?r=61119407%2F908900038" },
+            { name: "Crown Coins", url: "https://crowncoinscasino.com/?utm_campaign=59048bf4-dbeb-4c58-b690-d7ad11bdb847&utm_source=friends" },
             { name: "Chanced", url: "https://chanced.com/c/ysa096" },
             { name: "Sportzino", url: "https://sportzino.com/signup/8a105ba6-7ada-45c8-b021-f478ac03c7c4" },
             { name: "PlayFame", url: "https://www.playfame.com/lp/raf?r=1275975417" },
@@ -170,6 +184,7 @@
             { name: "Jackpota", url: "https://www.jackpota.com/?r=85453282" },
             { name: "Zula Casino", url: "https://www.zulacasino.com/signup/221ddd92-862e-45d8-acc0-4cd2c26f7cdd" },
             { name: "Fortune Coins", url: "https://www.fortunecoins.com/signup/3c08936f-8979-4f87-b377-efdbff519029" },
+            { name: "MyPrize.us", url: "https://myprize.us/invite/jmenichole" },
             { name: "Clubs Poker", url: "https://play.clubs.poker/?referralCode=104192" },
             { name: "Rolla", url: "https://www.rolla.com/?raf=3873" },
             { name: "Lone Star Casino", url: "https://lonestarcasino.com/refer/678504" },
@@ -191,23 +206,23 @@
             { name: "LuckyLand Slots", url: "https://luckylandslots.com" },
             { name: "LuckyBits Vegas", url: "https://luckybitsvegas.com/gc?adId=INV001%3Ajmenichole" },
             { name: "Shuffle.us", url: "https://shuffle.us?r=Rl93OJoflX" },
-            { name: "Sportzino", url: "https://sportzino.com/signup/8a105ba6-7ada-45c8-b021-f478ac03c7c4" },
             { name: "Slips", url: "https://slips.com/invite?code=6901" },
             { name: "PrizePicks", url: "https://app.prizepicks.com/sign-up?invite_code=PR-N0MTQX8&source=iosShare" },
             { name: "Dabble", url: "https://click.dabble.com/GaFA/js1v7hqv" },
-            { name: "Thrill", url: "https://thrill.com/?r=3E8477CE-1756119554" },
+            { name: "Thrill VPN", url: "https://thrill.com/?r=3E8477CE-1756119554" },
             { name: "Goated.com", url: "https://www.goated.com/r/YDRZLJ" },
             { name: "Shuffle.com", url: "https://shuffle.com?r=jHR7JnWRPF" },
             { name: "Stake.com", url: "https://www.stake.com/?c=LAYP68hb" },
             { name: "Kickr.com", url: "https://kickr.com/signup/doxe8c09" },
             { name: "Gamba.com", url: "https://gamba.com?c=Jme" },
-            { name: "MetaWin", url: "https://metawin.com/jmenichole007/" },
-            { name: "Winna", url: "https://winna.com/?r=jmenichole" },
-
+            { name: "MetaWin VPN", url: "https://metawin.com/jmenichole007/" }
         ];
 
         function renderLinks() {
             const grid = document.getElementById('links-grid');
+            
+            // Get today's date as a string (e.g., "Sun Aug 02 2026")
+            const today = new Date().toDateString();
             
             bonusLinks.forEach(link => {
                 const card = document.createElement('a');
@@ -215,6 +230,18 @@
                 card.className = 'card';
                 card.target = '_blank';
                 card.rel = 'noopener noreferrer';
+
+                // Check if this specific link was already clicked today
+                const lastClicked = localStorage.getItem('clicked_' + link.name);
+                if (lastClicked === today) {
+                    card.classList.add('clicked-today');
+                }
+
+                // When clicked, save today's date to storage and update style instantly
+                card.addEventListener('click', () => {
+                    localStorage.setItem('clicked_' + link.name, today);
+                    card.classList.add('clicked-today');
+                });
 
                 card.innerHTML = `
                     <div class="card-content">
@@ -230,3 +257,4 @@
     </script>
 </body>
 </html>
+   
