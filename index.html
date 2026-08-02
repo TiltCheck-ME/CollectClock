@@ -1,1105 +1,263 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Collect Clock</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#050814" />
-  <link rel="apple-touch-icon" href="https://www.google.com/s2/favicons?domain=stake.us&size=180" />
-  <script src="/socket.io/socket.io.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bonus Links Directory</title>
+    <style>
+        :root {
+            --bg-primary: #0f1115;
+            --bg-secondary: #1a1d24;
+            --text-primary: #ffffff;
+            --text-secondary: #9ca3af;
+            --accent: #3b82f6;
+            --accent-hover: #2563eb;
+            --vpn-badge: #ef4444;
+            --restricted-badge: #f59e0b;
+            --border-color: #2d3139;
+        }
 
-  <style>
-    :root {
-      --bg: #050814;
-      --card: rgba(20, 26, 46, 0.6);
-      --border: rgba(31, 37, 56, 0.5);
-      --text: #e8ebff;
-      --muted: #9aa4ff;
-      --ready: #00ffa3;
-      --soon: #ffb020;
-      --later: #ff5c5c;
-      --accent: rgba(43, 51, 80, 0.8);
-      --glass-blur: blur(12px);
-    }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
-    * { box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
 
-    body {
-      margin: 0;
-      background-color: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', system-ui, -apple-system, sans-serif;
-      background-image:
-        radial-gradient(circle at 10% 10%, rgba(0, 255, 163, 0.05), transparent 25%),
-        radial-gradient(circle at 90% 90%, rgba(154, 164, 255, 0.05), transparent 25%);
-      background-attachment: fixed;
-      min-height: 100vh;
-    }
+        .header {
+            text-align: center;
+            padding: 3rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
+        }
 
-    header {
-      padding: 20px;
-      border-bottom: 1px solid var(--border);
-      background: rgba(5, 8, 20, 0.8);
-      backdrop-filter: var(--glass-blur);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
 
-    header h1 {
-      margin: 0;
-      font-size: 20px;
-      background: linear-gradient(45deg, #e8ebff, #9aa4ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
 
-    .search-box {
-      background: var(--card);
-      border: 1px solid var(--border);
-      padding: 8px 16px;
-      border-radius: 20px;
-      color: var(--text);
-      width: 250px;
-      font-size: 14px;
-      transition: all 0.3s ease;
-    }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
 
-    .search-box:focus {
-      outline: none;
-      border-color: var(--ready);
-      box-shadow: 0 0 15px rgba(0, 255, 163, 0.2);
-      width: 300px;
-    }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
+        }
 
-    .next-ready {
-      width: 100%;
-      background: rgba(15, 21, 36, 0.6);
-      backdrop-filter: var(--glass-blur);
-      border-bottom: 1px solid var(--border);
-      padding: 10px 20px;
-      font-size: 13px;
-      color: var(--muted);
-      text-align: center;
-      font-weight: 500;
-    }
+        .card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
 
-    .section-heading {
-      padding: 24px 20px 8px;
-      font-size: 16px;
-      font-weight: 600;
-      color: var(--ready);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
+        .card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
 
-    .container {
-      padding: 20px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-    }
+        .card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+        }
 
-    .card {
-      background: var(--card);
-      backdrop-filter: var(--glass-blur);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-      cursor: pointer;
-      position: relative;
-      min-height: 120px;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-      animation: fadeIn 0.5s ease-out forwards;
-    }
+        .badges-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.25rem 0.6rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
 
-    .card:hover {
-      transform: translateY(-8px) scale(1.02);
-      border-color: var(--ready);
-      box-shadow: 0 12px 40px 0 rgba(0, 255, 163, 0.15);
-    }
+        .badge-vpn {
+            background-color: rgba(239, 68, 68, 0.15);
+            color: var(--vpn-badge);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
 
-    .card h3 {
-      margin: 0;
-      font-size: 18px;
-      letter-spacing: -0.5px;
-    }
+        .badge-restricted {
+            background-color: rgba(245, 158, 11, 0.15);
+            color: var(--restricted-badge);
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
 
-    .status-badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 12px;
-      border-radius: 20px;
-      font-size: 12px;
-      font-weight: 700;
-      text-transform: uppercase;
-      width: fit-content;
-    }
+        .badge-restricted[title] {
+            cursor: help;
+        }
 
-    .badge-ready { background: rgba(0, 255, 163, 0.1); color: var(--ready); border: 1px solid rgba(0, 255, 163, 0.2); }
-    .badge-soon { background: rgba(255, 176, 32, 0.1); color: var(--soon); border: 1px solid rgba(255, 176, 32, 0.2); }
-    .badge-later { background: rgba(255, 92, 92, 0.1); color: var(--later); border: 1px solid rgba(255, 92, 92, 0.2); }
+        .footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            margin-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
 
-    .meta {
-      font-size: 12px;
-      color: var(--muted);
-      margin-top: auto;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
+        .footer p {
+            margin: 0;
+        }
 
-    footer {
-      padding: 40px 20px;
-      color: var(--muted);
-      font-size: 12px;
-      text-align: center;
-      opacity: 0.6;
-    }
+        .footer a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
 
-    /* Modal Styles */
-    .modal-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.85);
-      backdrop-filter: blur(8px);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 1000;
-      padding: 20px;
-    }
+        .footer a:hover {
+            color: var(--accent);
+        }
 
-    .modal-content {
-      background: #0f1524;
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      width: 100%;
-      max-width: 900px;
-      max-height: 90vh;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-      animation: modalFadeIn 0.3s ease-out;
-    }
-
-    @keyframes modalFadeIn {
-      from { opacity: 0; transform: scale(0.95); }
-      to { opacity: 1; transform: scale(1); }
-    }
-
-    /* Mobile responsiveness refinements */
-    @media (max-width: 600px) {
-      header {
-        flex-direction: column;
-        gap: 15px;
-        padding: 15px;
-      }
-
-      header h1 {
-        font-size: 22px;
-        margin-bottom: 5px;
-      }
-
-      header > div {
-        flex-direction: column;
-        width: 100%;
-        gap: 10px !important;
-      }
-
-      .search-box {
-        width: 100% !important;
-        order: -1; /* Keep search at top on mobile */
-      }
-
-      .btn-settings, .btn-discord {
-        width: 100%;
-        justify-content: center;
-      }
-
-      .container {
-        grid-template-columns: 1fr;
-        padding: 15px;
-      }
-
-      .modal-content {
-        max-height: 95vh;
-        border-radius: 12px;
-      }
-
-      .modal-header {
-        padding: 15px;
-      }
-
-      .modal-header h2 {
-        font-size: 16px;
-      }
-
-      .settings-table th, .settings-table td {
-        padding: 8px 12px;
-        font-size: 12px;
-      }
-      
-      .btn-settings {
-        padding: 6px 12px;
-        font-size: 12px;
-      }
-
-      .card .bonus-amt {
-        font-size: 20px;
-      }
-    }
-
-    .modal-header {
-      padding: 20px 24px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .modal-header h2 {
-      margin: 0;
-      font-size: 20px;
-      color: var(--ready);
-    }
-
-    .close-modal {
-      background: none;
-      border: none;
-      color: var(--muted);
-      font-size: 24px;
-      cursor: pointer;
-    }
-
-    .modal-body {
-      padding: 0;
-      overflow-y: auto;
-      overflow-x: auto;
-      flex: 1;
-    }
-
-    .general-prefs {
-      padding: 20px 24px;
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      gap: 40px;
-      align-items: center;
-      flex-wrap: wrap;
-    }
-
-    @media (max-width: 600px) {
-      .general-prefs {
-        padding: 15px;
-        gap: 20px;
-      }
-    }
-
-    .settings-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
-    }
-
-    .settings-table th {
-      text-align: left;
-      padding: 12px 24px;
-      background: rgba(255, 255, 255, 0.02);
-      color: var(--muted);
-      font-weight: 600;
-      text-transform: uppercase;
-      font-size: 11px;
-      letter-spacing: 1px;
-      position: sticky;
-      top: 0;
-      z-index: 1;
-    }
-
-    .settings-table td {
-      padding: 12px 24px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .settings-table tr:hover {
-      background: rgba(255, 255, 255, 0.01);
-    }
-
-    .settings-table input {
-      background: rgba(0, 0, 0, 0.3);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 6px 10px;
-      border-radius: 6px;
-      width: 100%;
-    }
-
-    .settings-table input:focus {
-      border-color: var(--ready);
-      outline: none;
-    }
-
-    .toggle-switch {
-      position: relative;
-      display: inline-block;
-      width: 40px;
-      height: 20px;
-    }
-
-    .toggle-switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      inset: 0;
-      background-color: #333;
-      transition: .4s;
-      border-radius: 20px;
-    }
-
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 14px;
-      width: 14px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .4s;
-      border-radius: 50%;
-    }
-
-    input:checked + .slider {
-      background-color: var(--ready);
-    }
-
-    input:checked + .slider:before {
-      transform: translateX(20px);
-    }
-
-    .btn-settings {
-      background: var(--card);
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 8px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: all 0.2s;
-    }
-
-    .btn-settings:hover {
-      background: var(--accent);
-      border-color: var(--ready);
-    }
-
-    .card .bonus-amt {
-      font-size: 24px;
-      font-weight: 800;
-      color: var(--ready);
-      margin: 4px 0;
-    }
-
-    /* Progress Bar */
-    .progress-container {
-      width: 100%;
-      height: 4px;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 2px;
-      margin-top: 8px;
-      overflow: hidden;
-    }
-
-    .progress-bar {
-      height: 100%;
-      background: var(--ready);
-      width: 0%;
-      transition: width 1s linear;
-    }
-
-    .card.soon .progress-bar { background: var(--soon); }
-    .card.later .progress-bar { background: var(--later); }
-
-    .card-notes {
-      font-size: 11px;
-      color: var(--muted);
-      font-style: italic;
-      margin-top: 4px;
-      border-top: 1px solid var(--border);
-      padding-top: 4px;
-      display: -webkit-box;
-      -webkit-line-clamp: 2;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .discord-link {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      color: #5865F2;
-      font-size: 12px;
-      text-decoration: none;
-      margin-top: 8px;
-      font-weight: 600;
-    }
-
-    .discord-link:hover { text-decoration: underline; }
-
-    /* Live Drop Notification */
-    #liveDropToast {
-      position: fixed;
-      bottom: 20px;
-      left: 20px;
-      background: #5865F2;
-      color: white;
-      padding: 12px 20px;
-      border-radius: 12px;
-      display: none;
-      z-index: 2000;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-      animation: slideUp 0.3s ease-out;
-      max-width: 300px;
-    }
-
-    @keyframes slideUp {
-      from { transform: translateY(100px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-
-    .btn-discord {
-      background: #5865F2;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-size: 14px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: 600;
-      text-decoration: none;
-    }
-  </style>
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
+<body>
 
-   
-      
+    <header class="header">
+        <h1>Bonus Collection</h1>
+        <p>Your daily source for sweepstakes, social casinos, and referral links.</p>
+    </header>
 
-  <div class="section-heading">Casino Bonuses</div>
-  <div class="container" id="cards"></div>
+    <main class="container">
+        <div id="links-grid" class="grid">
+            <!-- Cards will be injected here via JavaScript -->
+        </div>
+    </main>
 
-  <div class="section-heading">Get Paid To Sites</div>
-  <div class="container" id="paidCards"></div>
+    <footer class="footer">
+        <p><a href="https://jmenichole.github.io/Portfolio/" target="_blank" rel="noopener noreferrer">made for degens by degens</a></p>
+    </footer>
 
+    <script>
+        const bonusLinks = [
+            { name: "CardCrush", url: "https://www.cardcrush.com/lp/raf?r=db061927%2F45375369" },
+            { name: "Yotta", url: "https://join.withyotta.com/JMENICHOLE0" },
+            { name: "Coverd", url: "https://apps.apple.com/us/app/coverd/id6741347396" },
+            { name: "Winera", url: "https://winera.us?referralCode=Vf8jRF#signup" },
+            { name: "Acebet", url: "https://acebet.cc/welcome/r/jmenichole" },
+            { name: "Nuts.gg", url: "https://nuts.gg/play/jmenichole" },
+            { name: "Sharkroll", url: "https://www.sharkroll.io/en/?ref=A120A9538458" },
+            { name: "Coinsback Casino", url: "https://www.coinsbackcasino.com/invite/1556026?utm_source=copy&utm_medium=referral&utm_campaign=member-referral" },
+            { name: "Qzino", url: "https://qzino.ai?r=QZER6326443" },
+            { name: "FireSevens", url: "https://firesevens.com/?invited_by=BEQM7P" },
+            { name: "Jumbo88", url: "https://www.jumbo88.com/signup?referralCode=6uff79" },
+            { name:"HelloMillions", url:"https://www.hellomillions.com/lp/raf?r=26d6760f%2F1236643867", restricted: ["WA", "ID", "NV", "GA", "KY", "AL"] },
+            { name:"SpinBlitz", url:"https://www.spinblitz.com/lp/raf?r=606f64a3%2F1246446739", restricted: ["WA", "ID", "NV", "GA", "KY", "AL"] },
+            { name:"MegaBonanza", url:"https://www.megabonanza.com/?r=72781897", restricted: ["WA", "ID", "NV", "GA", "KY", "AL"] },
+            { name:"RealPrize", url:"https://www.realprize.com/refer/317136", restricted: ["WA", "ID", "NV"] },
+            { name:"WOW Vegas", url:"https://www.wowvegas.com/?raf=3615494", restricted: ["WA", "ID", "NV"] },
+            { name:"Pulsz", url:"https://www.pulsz.com/?invited_by=utfk4r", restricted: ["WA", "ID", "NV"] },
+            { name:"Modo", url:"https://modo.us?referralCode=61MN6A", restricted: ["WA", "ID", "NV", "NJ", "PA", "WV"] },
+            { name:"McLuck", url:"https://www.mcluck.com/lp/raf?r=61119407%2F908900038", restricted: ["WA", "ID", "NV", "GA", "KY", "AL"] },
+            { name:"Crown Coins", url:"https://crowncoinscasino.com/?utm_campaign=59048bf4-dbeb-4c58-b690-d7ad11bdb847&utm_source=friends", restricted: ["WA", "ID", "NV"] },
+            { name:"Chanced", url:"https://chanced.com/c/ysa096", restricted: ["WA", "ID", "NV"] },
+            { name:"Stake.us", url:"https://stake.us/?c=Jmenichole", restricted: ["WA", "ID", "NV", "KY", "MI", "VT"] },
+            { name:"Sportzino", url:"https://sportzino.com/signup/8a105ba6-7ada-45c8-b021-f478ac03c7c4", restricted: ["WA", "ID", "NV", "GA"] },
+            { name:"PlayFame", url:"https://www.playfame.com/lp/raf?r=1275975417", restricted: ["WA", "ID", "NV"] },
+            { name:"Pulsz Bingo", url:"https://www.pulszbingo.com/?invited_by=eg6mbf", restricted: ["WA", "ID", "NV"] },
+            { name:"Jackpota", url:"https://www.jackpota.com/?r=85453282", restricted: ["WA", "ID", "NV"] },
+            { name:"Zula Casino", url:"https://www.zulacasino.com/signup/221ddd92-862e-45d8-acc0-4cd2c26f7cdd", restricted: ["WA", "ID", "NV", "GA"] },
+            { name:"Fortune Coins", url:"https://www.fortunecoins.com/signup/3c08936f-8979-4f87-b377-efdbff519029", restricted: ["WA", "ID", "NV", "GA"] },
+            { name:"MyPrize", url:"https://myprize.us/invite/jmenichole", restricted: ["WA", "NV"] },
+            { name:"Winna", url:"https://winna.com/?r=jmenichole" },
+            { name:"Clubs Poker", url:"https://play.clubs.poker/?referralCode=104192", restricted: ["WA", "ID", "NV"] },
+            { name:"Rolla", url:"https://www.rolla.com/?raf=3873" },
+            { name:"Lone Star Casino", url:"https://lonestarcasino.com/refer/678504" },
+            { name:"Spree", url:"https://spree.com/?r=1450539", restricted: ["WA", "ID", "NV"] },
+            { name:"SpinPals", url:"https://www.spinpals.com?referralcode=e851e1a8-c455-4a59-954d-b7fe0bbad04c" },
+            { name:"High 5 Casino", url:"https://high5casino.com/gc?adId=INV001%3AJmenichole", restricted: ["WA", "ID", "NV"] },
+            { name:"TrustDice", url:"https://trustdice.win/faucet/?ref=u_jmenichole", needsVPN: true },
+            { name:"Punt", url:"https://punt.com/c/cg60pd" },
+            { name:"FortuneWheelz", url:"https://fortunewheelz.com/?invited_by=P36ZS6", restricted: ["WA", "ID", "NV"] },
+            { name:"Zoot", url:"https://getzoot.us/?referralCode=ZOOTwithJMENICHOLE", restricted: ["WA", "ID", "NV"] },
+            { name:"Spinsala", url:"https://spinsala.com/en?invite=daym" },
+            { name:"Legendz", url:"https://legendz.com/?referred_by_id=221602", restricted: ["WA", "ID", "NV"] },
+            { name:"NoLimit Coins", url:"https://nolimitcoins.com/?invited_by=ZI1JIU", restricted: ["WA", "ID", "NV"] },
+            { name:"Gamba", url:"https://gamba.com?c=Jme", needsVPN: true },
+            { name:"American Luck", url:"https://americanluck.com/signup/e360918f-8986-4dec-9823-a902d3f4936a" },
+            { name:"Goated", url:"https://www.goated.com/r/YDRZLJ", needsVPN: true },
+            { name:"Shuffle", url:"https://shuffle.com?r=jHR7JnWRPF", needsVPN: true },
+            { name:"Stake (Global)", url:"https://www.stake.com/?c=LAYP68hb", needsVPN: true },
+            { name:"Clash.gg", url:"https://clash.gg/r/stakestats", needsVPN: true },
+            { name:"Cases.gg", url:"https://www.cases.gg/r/JMENICHOLE" },
+            { name:"Jemlit", url:"https://jemlit.com/en/a/Jmenichole" },
+            { name:"RoxyMoxy", url:"https://roxymoxy.com/home?invite=f94f874427" },
+            { name:"LuckyLand Slots", url:"https://luckylandslots.com", restricted: ["WA", "ID"] },
+            { name:"LuckyBits Vegas", url:"https://luckybitsvegas.com/gc?adId=INV001%3Ajmenichole" },
+            { name:"Shuffle.us", url:"https://shuffle.us?r=Rl93OJoflX", restricted: ["WA", "ID", "NV"] },
+            { name:"Kickr", url:"https://kickr.com/signup/doxe8c09", restricted: ["WA", "ID", "NV"] }
+        ];
 
+        function renderLinks() {
+            const grid = document.getElementById('links-grid');
+            
+            bonusLinks.forEach(link => {
+                const card = document.createElement('a');
+                card.href = link.url;
+                card.className = 'card';
+                card.target = '_blank';
+                card.rel = 'noopener noreferrer';
 
-  <footer>MADE FOR DEGENS BY DEGENS
- 
-  </footer>
+                let badgesHTML = '';
+                
+                if (link.needsVPN) {
+                    badgesHTML += `<span class="badge badge-vpn">VPN Required</span>`;
+                }
+                
+                if (link.restricted && link.restricted.length > 0) {
+                    badgesHTML += `<span class="badge badge-restricted" title="${link.restricted.join(', ')}">Restricted States</span>`;
+                }
 
-  <script>
-    let searchTerm = "";
-    let selectedState = localStorage.getItem("collectClockState") || "";
-
-    function esc(str) {
-      const d = document.createElement("div");
-      d.textContent = str;
-      return d.innerHTML;
-    }
-
-    function updateStateFilter() {
-      selectedState = document.getElementById("stateFilter").value;
-      localStorage.setItem("collectClockState", selectedState);
-      render();
-      renderPaid();
-    }
-
-    // Restore state filter dropdown on load
-    document.addEventListener("DOMContentLoaded", () => {
-      if (selectedState) {
-        const sel = document.getElementById("stateFilter");
-        if (sel) sel.value = selectedState;
-      }
-    });
-
-    document.getElementById("searchInp").addEventListener("input", (e) => {
-      searchTerm = e.target.value.toLowerCase();
-      render();
-      renderPaid();
-    });
-
-    // initial list (as before) — we'll store per-site cooldownHours and optional bonusDetails
-    let state = [
-      { name:"HelloMillions", url:"https://www.hellomillions.com/lp/raf?r=26d6760f%2F1236643867", restricted: ["WA", "ID", "NV", "GA", "KY", "AL"] },
-      { name:"SpinBlitz", url:"https://www.spinblitz.com/lp/raf?r=606f64a3%2F1246446739", restricted: ["WA", "ID", "NV", "GA", "KY", "AL"] },
-      { name:"MegaBonanza", url:"https://www.megabonanza.com/?r=72781897", restricted: ["WA", "ID", "NV", "GA", "KY", "AL"] },
-      { name:"RealPrize", url:"https://www.realprize.com/refer/317136", restricted: ["WA", "ID", "NV"] },
-      { name:"WOW Vegas", url:"https://www.wowvegas.com/?raf=3615494", restricted: ["WA", "ID", "NV"] },
-      { name:"Pulsz", url:"https://www.pulsz.com/?invited_by=utfk4r", restricted: ["WA", "ID", "NV"] },
-      { name:"Modo", url:"https://modo.us?referralCode=61MN6A", restricted: ["WA", "ID", "NV", "NJ", "PA", "WV"] },
-      { name:"McLuck", url:"https://www.mcluck.com/lp/raf?r=61119407%2F908900038", restricted: ["WA", "ID", "NV", "GA", "KY", "AL"] },
-      { name:"Crown Coins", url:"https://crowncoinscasino.com/?utm_campaign=59048bf4-dbeb-4c58-b690-d7ad11bdb847&utm_source=friends", restricted: ["WA", "ID", "NV"] },
-      { name:"Chanced", url:"https://chanced.com/c/ysa096", restricted: ["WA", "ID", "NV"] },
-
-      { name:"Stake.us", url:"https://stake.us/?c=Jmenichole", restricted: ["WA", "ID", "NV", "KY", "MI", "VT"] },
-      { name:"Sportzino", url:"https://sportzino.com/signup/8a105ba6-7ada-45c8-b021-f478ac03c7c4", restricted: ["WA", "ID", "NV", "GA"] },
-      { name:"PlayFame", url:"https://www.playfame.com/lp/raf?r=1275975417", restricted: ["WA", "ID", "NV"] },
-      { name:"Pulsz Bingo", url:"https://www.pulszbingo.com/?invited_by=eg6mbf", restricted: ["WA", "ID", "NV"] },
-      { name:"Jackpota", url:"https://www.jackpota.com/?r=85453282", restricted: ["WA", "ID", "NV"] },
-      { name:"Zula Casino", url:"https://www.zulacasino.com/signup/221ddd92-862e-45d8-acc0-4cd2c26f7cdd", restricted: ["WA", "ID", "NV", "GA"] },
-      { name:"Fortune Coins", url:"https://www.fortunecoins.com/signup/3c08936f-8979-4f87-b377-efdbff519029", restricted: ["WA", "ID", "NV", "GA"] },
-      { name:"MyPrize", url:"https://myprize.us/invite/jmenichole", restricted: ["WA", "NV"] },
-      { name:"Winna", url:"https://winna.com/?r=jmenichole" },
-      { name:"Clubs Poker", url:"https://play.clubs.poker/?referralCode=104192", restricted: ["WA", "ID", "NV"] },
-
-      { name:"Rolla", url:"https://www.rolla.com/?raf=3873" },
-      { name:"Lone Star Casino", url:"https://lonestarcasino.com/refer/678504" },
-      { name:"Spree", url:"https://spree.com/?r=1450539", restricted: ["WA", "ID", "NV"] },
-      { name:"SpinPals", url:"https://www.spinpals.com?referralcode=e851e1a8-c455-4a59-954d-b7fe0bbad04c" },
-      { name:"High 5 Casino", url:"https://high5casino.com/gc?adId=INV001%3AJmenichole", restricted: ["WA", "ID", "NV"] },
-      { name:"TrustDice", url:"https://trustdice.win/faucet/?ref=u_jmenichole", needsVPN: true },
-      { name:"Punt", url:"https://punt.com/c/cg60pd" },
-      { name:"FortuneWheelz", url:"https://fortunewheelz.com/?invited_by=P36ZS6", restricted: ["WA", "ID", "NV"] },
-      { name:"Zoot", url:"https://getzoot.us/?referralCode=ZOOTwithJMENICHOLE", restricted: ["WA", "ID", "NV"] },
-      { name:"Spinsala", url:"https://spinsala.com/en?invite=daym" },
-
-      { name:"Legendz", url:"https://legendz.com/?referred_by_id=221602", restricted: ["WA", "ID", "NV"] },
-      { name:"NoLimit Coins", url:"https://nolimitcoins.com/?invited_by=ZI1JIU", restricted: ["WA", "ID", "NV"] },
-      { name:"Gamba", url:"https://gamba.com?c=Jme", needsVPN: true },
-      { name:"American Luck", url:"https://americanluck.com/signup/e360918f-8986-4dec-9823-a902d3f4936a" },
-      { name:"Goated", url:"https://www.goated.com/r/YDRZLJ", needsVPN: true },
-      { name:"Shuffle", url:"https://shuffle.com?r=jHR7JnWRPF", needsVPN: true },
-      { name:"Stake (Global)", url:"https://www.stake.com/?c=LAYP68hb", needsVPN: true },
-      { name:"Clash.gg", url:"https://clash.gg/r/stakestats", needsVPN: true },
-      { name:"Cases.gg", url:"https://www.cases.gg/r/JMENICHOLE" },
-      { name:"Jemlit", url:"https://jemlit.com/en/a/Jmenichole" },
-
-      { name:"RoxyMoxy", url:"https://roxymoxy.com/home?invite=f94f874427" },
-      { name:"LuckyLand Slots", url:"https://luckylandslots.com", restricted: ["WA", "ID"] },
-      { name:"LuckyBits Vegas", url:"https://luckybitsvegas.com/gc?adId=INV001%3Ajmenichole" },
-      { name:"Shuffle.us", url:"https://shuffle.us?r=Rl93OJoflX", restricted: ["WA", "ID", "NV"] },
-      { name:"Kickr", url:"https://kickr.com/signup/doxe8c09", restricted: ["WA", "ID", "NV"] }
-    ]
-    // default properties
-    .map(c => ({ 
-      ...c, 
-      cooldownHours: 24, 
-      bonusDetails: "", 
-      lastCollected: null,
-      hidden: false,
-      bonusAmount: "",
-      notes: "",
-      isConfigured: false
-    }));
-
-    // Static Get Paid To Sites list — unchanged
-    const paidSites = [
-      { name: "Auto-mine Bitcoin Daily To Play Casino Games", url: "https://emberfund.onelink.me/ljTI/l4g18zii?mining_referrer_id=MNGX1VVREUE" },
-      { name: "FreeCash Surveys & Games", url: "https://freecash.com/r/IAI3V" },
-      { name: "Share unused bandwidth and get paid (Honeygain)", url: "https://join.honeygain.com/JAMIE864F2" },
-      { name: "Web3 platform for micro-tasking: side hu$tle (Jumptask)", url: "https://www.jumptask.io/r/sopypokofuvi" },
-      { name: "Discover high paying crypto bounties (Superteam Earn)", url: "https://www.earn.superteam.fun/r/KRNMB6H" },
-      { name: "Get free gift cards for doing things online (Swagbucks)", url: "https://www.swagbucks.com/profile/Jmenichole?rp=1" }
-    ];
-
-    const STORAGE_KEY = "collectClockFull";
-    const CONFIG_KEY = "collectClockConfig";
-
-    let globalSettings = {
-      soundEnabled: true,
-      notificationVolume: 0.5
-    };
-
-    let currentUser = null;
-    const socket = io();
-
-    socket.on('liveDrop', (data) => {
-      const toast = document.getElementById('liveDropToast');
-      const content = document.getElementById('dropContent');
-      content.textContent = `${data.author}: ${data.content}`;
-      toast.style.display = 'block';
-      
-      if (globalSettings.soundEnabled) {
-        const dropSound = new Audio("./assets/audio/800976__sadiquecat__other-uwu-2.wav");
-        dropSound.volume = globalSettings.notificationVolume;
-        dropSound.play().catch(e => {});
-      }
-
-      setTimeout(() => {
-        toast.style.display = 'none';
-      }, 5000);
-    });
-
-    async function syncToBackend() {
-      if (!currentUser) return;
-      try {
-        await fetch('/api/user/settings', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            casinoSettings: state,
-            globalSettings: globalSettings
-          })
-        });
-      } catch (err) {
-        console.error('Failed to sync to backend:', err);
-      }
-    }
-
-    function save(){ 
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); 
-      localStorage.setItem(CONFIG_KEY, JSON.stringify(globalSettings));
-      syncToBackend();
-    }
-    function mergeState(parsedData) {
-      if (!Array.isArray(parsedData)) return;
-      state = state.map(def => {
-        const saved = parsedData.find(p => p.name === def.name);
-        if (saved) {
-          return {
-            ...def,
-            ...saved,
-            cooldownHours: saved.cooldownHours ?? def.cooldownHours,
-            bonusDetails: saved.bonusDetails ?? def.bonusDetails,
-            lastCollected: saved.lastCollected ?? def.lastCollected,
-            hidden: saved.hidden ?? def.hidden,
-            bonusAmount: saved.bonusAmount ?? def.bonusAmount,
-            notes: saved.notes ?? def.notes,
-            isConfigured: saved.isConfigured ?? def.isConfigured
-          };
+                card.innerHTML = `
+                    <div class="card-content">
+                        <h3>${link.name}</h3>
+                        <div class="badges-container">
+                            ${badgesHTML}
+                        </div>
+                    </div>
+                `;
+                
+                grid.appendChild(card);
+            });
         }
-        return def;
-      });
-    }
 
-    function load(){
-      const s = localStorage.getItem(STORAGE_KEY);
-      if (s) {
-        try {
-          mergeState(JSON.parse(s));
-        } catch(e) {
-          console.error("Failed to parse stored state:", e);
-        }
-      }
-
-      const c = localStorage.getItem(CONFIG_KEY);
-      if (c) {
-        try {
-          const parsedConfig = JSON.parse(c);
-          globalSettings = { ...globalSettings, ...parsedConfig };
-        } catch(e) {
-          console.error("Failed to parse config:", e);
-        }
-      }
-      
-      // Request notifications
-      if (window.Notification && Notification.permission === "default") {
-        Notification.requestPermission();
-      }
-    }
-
-    function fmt(ms){
-      const h = Math.floor(ms / 3600000);
-      const m = Math.floor((ms % 3600000) / 60000);
-      if (h > 0) return `${h}h ${m}m`;
-      return `${m}m`;
-    }
-
-    // milliseconds remaining until next availability
-    function remaining(c){
-      if (!c.lastCollected) return 0;
-      const rem = (c.lastCollected + (c.cooldownHours || 24)*3600000) - Date.now();
-      return Math.max(0, rem);
-    }
-
-    function render(){
-      const root = document.getElementById("cards");
-      if (!root) return;
-      root.innerHTML = "";
-
-      // Ensure searchTerm is synced with input
-      const searchInp = document.getElementById("searchInp");
-      if (searchInp) searchTerm = searchInp.value.toLowerCase();
-
-      let filtered = state.filter(c => !c.hidden && c.name.toLowerCase().includes(searchTerm));
-      
-      // State Filter
-      if (selectedState) {
-        filtered = filtered.filter(c => !c.restricted || !c.restricted.includes(selectedState));
-      }
-
-      // Auto-sort: Ready first, then by time remaining
-      const sorted = [...filtered].sort((a,b) => {
-        const remA = remaining(a);
-        const remB = remaining(b);
-        if (remA === 0 && remB !== 0) return -1;
-        if (remA !== 0 && remB === 0) return 1;
-        return remA - remB;
-      });
-
-      let readyCount = filtered.filter(c => remaining(c) === 0).length;
-
-      for (const c of sorted){
-        const r = remaining(c);
-        const totalMs = (c.cooldownHours || 24) * 3600000;
-        const elapsed = totalMs - r;
-        const progress = Math.min(100, Math.max(0, (elapsed / totalMs) * 100));
-
-        const card = document.createElement("div");
-        const statusClass = r ? (r < 3600000 ? "soon" : "later") : "ready";
-        card.className = `card ${statusClass}`;
-        card.title = `Click to collect from ${c.name}. Current interval: ${c.cooldownHours}h`;
-
-        card.onclick = () => {
-          c.lastCollected = Date.now();
-          save();
-          window.open(c.url, "_blank");
-          if (!c.isConfigured) {
-            openConfigModal(c);
-          }
-          render();
-        };
-
-        const badgeClass = r ? (r < 3600000 ? "badge-soon" : "badge-later") : "badge-ready";
-        const statusText = r ? fmt(r) : "READY";
-        const bonusText = c.bonusDetails ? ` · ${c.bonusDetails}` : "";
-
-        card.innerHTML = `
-          <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <h3>${esc(c.name)}</h3>
-            ${c.needsVPN ? '<span style="background: #ff5c5c; color: white; font-size: 8px; padding: 2px 6px; border-radius: 4px; font-weight: 800;">VPN REQUIRED</span>' : ''}
-          </div>
-          ${c.bonusAmount ? `<div class="bonus-amt">${esc(c.bonusAmount)}</div>` : ""}
-          <div class="status-badge ${badgeClass}">
-            ${statusText}
-          </div>
-          <div class="progress-container">
-            <div class="progress-bar" style="width: ${progress}%"></div>
-          </div>
-          <div class="meta">
-            <span>Next: ${c.cooldownHours}h${esc(bonusText)}</span>
-            <span style="opacity: 0.7;">${c.lastCollected ? `Last: ${new Date(c.lastCollected).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}` : 'Never'}</span>
-          </div>
-          ${c.notes ? `<div class="card-notes">${esc(c.notes)}</div>` : ""}
-          <a href="discord://discord.com/channels/1206686161175052338/1349602720780390423" class="discord-link" onclick="event.stopPropagation();" title="View live bonus drops on Discord">
-            <span>💬 Live Drops</span>
-          </a>
-        `;
-        root.appendChild(card);
-      }
-
-      // Check for newly ready bonuses to notify
-      checkNotifications(filtered);
-
-      // compute next ready time if none ready
-      if (readyCount) {
-        document.getElementById("nextReady").textContent =
-        `${readyCount} bonuses ready to collect`;
-      } else {
-        const nextSel = filtered.map(s => ({s, r: remaining(s)})).filter(x => x.r > 0).sort((a,b)=>a.r-b.r)[0];
-        if (nextSel) {
-          document.getElementById("nextReady").textContent = `Next ready in ${fmt(nextSel.r)} — ${nextSel.s.name}`;
-        } else {
-          document.getElementById("nextReady").textContent = `All clear`;
-        }
-      }
-    }
-
-    let notifiedSet = new Set();
-    function checkNotifications(filtered) {
-      if (!window.Notification || Notification.permission !== "granted") return;
-      for (const c of filtered) {
-        if (remaining(c) === 0 && !notifiedSet.has(c.name)) {
-          notifiedSet.add(c.name);
-          new Notification(`${c.name} is ready to collect!`);
-          if (globalSettings.soundEnabled) {
-            const snd = new Audio("./assets/audio/800976__sadiquecat__other-uwu-2.wav");
-            snd.volume = globalSettings.notificationVolume;
-            snd.play().catch(() => {});
-          }
-        } else if (remaining(c) > 0) {
-          notifiedSet.delete(c.name);
-        }
-      }
-    }
-
-    function openSettings() {
-      document.getElementById("settingsModal").style.display = "flex";
-      renderSettingsTable();
-    }
-
-    function closeSettings() {
-      document.getElementById("settingsModal").style.display = "none";
-      render(); // Refresh main view
-    }
-
-    let pendingConfigCasino = null;
-    function openConfigModal(casino) {
-      pendingConfigCasino = casino;
-      document.getElementById("configTitle").textContent = `Configure ${casino.name}`;
-      document.getElementById("configHours").value = casino.cooldownHours;
-      document.getElementById("configAmount").value = casino.bonusAmount;
-      document.getElementById("configModal").style.display = "flex";
-    }
-
-    function saveConfig() {
-      if (pendingConfigCasino) {
-        pendingConfigCasino.cooldownHours = parseInt(document.getElementById("configHours").value) || 24;
-        pendingConfigCasino.bonusAmount = document.getElementById("configAmount").value.trim();
-        pendingConfigCasino.isConfigured = true;
-        save();
-        document.getElementById("configModal").style.display = "none";
-        render();
-      }
-    }
-
-    function skipConfig() {
-      if (pendingConfigCasino) {
-        pendingConfigCasino.isConfigured = true;
-        save();
-        document.getElementById("configModal").style.display = "none";
-        render();
-      }
-    }
-
-    function renderSettingsTable() {
-      const tbody = document.getElementById("settingsTableBody");
-      tbody.innerHTML = "";
-
-      // Set global settings values
-      document.getElementById("soundToggle").checked = globalSettings.soundEnabled;
-      document.getElementById("volumeControl").value = globalSettings.notificationVolume;
-      document.getElementById("dmToggle").checked = globalSettings.dmNotifications || false;
-      
-      // Sort state alphabetically for settings
-      const alphaState = [...state].sort((a,b) => a.name.localeCompare(b.name));
-
-      for (const c of alphaState) {
-        const safeName = c.name.replace(/'/g, "\\'");
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td>
-            <label class="toggle-switch">
-              <input type="checkbox" ${c.hidden ? "" : "checked"} onchange="toggleCasino('${safeName}', this.checked)">
-              <span class="slider"></span>
-            </label>
-          </td>
-          <td>${esc(c.name)}</td>
-          <td>
-            <input type="number" value="${c.cooldownHours}" min="1" onchange="updateInterval('${safeName}', this.value)">
-          </td>
-          <td>
-            <input type="text" value="${esc(c.bonusAmount)}" placeholder="e.g. $1.00" onchange="updateBonusAmount('${safeName}', this.value)">
-          </td>
-          <td>
-            <input type="text" value="${esc(c.notes)}" placeholder="e.g. Check email" onchange="updateNotes('${safeName}', this.value)">
-          </td>
-        `;
-        tbody.appendChild(tr);
-      }
-    }
-
-    window.toggleSound = (enabled) => {
-      globalSettings.soundEnabled = enabled;
-      save();
-    };
-
-    window.toggleDm = (enabled) => {
-      globalSettings.dmNotifications = enabled;
-      save();
-    };
-
-    window.updateVolume = (vol) => {
-      globalSettings.notificationVolume = parseFloat(vol);
-      save();
-    };
-
-    window.toggleCasino = (name, visible) => {
-      const c = state.find(x => x.name === name);
-      if (c) {
-        c.hidden = !visible;
-        save();
-      }
-    };
-
-    window.updateInterval = (name, hours) => {
-      const c = state.find(x => x.name === name);
-      if (c) {
-        c.cooldownHours = parseInt(hours) || 24;
-        save();
-      }
-    };
-
-    window.updateBonusAmount = (name, amount) => {
-      const c = state.find(x => x.name === name);
-      if (c) {
-        c.bonusAmount = amount.trim();
-        save();
-      }
-    };
-
-    window.updateNotes = (name, notes) => {
-      const c = state.find(x => x.name === name);
-      if (c) {
-        c.notes = notes.trim();
-        save();
-      }
-    };
-
-    window.exportSettings = () => {
-      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(state, null, 2));
-      const downloadAnchorNode = document.createElement('a');
-      downloadAnchorNode.setAttribute("href", dataStr);
-      downloadAnchorNode.setAttribute("download", "collectclock_settings.json");
-      document.body.appendChild(downloadAnchorNode);
-      downloadAnchorNode.click();
-      downloadAnchorNode.remove();
-    };
-
-    window.importSettings = (event) => {
-      const file = event.target.files[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const imported = JSON.parse(e.target.result);
-          if (Array.isArray(imported)) {
-            mergeState(imported);
-            save();
-            render();
-            renderSettingsTable();
-            alert("Settings imported successfully!");
-          }
-        } catch (err) {
-          alert("Error importing settings: " + err.message);
-        }
-      };
-      reader.readAsText(file);
-    };
-
-    // Close modals when clicking outside content
-    window.onclick = (event) => {
-      const settingsModal = document.getElementById("settingsModal");
-      const configModal = document.getElementById("configModal");
-      if (event.target === settingsModal) closeSettings();
-      if (event.target === configModal) { configModal.style.display = "none"; }
-    };
-
-    // Render paid sites without any cooldown/lastCollected logic.
-    function renderPaid(){
-      const root = document.getElementById("paidCards");
-      if (!root) return;
-      root.innerHTML = "";
-
-      // Sync searchTerm
-      const searchInp = document.getElementById("searchInp");
-      if (searchInp) searchTerm = searchInp.value.toLowerCase();
-
-      const filtered = paidSites.filter(s => s.name.toLowerCase().includes(searchTerm));
-
-      for (const s of filtered){
-        const card = document.createElement("div");
-        card.className = "card";
-        card.onclick = () => window.open(s.url, "_blank");
-
-        card.innerHTML = `
-          <h3>${esc(s.name)}</h3>
-          <div class="status-badge badge-ready">REFERRAL</div>
-          <div class="meta">Get Paid Site</div>
-        `;
-        root.appendChild(card);
-      }
-    }
-
-    async function checkAuth() {
-      try {
-        const response = await fetch('/auth/success');
-        if (response.ok) {
-          const data = await response.json();
-          currentUser = data.user;
-          const loginBtn = document.getElementById('loginBtn');
-          const userProfile = document.getElementById('userProfile');
-          if (loginBtn) loginBtn.style.display = 'none';
-          if (userProfile) userProfile.style.display = 'flex';
-          
-          const userName = document.getElementById('userName');
-          const userAvatar = document.getElementById('userAvatar');
-          if (userName) userName.textContent = currentUser.username;
-          if (userAvatar) {
-            userAvatar.src = currentUser.avatar 
-              ? `https://cdn.discordapp.com/avatars/${currentUser.discordId}/${currentUser.avatar}.png`
-              : "https://cdn.discordapp.com/embed/avatars/0.png";
-          }
-          
-          // Sync backend data to local if backend has data
-          if (currentUser.casinoSettings && currentUser.casinoSettings.length > 0) {
-            mergeState(currentUser.casinoSettings);
-            globalSettings = currentUser.globalSettings || globalSettings;
-            // Save synced data to local storage
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); 
-            localStorage.setItem(CONFIG_KEY, JSON.stringify(globalSettings));
-            render();
-            renderPaid();
-          }
-        }
-      } catch (err) {
-        console.error('Auth check failed:', err);
-      }
-    }
-
-    // bootstrap
-    function bootstrap() {
-      try {
-        load();
-        render();
-        renderPaid();
-        checkAuth().finally(() => {
-          render();
-          renderPaid();
-        });
-      } catch (e) {
-        console.error("Bootstrap failed:", e);
-        render();
-        renderPaid();
-      }
-    }
-
-    bootstrap();
-    
-    setInterval(()=>{
-      render();
-      renderPaid();
-    }, 60000);
-
-    // Register Service Worker
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(reg => console.log('SW registered'))
-          .catch(err => console.log('SW failed', err));
-      });
-    }
-  </script>
+        document.addEventListener('DOMContentLoaded', renderLinks);
+    </script>
 </body>
 </html>
