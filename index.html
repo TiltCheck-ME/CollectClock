@@ -6,15 +6,13 @@
     <title>Bonus Links Directory</title>
     <style>
         :root {
-            --bg-primary: #0f1115;
-            --bg-secondary: #1a1d24;
+            /* Colors pulled directly from your CollectClock page */
+            --bg-primary: #060b13; 
+            --bg-secondary: #0a101d; 
             --text-primary: #ffffff;
-            --text-secondary: #9ca3af;
-            --accent: #3b82f6;
-            --accent-hover: #2563eb;
-            --vpn-badge: #ef4444;
-            --restricted-badge: #f59e0b;
-            --border-color: #2d3139;
+            --text-accent: #00ff66; /* Neon green */
+            --text-secondary: #596585; /* Muted purple-blue */
+            --border-color: #151c2b;
         }
 
         * {
@@ -34,12 +32,15 @@
             text-align: center;
             padding: 3rem 1rem;
             border-bottom: 1px solid var(--border-color);
-            background-color: var(--bg-secondary);
+            background-color: var(--bg-primary);
         }
 
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
+            color: var(--text-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .header p {
@@ -70,71 +71,47 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            text-align: center;
         }
 
         .card:hover {
             transform: translateY(-2px);
-            border-color: var(--accent);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-color: var(--text-accent);
+            box-shadow: 0 4px 15px rgba(0, 255, 102, 0.1);
         }
 
         .card h3 {
             font-size: 1.25rem;
-            margin-bottom: 0.75rem;
             color: var(--text-primary);
+            margin: 0;
+            transition: color 0.2s ease;
         }
 
-        .badges-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-        }
-
-        .badge {
-            font-size: 0.75rem;
-            font-weight: 600;
-            padding: 0.25rem 0.6rem;
-            border-radius: 9999px;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .badge-vpn {
-            background-color: rgba(239, 68, 68, 0.15);
-            color: var(--vpn-badge);
-            border: 1px solid rgba(239, 68, 68, 0.3);
-        }
-
-        .badge-restricted {
-            background-color: rgba(245, 158, 11, 0.15);
-            color: var(--restricted-badge);
-            border: 1px solid rgba(245, 158, 11, 0.3);
-        }
-
-        .badge-restricted[title] {
-            cursor: help;
+        .card:hover h3 {
+            color: var(--text-accent);
         }
 
         .footer {
             text-align: center;
-            padding: 2rem 1rem;
+            padding: 4rem 1rem 2rem 1rem;
             margin-top: 2rem;
-            border-top: 1px solid var(--border-color);
         }
 
         .footer p {
             margin: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
         }
 
         .footer a {
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             transition: color 0.2s ease;
         }
 
         .footer a:hover {
-            color: var(--accent);
+            color: var(--text-accent);
         }
 
         @media (max-width: 768px) {
@@ -150,8 +127,8 @@
 <body>
 
     <header class="header">
-        <h1>Bonus Collection</h1>
-        <p>Your daily source for sweepstakes, social casinos, and referral links.</p>
+        <h1>Casino Bonuses</h1>
+        <p>Get paid to sites and referral links.</p>
     </header>
 
     <main class="container">
@@ -174,54 +151,54 @@
             { name: "Nuts.gg", url: "https://nuts.gg/play/jmenichole" },
             { name: "Sharkroll", url: "https://www.sharkroll.io/en/?ref=A120A9538458" },
             { name: "Coinsback Casino", url: "https://www.coinsbackcasino.com/invite/1556026?utm_source=copy&utm_medium=referral&utm_campaign=member-referral" },
+            { name: "Winna", url: "https://winna.com/?r=jmenichole" },
             { name: "Qzino", url: "https://qzino.ai?r=QZER6326443" },
             { name: "FireSevens", url: "https://firesevens.com/?invited_by=BEQM7P" },
             { name: "Jumbo88", url: "https://www.jumbo88.com/signup?referralCode=6uff79" },
-            { name:"HelloMillions", url:"https://www.hellomillions.com/lp/raf?r=26d6760f%2F1236643867", restricted: ["WA", "ID", "NV", "GA", "KY", "AL"] },
-            { name:"SpinBlitz", url:"https://www.spinblitz.com/lp/raf?r=606f64a3%2F1246446739", restricted: ["WA", "ID", "NV", "GA", "KY", "AL"] },
-            { name:"MegaBonanza", url:"https://www.megabonanza.com/?r=72781897", restricted: ["WA", "ID", "NV", "GA", "KY", "AL"] },
-            { name:"RealPrize", url:"https://www.realprize.com/refer/317136", restricted: ["WA", "ID", "NV"] },
-            { name:"WOW Vegas", url:"https://www.wowvegas.com/?raf=3615494", restricted: ["WA", "ID", "NV"] },
-            { name:"Pulsz", url:"https://www.pulsz.com/?invited_by=utfk4r", restricted: ["WA", "ID", "NV"] },
-            { name:"Modo", url:"https://modo.us?referralCode=61MN6A", restricted: ["WA", "ID", "NV", "NJ", "PA", "WV"] },
-            { name:"McLuck", url:"https://www.mcluck.com/lp/raf?r=61119407%2F908900038", restricted: ["WA", "ID", "NV", "GA", "KY", "AL"] },
-            { name:"Crown Coins", url:"https://crowncoinscasino.com/?utm_campaign=59048bf4-dbeb-4c58-b690-d7ad11bdb847&utm_source=friends", restricted: ["WA", "ID", "NV"] },
-            { name:"Chanced", url:"https://chanced.com/c/ysa096", restricted: ["WA", "ID", "NV"] },
-            { name:"Stake.us", url:"https://stake.us/?c=Jmenichole", restricted: ["WA", "ID", "NV", "KY", "MI", "VT"] },
-            { name:"Sportzino", url:"https://sportzino.com/signup/8a105ba6-7ada-45c8-b021-f478ac03c7c4", restricted: ["WA", "ID", "NV", "GA"] },
-            { name:"PlayFame", url:"https://www.playfame.com/lp/raf?r=1275975417", restricted: ["WA", "ID", "NV"] },
-            { name:"Pulsz Bingo", url:"https://www.pulszbingo.com/?invited_by=eg6mbf", restricted: ["WA", "ID", "NV"] },
-            { name:"Jackpota", url:"https://www.jackpota.com/?r=85453282", restricted: ["WA", "ID", "NV"] },
-            { name:"Zula Casino", url:"https://www.zulacasino.com/signup/221ddd92-862e-45d8-acc0-4cd2c26f7cdd", restricted: ["WA", "ID", "NV", "GA"] },
-            { name:"Fortune Coins", url:"https://www.fortunecoins.com/signup/3c08936f-8979-4f87-b377-efdbff519029", restricted: ["WA", "ID", "NV", "GA"] },
-            { name:"MyPrize", url:"https://myprize.us/invite/jmenichole", restricted: ["WA", "NV"] },
-            { name:"Winna", url:"https://winna.com/?r=jmenichole" },
-            { name:"Clubs Poker", url:"https://play.clubs.poker/?referralCode=104192", restricted: ["WA", "ID", "NV"] },
-            { name:"Rolla", url:"https://www.rolla.com/?raf=3873" },
-            { name:"Lone Star Casino", url:"https://lonestarcasino.com/refer/678504" },
-            { name:"Spree", url:"https://spree.com/?r=1450539", restricted: ["WA", "ID", "NV"] },
-            { name:"SpinPals", url:"https://www.spinpals.com?referralcode=e851e1a8-c455-4a59-954d-b7fe0bbad04c" },
-            { name:"High 5 Casino", url:"https://high5casino.com/gc?adId=INV001%3AJmenichole", restricted: ["WA", "ID", "NV"] },
-            { name:"TrustDice", url:"https://trustdice.win/faucet/?ref=u_jmenichole", needsVPN: true },
-            { name:"Punt", url:"https://punt.com/c/cg60pd" },
-            { name:"FortuneWheelz", url:"https://fortunewheelz.com/?invited_by=P36ZS6", restricted: ["WA", "ID", "NV"] },
-            { name:"Zoot", url:"https://getzoot.us/?referralCode=ZOOTwithJMENICHOLE", restricted: ["WA", "ID", "NV"] },
-            { name:"Spinsala", url:"https://spinsala.com/en?invite=daym" },
-            { name:"Legendz", url:"https://legendz.com/?referred_by_id=221602", restricted: ["WA", "ID", "NV"] },
-            { name:"NoLimit Coins", url:"https://nolimitcoins.com/?invited_by=ZI1JIU", restricted: ["WA", "ID", "NV"] },
-            { name:"Gamba", url:"https://gamba.com?c=Jme", needsVPN: true },
-            { name:"American Luck", url:"https://americanluck.com/signup/e360918f-8986-4dec-9823-a902d3f4936a" },
-            { name:"Goated", url:"https://www.goated.com/r/YDRZLJ", needsVPN: true },
-            { name:"Shuffle", url:"https://shuffle.com?r=jHR7JnWRPF", needsVPN: true },
-            { name:"Stake (Global)", url:"https://www.stake.com/?c=LAYP68hb", needsVPN: true },
-            { name:"Clash.gg", url:"https://clash.gg/r/stakestats", needsVPN: true },
-            { name:"Cases.gg", url:"https://www.cases.gg/r/JMENICHOLE" },
-            { name:"Jemlit", url:"https://jemlit.com/en/a/Jmenichole" },
-            { name:"RoxyMoxy", url:"https://roxymoxy.com/home?invite=f94f874427" },
-            { name:"LuckyLand Slots", url:"https://luckylandslots.com", restricted: ["WA", "ID"] },
-            { name:"LuckyBits Vegas", url:"https://luckybitsvegas.com/gc?adId=INV001%3Ajmenichole" },
-            { name:"Shuffle.us", url:"https://shuffle.us?r=Rl93OJoflX", restricted: ["WA", "ID", "NV"] },
-            { name:"Kickr", url:"https://kickr.com/signup/doxe8c09", restricted: ["WA", "ID", "NV"] }
+            { name: "HelloMillions", url: "https://www.hellomillions.com/lp/raf?r=26d6760f%2F1236643867" },
+            { name: "SpinBlitz", url: "https://www.spinblitz.com/lp/raf?r=606f64a3%2F1246446739" },
+            { name: "MegaBonanza", url: "https://www.megabonanza.com/?r=72781897" },
+            { name: "RealPrize", url: "https://www.realprize.com/refer/317136" },
+            { name: "WOW Vegas", url: "https://www.wowvegas.com/?raf=3615494" },
+            { name: "Pulsz", url: "https://www.pulsz.com/?invited_by=utfk4r" },
+            { name: "Modo", url: "https://modo.us?referralCode=61MN6A" },
+            { name: "McLuck", url: "https://www.mcluck.com/lp/raf?r=61119407%2F908900038" },
+            { name: "Crown Coins", url: "https://crowncoinscasino.com/?utm_campaign=59048bf4-dbeb-4c58-b690-d7ad11bdb847&utm_source=friends" },
+            { name: "Chanced", url: "https://chanced.com/c/ysa096" },
+            { name: "Stake.us", url: "https://stake.us/?c=Jmenichole" },
+            { name: "Sportzino", url: "https://sportzino.com/signup/8a105ba6-7ada-45c8-b021-f478ac03c7c4" },
+            { name: "PlayFame", url: "https://www.playfame.com/lp/raf?r=1275975417" },
+            { name: "Pulsz Bingo", url: "https://www.pulszbingo.com/?invited_by=eg6mbf" },
+            { name: "Jackpota", url: "https://www.jackpota.com/?r=85453282" },
+            { name: "Zula Casino", url: "https://www.zulacasino.com/signup/221ddd92-862e-45d8-acc0-4cd2c26f7cdd" },
+            { name: "Fortune Coins", url: "https://www.fortunecoins.com/signup/3c08936f-8979-4f87-b377-efdbff519029" },
+            { name: "MyPrize", url: "https://myprize.us/invite/jmenichole" },
+            { name: "Clubs Poker", url: "https://play.clubs.poker/?referralCode=104192" },
+            { name: "Rolla", url: "https://www.rolla.com/?raf=3873" },
+            { name: "Lone Star Casino", url: "https://lonestarcasino.com/refer/678504" },
+            { name: "Spree", url: "https://spree.com/?r=1450539" },
+            { name: "SpinPals", url: "https://www.spinpals.com?referralcode=e851e1a8-c455-4a59-954d-b7fe0bbad04c" },
+            { name: "High 5 Casino", url: "https://high5casino.com/gc?adId=INV001%3AJmenichole" },
+            { name: "TrustDice", url: "https://trustdice.win/faucet/?ref=u_jmenichole" },
+            { name: "Punt", url: "https://punt.com/c/cg60pd" },
+            { name: "FortuneWheelz", url: "https://fortunewheelz.com/?invited_by=P36ZS6" },
+            { name: "Zoot", url: "https://getzoot.us/?referralCode=ZOOTwithJMENICHOLE" },
+            { name: "Spinsala", url: "https://spinsala.com/en?invite=daym" },
+            { name: "Legendz", url: "https://legendz.com/?referred_by_id=221602" },
+            { name: "NoLimit Coins", url: "https://nolimitcoins.com/?invited_by=ZI1JIU" },
+            { name: "Gamba", url: "https://gamba.com?c=Jme" },
+            { name: "American Luck", url: "https://americanluck.com/signup/e360918f-8986-4dec-9823-a902d3f4936a" },
+            { name: "Goated", url: "https://www.goated.com/r/YDRZLJ" },
+            { name: "Shuffle", url: "https://shuffle.com?r=jHR7JnWRPF" },
+            { name: "Stake (Global)", url: "https://www.stake.com/?c=LAYP68hb" },
+            { name: "Clash.gg", url: "https://clash.gg/r/stakestats" },
+            { name: "Cases.gg", url: "https://www.cases.gg/r/JMENICHOLE" },
+            { name: "Jemlit", url: "https://jemlit.com/en/a/Jmenichole" },
+            { name: "RoxyMoxy", url: "https://roxymoxy.com/home?invite=f94f874427" },
+            { name: "LuckyLand Slots", url: "https://luckylandslots.com" },
+            { name: "LuckyBits Vegas", url: "https://luckybitsvegas.com/gc?adId=INV001%3Ajmenichole" },
+            { name: "Shuffle.us", url: "https://shuffle.us?r=Rl93OJoflX" },
+            { name: "Kickr", url: "https://kickr.com/signup/doxe8c09" }
         ];
 
         function renderLinks() {
@@ -234,22 +211,9 @@
                 card.target = '_blank';
                 card.rel = 'noopener noreferrer';
 
-                let badgesHTML = '';
-                
-                if (link.needsVPN) {
-                    badgesHTML += `<span class="badge badge-vpn">VPN Required</span>`;
-                }
-                
-                if (link.restricted && link.restricted.length > 0) {
-                    badgesHTML += `<span class="badge badge-restricted" title="${link.restricted.join(', ')}">Restricted States</span>`;
-                }
-
                 card.innerHTML = `
                     <div class="card-content">
                         <h3>${link.name}</h3>
-                        <div class="badges-container">
-                            ${badgesHTML}
-                        </div>
                     </div>
                 `;
                 
