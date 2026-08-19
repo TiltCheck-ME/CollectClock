@@ -128,9 +128,10 @@
             opacity: 1;
         }
 
-        .card .meta {
-            font-size: 0.75rem;
+        .card .desc {
+            font-size: 0.85rem;
             color: var(--text-secondary);
+            line-height: 1.35;
         }
 
         .footer {
@@ -257,12 +258,12 @@
         ];
 
         const paidSites = [
-            { name: "FreeCash", url: "https://freecash.com/r/jmenichole" },
-            { name: "EarnLab", url: "https://earnlab.com/r/jmenichole" },
-            { name: "Earnopolis", url: "https://earnopolis.com/r/?r=jmenichole" },
-            { name: "Handshake Move Program", url: "https://joinhandshake.com/move-program/referral?referralCode=E67C78&utm_source=web&utm_campaign=hai_referral_page_share&utm_medium=share&utm_content=hai_referral_page" },
-            { name: "2Captcha", url: "https://2captcha.com/auth/register/?from=25952984" },
-            { name: "CPR.gg", url: "https://cpr.gg/r/WORYDP" }
+            { name: "FreeCash", url: "https://freecash.com/r/jmenichole", desc: "Surveys, offers, and games that pay cash" },
+            { name: "EarnLab", url: "https://earnlab.com/r/jmenichole", desc: "Complete offers and surveys for cash" },
+            { name: "Earnopolis", url: "https://earnopolis.com/r/?r=jmenichole", desc: "Get paid for offers and tasks" },
+            { name: "Handshake", url: "https://joinhandshake.com/move-program/referral?referralCode=E67C78&utm_source=web&utm_campaign=hai_referral_page_share&utm_medium=share&utm_content=hai_referral_page", desc: "Student jobs and career referrals" },
+            { name: "2Captcha", url: "https://2captcha.com/auth/register/?from=25952984", desc: "Get paid to solve captchas" },
+            { name: "Copper", url: "https://cpr.gg/r/WORYDP", desc: "Surveys and offers, like FreeCash" }
         ];
 
         const STORAGE_KEY = "collectClockVisits";
@@ -323,10 +324,17 @@
             card.dataset.name = link.name;
             card.innerHTML = `
                 <h3></h3>
+                <div class="desc"></div>
                 <div class="countdown"></div>
                 <div class="meta"></div>
             `;
             card.querySelector("h3").textContent = link.name;
+            const desc = card.querySelector(".desc");
+            if (link.desc) {
+                desc.textContent = link.desc;
+            } else {
+                desc.remove();
+            }
             applyCardState(card, link.name, visits);
 
             const markVisited = () => {
