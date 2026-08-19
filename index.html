@@ -660,7 +660,7 @@
             { name: "Slips", url: "https://slips.com/invite?code=6901" },
             { name: "PrizePicks", url: "https://app.prizepicks.com/sign-up?invite_code=PR-N0MTQX8&source=iosShare" },
             { name: "Dabble", url: "https://click.dabble.com/GaFA/js1v7hqv" },
-            { name: "Thrill VPN", url: "https://thrill.com/?r=3E8477CE-1756119554" },
+            { name: "Thrill", url: "https://thrill.com/?r=3E8477CE-1756119554" },
             { name: "Goated.com", url: "https://www.goated.com/r/YDRZLJ" },
             { name: "Shuffle.com", url: "https://shuffle.com?r=jHR7JnWRPF" },
             { name: "Stake.com", url: "https://www.stake.com/?c=LAYP68hb" },
@@ -775,7 +775,12 @@
         function loadVisits() {
             try {
                 const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-                return parsed && typeof parsed === "object" ? parsed : {};
+                if (!parsed || typeof parsed !== "object") return {};
+                if (parsed["Thrill VPN"] && !parsed.Thrill) {
+                    parsed.Thrill = parsed["Thrill VPN"];
+                    delete parsed["Thrill VPN"];
+                }
+                return parsed;
             } catch (e) {
                 return {};
             }
