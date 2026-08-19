@@ -1362,6 +1362,8 @@
                 if (e.target === overlay) close();
             });
         }
+
+        document.addEventListener("DOMContentLoaded", () => {
             renderAll();
             tickCountdowns();
             const hiddenBtn = document.getElementById("hiddenToggle");
