@@ -4,16 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Collect Clock</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg-primary: #060b13;
             --bg-secondary: #0a101d;
-            --text-primary: #ffffff;
+            --text-primary: #e8edf7;
             --text-accent: #00ff66;
-            --text-secondary: #596585;
-            --border-color: #151c2b;
+            --text-secondary: #7a8499;
+            --border-color: #1a2233;
             --clicked-border: #8a2be2;
             --soon: #ffb020;
+            --font: "Inter", system-ui, -apple-system, sans-serif;
+            --title: 1.35rem;
+            --section: 0.7rem;
+            --card-name: 1.05rem;
+            --helper: 0.8rem;
         }
 
         * {
@@ -23,30 +31,38 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: var(--font);
             background-color: var(--bg-primary);
             color: var(--text-primary);
-            line-height: 1.6;
+            line-height: 1.5;
+            font-size: 15px;
         }
 
         .header {
+            position: sticky;
+            top: 0;
+            z-index: 40;
             text-align: center;
-            padding: 3rem 1rem 1.5rem;
+            padding: 0.85rem 1rem 0.75rem;
             border-bottom: 1px solid var(--border-color);
-            background-color: var(--bg-primary);
+            background: rgba(6, 11, 19, 0.78);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
         }
 
         .header h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-accent);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
+            margin: 0;
+            font-size: var(--title);
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: var(--text-primary);
         }
 
-        .header p {
+        .header .subtitle {
             color: var(--text-secondary);
-            font-size: 1.1rem;
+            font-size: var(--helper);
+            margin-top: 0.25rem;
+            font-weight: 400;
         }
 
         .header-actions {
@@ -54,7 +70,7 @@
             justify-content: center;
             flex-wrap: wrap;
             gap: 8px;
-            margin-top: 1rem;
+            margin-top: 0.65rem;
         }
 
         .hidden-toggle {
@@ -62,12 +78,13 @@
             background: transparent;
             color: var(--text-secondary);
             border-radius: 999px;
-            padding: 6px 14px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            letter-spacing: 0.04em;
+            padding: 5px 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
             cursor: pointer;
+            font-family: inherit;
         }
 
         .hidden-toggle[aria-pressed="true"] {
@@ -78,15 +95,16 @@
         .container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1.25rem 1rem 2rem;
         }
 
         .section-heading {
-            color: var(--text-accent);
+            color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 0.08em;
-            font-size: 0.95rem;
-            margin: 0 0 1.25rem;
+            letter-spacing: 0.14em;
+            font-size: var(--section);
+            font-weight: 600;
+            margin: 0 0 1.1rem;
         }
 
         .section + .section {
@@ -103,54 +121,75 @@
             grid-column: 1 / -1;
             display: flex;
             justify-content: center;
-            padding: 6px 0 10px;
+            padding: 4px 0 8px;
         }
 
-        .mid-banner a {
-            display: block;
+        .mid-banner .banner-slot {
             width: 100%;
             max-width: 728px;
         }
 
-        .mid-banner img {
+        .ad-label {
             display: block;
-            width: 100%;
-            height: auto;
-            max-height: 220px;
-            object-fit: contain;
-            background: #070c16;
-            border-radius: 10px;
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            margin-bottom: 6px;
         }
 
-        .mid-banner a:hover img {
-            filter: brightness(1.08);
+        .banner-frame {
+            display: block;
+            width: 100%;
+            max-width: 728px;
+            height: auto;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: #070c16;
+        }
+
+        .mid-banner img.banner-frame {
+            max-height: 220px;
+            object-fit: contain;
         }
 
         .card {
             background-color: var(--bg-secondary);
             border: 1px solid var(--border-color);
+            border-left: 3px solid transparent;
             border-radius: 8px;
-            padding: 1.5rem;
-            padding-top: 2.4rem;
+            padding: 1.35rem 1.25rem 1.25rem;
+            padding-top: 2.1rem;
             color: inherit;
             position: relative;
-            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
             display: flex;
             flex-direction: column;
             justify-content: center;
             text-align: center;
-            gap: 0.6rem;
+            gap: 0.55rem;
+            transition: transform 150ms ease;
         }
 
         .card:hover {
             transform: translateY(-2px);
-            border-color: var(--text-accent);
-            box-shadow: 0 4px 15px rgba(0, 255, 102, 0.1);
+        }
+
+        .card.ready {
+            border-left-color: var(--text-accent);
+        }
+
+        .card.on-cooldown {
+            border-left-color: var(--soon);
+        }
+
+        .card.on-cooldown .countdown {
+            color: var(--soon);
         }
 
         .card h3 {
-            font-size: 1.25rem;
+            font-size: var(--card-name);
+            font-weight: 600;
             color: var(--text-primary);
             margin: 0;
         }
@@ -158,11 +197,17 @@
         .card h3 a {
             color: inherit;
             text-decoration: none;
-            transition: color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        .card:hover h3 a {
-            color: var(--text-accent);
+        .favicon {
+            width: 16px;
+            height: 16px;
+            border-radius: 3px;
+            flex-shrink: 0;
         }
 
         .timer-row {
@@ -177,27 +222,25 @@
             position: absolute;
             top: 8px;
             right: 8px;
-            border: 1px solid var(--border-color);
+            border: none;
             background: transparent;
             color: var(--text-secondary);
-            border-radius: 999px;
-            padding: 3px 10px;
-            font-size: 0.68rem;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
+            border-radius: 6px;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            letter-spacing: 0.02em;
             cursor: pointer;
+            font-family: inherit;
+            opacity: 0.5;
         }
 
         .hide-toggle:hover {
-            border-color: var(--text-accent);
-            color: var(--text-accent);
+            opacity: 1;
         }
 
         .card.is-hidden .hide-toggle {
-            border-color: var(--text-accent);
-            background: var(--text-accent);
-            color: var(--bg-primary);
+            opacity: 0.85;
         }
 
         .timer-check {
@@ -232,123 +275,75 @@
         }
 
         .countdown {
-            font-size: 0.8rem;
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
+            font-size: var(--helper);
+            font-weight: 600;
+            letter-spacing: 0.02em;
             font-variant-numeric: tabular-nums;
             color: var(--text-accent);
             min-width: 7.5rem;
         }
 
-        .card.on-cooldown {
-            border-color: var(--clicked-border);
-            opacity: 0.85;
-        }
-
-        .card.on-cooldown .countdown {
-            color: var(--soon);
-        }
-
-        .card.on-cooldown:hover {
-            border-color: var(--text-accent);
-            opacity: 1;
-        }
-
         .card .desc {
-            font-size: 0.85rem;
+            font-size: var(--helper);
             color: var(--text-secondary);
             line-height: 1.35;
         }
 
         .card .meta {
-            font-size: 0.75rem;
+            font-size: 0.72rem;
             color: var(--text-secondary);
         }
 
         .promo-banner {
-            display: block;
-            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px 12px;
             text-decoration: none;
-            padding: 0.85rem 1rem;
-            font-weight: 800;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-            font-size: 0.95rem;
-        }
-
-        .promo-banner span {
-            font-weight: 500;
-            text-transform: none;
-            letter-spacing: 0;
-            opacity: 0.85;
-            margin-left: 0.4rem;
         }
 
         .promo-banner.top {
-            background:
-                radial-gradient(ellipse at 80% 50%, rgba(247, 168, 27, 0.18), transparent 55%),
-                linear-gradient(90deg, #060b13 0%, #0c1624 50%, #060b13 100%);
-            color: #fff;
-            border-bottom: 1px solid rgba(247, 168, 27, 0.35);
-            padding: 10px 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        .promo-banner.top img {
-            display: block;
-            width: 728px;
-            max-width: 100%;
-            height: auto;
-            border-radius: 6px;
-            box-shadow: 0 4px 24px rgba(247, 168, 27, 0.22);
-            transition: box-shadow 0.2s ease, transform 0.2s ease;
-        }
-
-        .promo-banner.top:hover img {
-            transform: translateY(-1px);
-            box-shadow: 0 8px 32px rgba(247, 168, 27, 0.45);
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
         }
 
         .promo-banner.bottom {
-            background: #0b1220;
+            background: var(--bg-primary);
             border-top: 1px solid var(--border-color);
-            padding: 8px 12px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
         }
 
-        .promo-banner.bottom img {
-            display: block;
-            width: 468px;
-            max-width: 100%;
-            height: auto;
+        .promo-banner img.banner-frame {
+            width: min(728px, 100%);
         }
 
-        .promo-banner.bottom:hover {
-            filter: brightness(1.08);
+        .promo-banner.bottom img.banner-frame {
+            width: min(468px, 100%);
         }
 
         .footer {
             text-align: center;
-            padding: 4rem 1rem 2rem 1rem;
-            margin-top: 2rem;
+            padding: 2.5rem 1rem 2rem;
+            margin-top: 1rem;
         }
 
         .footer p {
             margin: 0;
+            color: var(--text-secondary);
             text-transform: uppercase;
-            letter-spacing: 0.05em;
+            letter-spacing: 0.14em;
+            font-size: var(--section);
+            font-weight: 600;
         }
 
-        .footer a {
+        .footer a,
+        .footer-link {
             color: var(--text-secondary);
             text-decoration: none;
-            font-size: 0.85rem;
-            transition: color 0.2s ease;
+            font-size: var(--section);
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            transition: color 150ms ease;
         }
 
         .footer a:hover,
@@ -359,10 +354,6 @@
         .footer-link {
             background: none;
             border: none;
-            color: var(--text-secondary);
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
             cursor: pointer;
             padding: 0;
             font-family: inherit;
@@ -536,7 +527,7 @@
 
     <header class="header">
         <h1>Collect Clock</h1>
-        <p>Click a name to open the site. Check the box to start a timer — 24 hours unless you change it. Off hides a site from the list.</p>
+        <p class="subtitle">Click a name to open the site. Check the box to start a 24h timer. Off hides a site.</p>
         <div class="header-actions">
             <button type="button" class="hidden-toggle" id="notifyToggle">Alerts off</button>
             <button type="button" class="hidden-toggle" id="hiddenToggle" hidden>Hidden (0)</button>
@@ -544,7 +535,7 @@
     </header>
 
     <a class="promo-banner top" href="https://stake.us/?c=Jmenichole" target="_blank" rel="noopener noreferrer">
-        <img src="assets/stake-banner-728x90.gif" width="728" height="90" alt="Stake.us — America's Social Casino. Play now.">
+        <img class="banner-frame" src="assets/stake-banner-728x90.gif" width="728" height="90" alt="Stake.us — America's Social Casino. Play now.">
     </a>
 
     <main class="container">
@@ -560,7 +551,7 @@
     </main>
 
     <a class="promo-banner bottom" href="https://2captcha.com/auth/register/?from=25952984" target="_blank" rel="noopener noreferrer">
-        <img src="https://2captcha.com/referral-banners/2captcha/09.svg" width="468" height="60" loading="lazy" alt="2Captcha">
+        <img class="banner-frame" src="https://2captcha.com/referral-banners/2captcha/09.svg" width="468" height="60" loading="lazy" alt="2Captcha">
     </a>
 
     <footer class="footer">
@@ -844,6 +835,7 @@
             const hideBtn = card.querySelector(".hide-toggle");
 
             card.classList.toggle("on-cooldown", !!countdown && rem > 0);
+            card.classList.toggle("ready", !!countdown && rem === 0);
             card.classList.toggle("is-hidden", !!visit.hidden);
             if (countdown) countdown.textContent = rem > 0 ? fmt(rem) : "Ready";
             if (meta) meta.textContent = formatVisited(visit);
@@ -877,7 +869,18 @@
             `;
             const titleLink = card.querySelector("h3 a");
             titleLink.href = link.url;
-            titleLink.textContent = link.name;
+            titleLink.textContent = "";
+            try {
+                const icon = document.createElement("img");
+                icon.className = "favicon";
+                icon.width = 16;
+                icon.height = 16;
+                icon.alt = "";
+                icon.src = "https://www.google.com/s2/favicons?domain=" + encodeURIComponent(new URL(link.url).hostname) + "&sz=32";
+                icon.addEventListener("error", () => icon.remove());
+                titleLink.appendChild(icon);
+            } catch (e) {}
+            titleLink.appendChild(document.createTextNode(link.name));
 
             const desc = card.querySelector(".desc");
             if (link.desc) {
@@ -969,18 +972,26 @@
         function createMidBanner(banner) {
             const wrap = document.createElement("div");
             wrap.className = "mid-banner";
+            const slot = document.createElement("div");
+            slot.className = "banner-slot";
+            const label = document.createElement("span");
+            label.className = "ad-label";
+            label.textContent = "Ad";
             const link = document.createElement("a");
             link.href = banner.href;
             link.target = "_blank";
             link.rel = "noopener noreferrer";
             const img = document.createElement("img");
+            img.className = "banner-frame";
             img.src = banner.src;
             img.alt = banner.alt;
             img.loading = "lazy";
             img.width = 728;
             img.height = 220;
             link.appendChild(img);
-            wrap.appendChild(link);
+            slot.appendChild(label);
+            slot.appendChild(link);
+            wrap.appendChild(slot);
             return wrap;
         }
 
