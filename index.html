@@ -1225,12 +1225,10 @@
             grid.innerHTML = "";
             const visits = loadVisits();
             const visible = links.filter((link) => showHidden || !normalizeVisit(visits[link.name]).hidden);
-            const third = Math.max(1, Math.floor(visible.length / 3));
             visible.forEach((link, i) => {
                 grid.appendChild(createCard(link, visits, withTimer));
-                if (gridId === "links-grid") {
-                    if (i === third - 1) grid.appendChild(createAdPlaceholder());
-                    if (i === third * 2 - 1) grid.appendChild(createAdPlaceholder());
+                if (gridId === "links-grid" && i === Math.floor(visible.length / 2) - 1) {
+                    grid.appendChild(createAdPlaceholder());
                 }
             });
         }
