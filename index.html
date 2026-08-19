@@ -733,7 +733,7 @@
             const hoursInput = card.querySelector(".hours-input");
             const hideBtn = card.querySelector(".hide-toggle");
 
-            card.classList.toggle("on-cooldown", rem > 0);
+            card.classList.toggle("on-cooldown", !!countdown && rem > 0);
             card.classList.toggle("is-hidden", !!visit.hidden);
             if (countdown) countdown.textContent = rem > 0 ? fmt(rem) : "Ready";
             if (meta) meta.textContent = formatVisited(visit);
@@ -747,7 +747,7 @@
             }
         }
 
-        function createCard(link, visits) {
+        function createCard(link, visits, withTimer) {
             const card = document.createElement("article");
             card.className = "card";
             card.dataset.name = link.name;
@@ -755,6 +755,7 @@
                 <button type="button" class="hide-toggle" title="Hide this site from the list">Off</button>
                 <h3><a target="_blank" rel="noopener noreferrer"></a></h3>
                 <div class="desc"></div>
+                ${withTimer ? `
                 <div class="timer-row">
                     <input type="checkbox" class="timer-check" title="Start or stop the timer">
                     <input type="number" class="hours-input" min="1" max="168" value="24" title="Timer length in hours">
@@ -762,6 +763,7 @@
                     <span class="countdown">Ready</span>
                 </div>
                 <div class="meta"></div>
+                ` : ""}
             `;
             const titleLink = card.querySelector("h3 a");
             titleLink.href = link.url;
@@ -779,21 +781,35 @@
             const hideBtn = card.querySelector(".hide-toggle");
             applyCardState(card, link.name, visits);
 
-            checkbox.addEventListener("change", () => {
-                const next = loadVisits();
-                const visit = normalizeVisit(next[link.name]);
-                visit.hours = parseHours(hoursInput.value);
-                hoursInput.value = visit.hours;
-                if (checkbox.checked) {
-                    visit.startedAt = Date.now();
-                    visit.active = true;
-                } else {
-                    visit.active = false;
-                }
-                next[link.name] = visit;
-                saveVisits(next);
-                applyCardState(card, link.name, next);
-            });
+            if (checkbox && hoursInput) {
+                checkbox.addEventListener("change", () => {
+                    const next = loadVisits();
+                    const visit = normalizeVisit(next[link.name]);
+                    visit.hours = parseHours(hoursInput.value);
+                    hoursInput.value = visit.hours;
+                    if (checkbox.checked) {
+                        visit.startedAt = Date.now();
+                        visit.active = true;
+                    } else {
+                        visit.active = false;
+                    }
+                    next[link.name] = visit;
+                    saveVisits(next);
+                    applyCardState(card, link.name, next);
+                });
+
+                const saveHours = () => {
+                    const next = loadVisits();
+                    const visit = normalizeVisit(next[link.name]);
+                    visit.hours = parseHours(hoursInput.value);
+                    hoursInput.value = visit.hours;
+                    next[link.name] = visit;
+                    saveVisits(next);
+                    applyCardState(card, link.name, next);
+                };
+                hoursInput.addEventListener("change", saveHours);
+                hoursInput.addEventListener("blur", saveHours);
+            }
 
             hideBtn.addEventListener("click", () => {
                 const next = loadVisits();
@@ -803,18 +819,6 @@
                 saveVisits(next);
                 renderAll();
             });
-
-            const saveHours = () => {
-                const next = loadVisits();
-                const visit = normalizeVisit(next[link.name]);
-                visit.hours = parseHours(hoursInput.value);
-                hoursInput.value = visit.hours;
-                next[link.name] = visit;
-                saveVisits(next);
-                applyCardState(card, link.name, next);
-            };
-            hoursInput.addEventListener("change", saveHours);
-            hoursInput.addEventListener("blur", saveHours);
 
             return card;
         }
@@ -839,25 +843,25 @@
             btn.textContent = showHidden ? `Showing hidden (${n})` : `Hidden (${n})`;
         }
 
-        function renderSection(gridId, links) {
+        function renderSection(gridId, links, withTimer) {
             const grid = document.getElementById(gridId);
             if (!grid) return;
             grid.innerHTML = "";
             const visits = loadVisits();
             links
                 .filter((link) => showHidden || !normalizeVisit(visits[link.name]).hidden)
-                .forEach((link) => grid.appendChild(createCard(link, visits)));
+                .forEach((link) => grid.appendChild(createCard(link, visits, withTimer)));
         }
 
         function renderAll() {
-            renderSection("links-grid", bonusLinks);
-            renderSection("paid-grid", paidSites);
+            renderSection("links-grid", bonusLinks, true);
+            renderSection("paid-grid", paidSites, false);
             updateHiddenButton();
         }
 
         function tickCountdowns() {
             const visits = loadVisits();
-            allLinks().forEach((link) => settleTimer(link.name, visits));
+            bonusLinks.forEach((link) => settleTimer(link.name, visits));
             document.querySelectorAll(".card[data-name]").forEach((card) => {
                 applyCardState(card, card.dataset.name, visits);
             });
