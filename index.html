@@ -118,11 +118,24 @@
         }
 
         .timer-toggle {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--text-accent);
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 999px;
+            padding: 4px 12px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
             cursor: pointer;
+            min-width: 3.6rem;
             flex-shrink: 0;
+        }
+
+        .timer-toggle[aria-pressed="true"] {
+            border-color: var(--text-accent);
+            background: var(--text-accent);
+            color: var(--bg-primary);
         }
 
         .hours-input {
@@ -220,7 +233,7 @@
 
     <header class="header">
         <h1>Collect Clock</h1>
-        <p>Click a name to open the site. Check the box to start a timer — 24 hours unless you change it.</p>
+        <p>Click a name to open the site. Tap On to start a timer — 24 hours unless you change it.</p>
     </header>
 
     <main class="container">
@@ -382,13 +395,16 @@
 
             const countdown = card.querySelector(".countdown");
             const meta = card.querySelector(".meta");
-            const checkbox = card.querySelector(".timer-toggle");
+            const toggle = card.querySelector(".timer-toggle");
             const hoursInput = card.querySelector(".hours-input");
 
             card.classList.toggle("on-cooldown", rem > 0);
             if (countdown) countdown.textContent = rem > 0 ? fmt(rem) : "Ready";
             if (meta) meta.textContent = formatVisited(visit);
-            if (checkbox) checkbox.checked = rem > 0;
+            if (toggle) {
+                toggle.setAttribute("aria-pressed", rem > 0 ? "true" : "false");
+                toggle.textContent = rem > 0 ? "On" : "Off";
+            }
             if (hoursInput && document.activeElement !== hoursInput) {
                 hoursInput.value = visit.hours;
             }
@@ -402,7 +418,7 @@
                 <h3><a target="_blank" rel="noopener noreferrer"></a></h3>
                 <div class="desc"></div>
                 <div class="timer-row">
-                    <input type="checkbox" class="timer-toggle" title="Start or stop the timer">
+                    <button type="button" class="timer-toggle" aria-pressed="false" title="Start or stop the timer">Off</button>
                     <input type="number" class="hours-input" min="1" max="168" value="24" title="Timer length in hours">
                     <span class="hours-suffix">h</span>
                     <span class="countdown">Ready</span>
@@ -420,16 +436,17 @@
                 desc.remove();
             }
 
-            const checkbox = card.querySelector(".timer-toggle");
+            const toggle = card.querySelector(".timer-toggle");
             const hoursInput = card.querySelector(".hours-input");
             applyCardState(card, link.name, visits);
 
-            checkbox.addEventListener("change", () => {
+            toggle.addEventListener("click", () => {
                 const next = loadVisits();
                 const visit = normalizeVisit(next[link.name]);
                 visit.hours = parseHours(hoursInput.value);
                 hoursInput.value = visit.hours;
-                if (checkbox.checked) {
+                const turningOn = toggle.getAttribute("aria-pressed") !== "true";
+                if (turningOn) {
                     visit.startedAt = Date.now();
                     visit.active = true;
                 } else {
