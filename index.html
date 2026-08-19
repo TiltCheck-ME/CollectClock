@@ -143,12 +143,7 @@
             grid-column: 1 / -1;
             display: flex;
             justify-content: center;
-            padding: 4px 0 8px;
-        }
-
-        .mid-banner .banner-slot {
-            width: 100%;
-            max-width: none;
+            padding: 2px 0;
         }
 
         .ad-label {
@@ -161,6 +156,35 @@
             margin-bottom: 6px;
         }
 
+        .ad-slot {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            flex-wrap: wrap;
+            padding: 0.7rem 1rem;
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px dashed var(--border-color);
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            text-align: center;
+        }
+
+        .ad-slot-copy {
+            font-size: var(--helper);
+            font-weight: 500;
+            letter-spacing: 0.02em;
+        }
+
+        .ad-slot-price {
+            color: var(--text-accent);
+            font-size: var(--helper);
+            font-weight: 700;
+        }
+
         .banner-frame {
             display: block;
             width: 100%;
@@ -169,15 +193,6 @@
             border-radius: 10px;
             border: 1px solid var(--border-color);
             background: #070c16;
-        }
-
-        .mid-banner img.banner-frame {
-            max-width: 100%;
-            width: 100%;
-            height: auto;
-            aspect-ratio: 21 / 6;
-            object-fit: cover;
-            object-position: center;
         }
 
         .card {
@@ -658,8 +673,8 @@
                 min-width: 0;
             }
 
-            .mid-banner img.banner-frame {
-                aspect-ratio: 16 / 7;
+            .ad-slot {
+                padding: 0.65rem 0.85rem;
             }
 
             .promo-banner {
@@ -799,6 +814,11 @@
                         <input type="checkbox" name="budget" value="Site listing — $5/mo">
                         Site listing
                         <span class="price">$5/mo</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="budget" value="In-feed ad — $8/mo">
+                        In-feed ad
+                        <span class="price">$8/mo</span>
                     </label>
                     <label>
                         <input type="checkbox" name="budget" value="Bottom banner — $8/mo">
@@ -1183,40 +1203,19 @@
             btn.textContent = showHidden ? `Showing hidden (${n})` : `Hidden (${n})`;
         }
 
-        const midBanners = [
-            {
-                href: "https://www.wowvegas.com/?raf=3615494",
-                src: "assets/wowvegas-banner.jpg",
-                alt: "WOW Vegas"
-            },
-            {
-                href: "https://freecash.com/r/jmenichole",
-                src: "assets/freecash-banner.jpg",
-                alt: "FreeCash — get paid to play games"
-            }
-        ];
+        function openAdvertiseModal() {
+            document.getElementById("advertiseModal")?.classList.add("open");
+        }
 
-        function createMidBanner(banner) {
+        function createAdPlaceholder() {
             const wrap = document.createElement("div");
             wrap.className = "mid-banner";
-            const slot = document.createElement("div");
-            slot.className = "banner-slot";
-            const label = document.createElement("span");
-            label.className = "ad-label";
-            label.textContent = "Ad";
-            const link = document.createElement("a");
-            link.href = banner.href;
-            link.target = "_blank";
-            link.rel = "noopener noreferrer";
-            const img = document.createElement("img");
-            img.className = "banner-frame";
-            img.src = banner.src;
-            img.alt = banner.alt;
-            img.loading = "lazy";
-            link.appendChild(img);
-            slot.appendChild(label);
-            slot.appendChild(link);
-            wrap.appendChild(slot);
+            const btn = document.createElement("button");
+            btn.type = "button";
+            btn.className = "ad-slot";
+            btn.innerHTML = '<span class="ad-slot-copy">Your ad here</span><span class="ad-slot-price">$8/mo</span>';
+            btn.addEventListener("click", openAdvertiseModal);
+            wrap.appendChild(btn);
             return wrap;
         }
 
@@ -1230,8 +1229,8 @@
             visible.forEach((link, i) => {
                 grid.appendChild(createCard(link, visits, withTimer));
                 if (gridId === "links-grid") {
-                    if (i === third - 1) grid.appendChild(createMidBanner(midBanners[0]));
-                    if (i === third * 2 - 1) grid.appendChild(createMidBanner(midBanners[1]));
+                    if (i === third - 1) grid.appendChild(createAdPlaceholder());
+                    if (i === third * 2 - 1) grid.appendChild(createAdPlaceholder());
                 }
             });
         }
