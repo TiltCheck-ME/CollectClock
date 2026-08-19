@@ -93,10 +93,32 @@
             margin-top: 2.5rem;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 1.5rem;
+        .mid-banner {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: center;
+            padding: 6px 0 10px;
+        }
+
+        .mid-banner a {
+            display: block;
+            width: 100%;
+            max-width: 728px;
+        }
+
+        .mid-banner img {
+            display: block;
+            width: 100%;
+            height: auto;
+            max-height: 220px;
+            object-fit: contain;
+            background: #070c16;
+            border-radius: 10px;
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+        }
+
+        .mid-banner a:hover img {
+            filter: brightness(1.08);
         }
 
         .card {
@@ -931,14 +953,51 @@
             btn.textContent = showHidden ? `Showing hidden (${n})` : `Hidden (${n})`;
         }
 
+        const midBanners = [
+            {
+                href: "https://www.wowvegas.com/?raf=3615494",
+                src: "assets/wowvegas-banner.jpg",
+                alt: "WOW Vegas"
+            },
+            {
+                href: "https://freecash.com/r/jmenichole",
+                src: "assets/freecash-banner.jpg",
+                alt: "FreeCash — get paid to play games"
+            }
+        ];
+
+        function createMidBanner(banner) {
+            const wrap = document.createElement("div");
+            wrap.className = "mid-banner";
+            const link = document.createElement("a");
+            link.href = banner.href;
+            link.target = "_blank";
+            link.rel = "noopener noreferrer";
+            const img = document.createElement("img");
+            img.src = banner.src;
+            img.alt = banner.alt;
+            img.loading = "lazy";
+            img.width = 728;
+            img.height = 220;
+            link.appendChild(img);
+            wrap.appendChild(link);
+            return wrap;
+        }
+
         function renderSection(gridId, links, withTimer) {
             const grid = document.getElementById(gridId);
             if (!grid) return;
             grid.innerHTML = "";
             const visits = loadVisits();
-            links
-                .filter((link) => showHidden || !normalizeVisit(visits[link.name]).hidden)
-                .forEach((link) => grid.appendChild(createCard(link, visits, withTimer)));
+            const visible = links.filter((link) => showHidden || !normalizeVisit(visits[link.name]).hidden);
+            const third = Math.max(1, Math.floor(visible.length / 3));
+            visible.forEach((link, i) => {
+                grid.appendChild(createCard(link, visits, withTimer));
+                if (gridId === "links-grid") {
+                    if (i === third - 1) grid.appendChild(createMidBanner(midBanners[0]));
+                    if (i === third * 2 - 1) grid.appendChild(createMidBanner(midBanners[1]));
+                }
+            });
         }
 
         function renderAll() {
