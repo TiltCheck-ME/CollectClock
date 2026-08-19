@@ -107,6 +107,14 @@
             margin: 0 0 1.1rem;
         }
 
+        .section-note {
+            color: var(--text-secondary);
+            font-size: var(--helper);
+            font-weight: 400;
+            margin: -0.55rem 0 1.1rem;
+            max-width: 40rem;
+        }
+
         .section + .section {
             margin-top: 2.5rem;
         }
@@ -545,6 +553,12 @@
         </section>
 
         <section class="section">
+            <h2 class="section-heading">International casinos</h2>
+            <p class="section-note">These sites are not available in the US. Access may require a VPN, depending on where you are.</p>
+            <div id="intl-grid" class="grid"></div>
+        </section>
+
+        <section class="section">
             <h2 class="section-heading">Get Paid To Sites</h2>
             <div id="paid-grid" class="grid"></div>
         </section>
@@ -636,7 +650,6 @@
             { name: "Zula Casino", url: "https://www.zulacasino.com/signup/221ddd92-862e-45d8-acc0-4cd2c26f7cdd" },
             { name: "Fortune Coins", url: "https://www.fortunecoins.com/signup/3c08936f-8979-4f87-b377-efdbff519029" },
             { name: "MyPrize.us", url: "https://myprize.us/invite/jmenichole" },
-            { name: "Clubs Poker", url: "https://play.clubs.poker/?referralCode=104192" },
             { name: "Rolla", url: "https://www.rolla.com/?raf=3873" },
             { name: "Lone Star Casino", url: "https://lonestarcasino.com/refer/678504" },
             { name: "Spree", url: "https://spree.com/?r=1450539" },
@@ -644,27 +657,25 @@
             { name: "High 5 Casino", url: "https://high5casino.com/gc?adId=INV001%3AJmenichole" },
             { name: "TrustDice", url: "https://trustdice.win/faucet/?ref=u_jmenichole" },
             { name: "Punt", url: "https://punt.com/c/cg60pd" },
-            { name: "FortuneWheelz", url: "https://fortunewheelz.com/?invited_by=P36ZS6" },
             { name: "Zoot", url: "https://getzoot.us/?referralCode=ZOOTwithJMENICHOLE" },
             { name: "Spinsala", url: "https://spinsala.com/en?invite=daym" },
             { name: "Legendz", url: "https://legendz.com/?referred_by_id=221602" },
-            { name: "NoLimit Coins", url: "https://nolimitcoins.com/?invited_by=ZI1JIU" },
             { name: "American Luck", url: "https://americanluck.com/signup/e360918f-8986-4dec-9823-a902d3f4936a" },
             { name: "Clash.gg", url: "https://clash.gg/r/stakestats" },
             { name: "Cases.gg", url: "https://www.cases.gg/r/JMENICHOLE" },
             { name: "Jemlit", url: "https://jemlit.com/en/a/Jmenichole" },
             { name: "RoxyMoxy", url: "https://roxymoxy.com/home?invite=f94f874427" },
-            { name: "LuckyLand Slots", url: "https://luckylandslots.com" },
             { name: "LuckyBits Vegas", url: "https://luckybitsvegas.com/gc?adId=INV001%3Ajmenichole" },
             { name: "Shuffle.us", url: "https://shuffle.us?r=Rl93OJoflX" },
-            { name: "Slips", url: "https://slips.com/invite?code=6901" },
             { name: "PrizePicks", url: "https://app.prizepicks.com/sign-up?invite_code=PR-N0MTQX8&source=iosShare" },
-            { name: "Dabble", url: "https://click.dabble.com/GaFA/js1v7hqv" },
+            { name: "Dabble", url: "https://click.dabble.com/GaFA/js1v7hqv" }
+        ];
+
+        const internationalLinks = [
             { name: "Thrill", url: "https://thrill.com/?r=3E8477CE-1756119554" },
             { name: "Goated.com", url: "https://www.goated.com/r/YDRZLJ" },
             { name: "Shuffle.com", url: "https://shuffle.com?r=jHR7JnWRPF" },
             { name: "Stake.com", url: "https://www.stake.com/?c=LAYP68hb" },
-            { name: "Kickr.com", url: "https://kickr.com/signup/doxe8c09" },
             { name: "Gamba.com", url: "https://gamba.com?c=Jme" },
             { name: "Winna", url: "https://winna.com/?r=jmenichole" },
             { name: "MetaWin.com", url: "https://metawin.com/jmenichole007/" }
@@ -944,7 +955,7 @@
         let showHidden = false;
 
         function allLinks() {
-            return bonusLinks.concat(paidSites);
+            return bonusLinks.concat(internationalLinks, paidSites);
         }
 
         function hiddenCount(visits) {
@@ -1018,13 +1029,14 @@
 
         function renderAll() {
             renderSection("links-grid", bonusLinks, true);
+            renderSection("intl-grid", internationalLinks, true);
             renderSection("paid-grid", paidSites, false);
             updateHiddenButton();
         }
 
         function tickCountdowns() {
             const visits = loadVisits();
-            bonusLinks.forEach((link) => settleTimer(link.name, visits));
+            bonusLinks.concat(internationalLinks).forEach((link) => settleTimer(link.name, visits));
             document.querySelectorAll(".card[data-name]").forEach((card) => {
                 applyCardState(card, card.dataset.name, visits);
             });
