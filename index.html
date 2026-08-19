@@ -380,8 +380,42 @@
         }
 
         .modal textarea {
-            min-height: 110px;
+            min-height: 90px;
             resize: vertical;
+        }
+
+        .budget-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin: 0 0 14px;
+        }
+
+        .budget-list label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-transform: none;
+            letter-spacing: 0;
+            font-size: 0.9rem;
+            color: var(--text-primary);
+            margin: 0;
+            cursor: pointer;
+        }
+
+        .budget-list input {
+            width: 16px;
+            height: 16px;
+            margin: 0;
+            accent-color: var(--text-accent);
+            flex-shrink: 0;
+        }
+
+        .budget-list .price {
+            margin-left: auto;
+            color: var(--text-accent);
+            font-weight: 700;
+            font-size: 0.85rem;
         }
 
         .modal input:focus,
@@ -490,8 +524,31 @@
                 <input id="adName" name="name" type="text" autocomplete="name">
                 <label for="adContact">Your email or Discord</label>
                 <input id="adContact" name="contact" type="text" autocomplete="email" required>
+                <label>Budget</label>
+                <div class="budget-list">
+                    <label>
+                        <input type="checkbox" name="budget" value="Site listing — $5/mo">
+                        Site listing
+                        <span class="price">$5/mo</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="budget" value="Bottom banner — $8/mo">
+                        Bottom banner
+                        <span class="price">$8/mo</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="budget" value="Top banner — $12/mo">
+                        Top banner
+                        <span class="price">$12/mo</span>
+                    </label>
+                    <label>
+                        <input type="checkbox" name="budget" value="Both banners — $15/mo">
+                        Both banners
+                        <span class="price">$15/mo</span>
+                    </label>
+                </div>
                 <label for="adMessage">Message</label>
-                <textarea id="adMessage" name="message" required placeholder="What do you want to promote?"></textarea>
+                <textarea id="adMessage" name="message" placeholder="Optional: what do you want to promote?"></textarea>
                 <div class="modal-actions">
                     <button type="button" class="modal-cancel" id="advertiseCancel">Cancel</button>
                     <button type="submit" class="modal-submit">Send</button>
@@ -889,11 +946,12 @@
                 const name = document.getElementById("adName").value.trim();
                 const contact = document.getElementById("adContact").value.trim();
                 const message = document.getElementById("adMessage").value.trim();
+                const budgets = [...form.querySelectorAll('input[name="budget"]:checked')].map((el) => el.value);
                 const body = [
                     name ? `Name: ${name}` : "",
                     `Contact: ${contact}`,
-                    "",
-                    message
+                    budgets.length ? `Budget: ${budgets.join("; ")}` : "Budget: not selected",
+                    message ? `\n${message}` : ""
                 ].filter(Boolean).join("\n");
                 const mailto = `mailto:${AD_EMAIL}?subject=${encodeURIComponent("Collect Clock advertising")}&body=${encodeURIComponent(body)}`;
                 window.location.href = mailto;
