@@ -284,24 +284,34 @@
             box-shadow: 0 8px 32px rgba(247, 168, 27, 0.45);
         }
 
-        .promo-banner.bottom:hover {
-            filter: brightness(1.15);
-        }
-
         .promo-banner.bottom {
             position: fixed;
             left: 0;
             right: 0;
             bottom: 0;
-            background: #142033;
-            color: #9aa4ff;
-            border-top: 1px solid rgba(154, 164, 255, 0.3);
+            background: #0b1220;
+            border-top: 1px solid var(--border-color);
             z-index: 50;
+            padding: 8px 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .promo-banner.bottom img {
+            display: block;
+            width: 468px;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .promo-banner.bottom:hover {
+            filter: brightness(1.08);
         }
 
         .footer {
             text-align: center;
-            padding: 4rem 1rem 5rem 1rem;
+            padding: 4rem 1rem 6.5rem 1rem;
             margin-top: 2rem;
         }
 
@@ -527,8 +537,8 @@
         </section>
     </main>
 
-    <a class="promo-banner bottom" href="https://earnlab.com/r/jmenichole" target="_blank" rel="noopener noreferrer">
-        EarnLab <span>Offers &amp; surveys that pay cash</span>
+    <a class="promo-banner bottom" href="https://2captcha.com/auth/register/?from=25952984" target="_blank" rel="noopener noreferrer">
+        <img src="https://2captcha.com/referral-banners/2captcha/09.svg" width="468" height="60" loading="lazy" alt="2Captcha">
     </a>
 
     <footer class="footer">
