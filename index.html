@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#060b13">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Collect Clock">
     <title>Collect Clock</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+    <link rel="apple-touch-icon" href="assets/icon.svg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -470,6 +477,36 @@
             margin-top: 0.75rem;
         }
 
+        .install-kicker {
+            color: var(--text-secondary);
+            font-size: var(--helper);
+            font-weight: 400;
+            letter-spacing: 0;
+            text-transform: none;
+            margin: 0 0 0.85rem;
+        }
+
+        .modal h3 {
+            margin: 0.85rem 0 0.35rem;
+            color: var(--text-secondary);
+            font-size: var(--section);
+            font-weight: 600;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+        }
+
+        .install-steps {
+            margin: 0 0 0.25rem;
+            padding-left: 1.15rem;
+            color: var(--text-primary);
+            font-size: var(--helper);
+            text-align: left;
+        }
+
+        .install-steps li + li {
+            margin-top: 0.3rem;
+        }
+
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -797,6 +834,7 @@
     <footer class="footer">
         <p><a href="https://jmenichole.github.io/Portfolio/" target="_blank" rel="noopener noreferrer">made for degens by degens &lt;3 </a></p>
         <p><button type="button" class="footer-link" id="advertiseBtn">Advertise with us</button></p>
+        <p><button type="button" class="footer-link" id="installBtn">Save to home screen</button></p>
     </footer>
 
     <div class="modal-overlay" id="advertiseModal">
@@ -846,7 +884,27 @@
         </div>
     </div>
 
-    <div id="toast" class="toast" role="status"></div>
+    <div class="modal-overlay" id="installModal">
+        <div class="modal" role="dialog" aria-labelledby="installTitle">
+            <h2 id="installTitle">Home screen</h2>
+            <p class="install-kicker">Add Collect Clock like an app. Timers and alerts still need the page open.</p>
+            <h3>iPhone</h3>
+            <ol class="install-steps">
+                <li>Open this page in Safari</li>
+                <li>Tap the Share button</li>
+                <li>Tap Add to Home Screen, then Add</li>
+            </ol>
+            <h3>Android</h3>
+            <ol class="install-steps">
+                <li>Open this page in Chrome</li>
+                <li>Tap the ⋮ menu</li>
+                <li>Tap Add to Home screen or Install app</li>
+            </ol>
+            <div class="modal-actions">
+                <button type="button" class="modal-submit" id="installClose">Got it</button>
+            </div>
+        </div>
+    </div>
 
     <script>
         const bonusLinks = [
@@ -1262,7 +1320,10 @@
                 if (e.target === overlay) close();
             });
             document.addEventListener("keydown", (e) => {
-                if (e.key === "Escape") close();
+                if (e.key === "Escape") {
+                    overlay.classList.remove("open");
+                    document.getElementById("installModal")?.classList.remove("open");
+                }
             });
 
             form.addEventListener("submit", (e) => {
@@ -1284,7 +1345,23 @@
             });
         }
 
-        document.addEventListener("DOMContentLoaded", () => {
+        function setupInstallHelp() {
+            const overlay = document.getElementById("installModal");
+            const openBtn = document.getElementById("installBtn");
+            const closeBtn = document.getElementById("installClose");
+            if (!overlay || !openBtn) return;
+            const standalone = window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone;
+            if (standalone) {
+                openBtn.hidden = true;
+                return;
+            }
+            const close = () => overlay.classList.remove("open");
+            openBtn.addEventListener("click", () => overlay.classList.add("open"));
+            if (closeBtn) closeBtn.addEventListener("click", close);
+            overlay.addEventListener("click", (e) => {
+                if (e.target === overlay) close();
+            });
+        }
             renderAll();
             tickCountdowns();
             const hiddenBtn = document.getElementById("hiddenToggle");
@@ -1302,6 +1379,7 @@
             }
             updateNotifyButton();
             setupAdvertiseForm();
+            setupInstallHelp();
             setInterval(tickCountdowns, 1000);
             document.addEventListener("visibilitychange", () => {
                 if (!document.hidden) tickCountdowns();
