@@ -258,9 +258,34 @@
         }
 
         .promo-banner.top {
-            background: #1a3a2a;
-            color: var(--text-accent);
-            border-bottom: 1px solid rgba(0, 255, 102, 0.25);
+            background:
+                radial-gradient(ellipse at 80% 50%, rgba(247, 168, 27, 0.18), transparent 55%),
+                linear-gradient(90deg, #060b13 0%, #0c1624 50%, #060b13 100%);
+            color: #fff;
+            border-bottom: 1px solid rgba(247, 168, 27, 0.35);
+            padding: 10px 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .promo-banner.top img {
+            display: block;
+            width: 728px;
+            max-width: 100%;
+            height: auto;
+            border-radius: 6px;
+            box-shadow: 0 4px 24px rgba(247, 168, 27, 0.22);
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+        }
+
+        .promo-banner.top:hover img {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 32px rgba(247, 168, 27, 0.45);
+        }
+
+        .promo-banner.bottom:hover {
+            filter: brightness(1.15);
         }
 
         .promo-banner.bottom {
@@ -272,10 +297,6 @@
             color: #9aa4ff;
             border-top: 1px solid rgba(154, 164, 255, 0.3);
             z-index: 50;
-        }
-
-        .promo-banner:hover {
-            filter: brightness(1.15);
         }
 
         .footer {
@@ -491,7 +512,7 @@
     </header>
 
     <a class="promo-banner top" href="https://stake.us/?c=Jmenichole" target="_blank" rel="noopener noreferrer">
-        Stake.us <span>Daily bonuses &amp; reloads</span>
+        <img src="assets/stake-banner-728x90.gif" width="728" height="90" alt="Stake.us — America's Social Casino. Play now.">
     </a>
 
     <main class="container">
