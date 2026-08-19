@@ -352,6 +352,12 @@
             padding-right: max(1rem, env(safe-area-inset-right));
         }
 
+        .house-ad-stack {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
         .house-ad {
             display: flex;
             align-items: center;
@@ -755,13 +761,22 @@
 
     <div class="house-ad-wrap">
         <span class="ad-label">From us</span>
-        <a class="house-ad" href="https://jmenichole.github.io/justthebuilder/" target="_blank" rel="noopener noreferrer">
-            <div class="house-ad-copy">
-                <strong>JustTheBuilder</strong>
-                <span>AI Discord server setup in under a minute. Free to design, $0.99 to build.</span>
-            </div>
-            <span class="house-ad-cta">Add to server</span>
-        </a>
+        <div class="house-ad-stack">
+            <a class="house-ad" href="https://jmenichole.github.io/justthebuilder/" target="_blank" rel="noopener noreferrer">
+                <div class="house-ad-copy">
+                    <strong>JustTheBuilder</strong>
+                    <span>AI Discord server setup in under a minute. Free to design, $0.99 to build.</span>
+                </div>
+                <span class="house-ad-cta">Add to server</span>
+            </a>
+            <a class="house-ad" href="https://jmenichole.github.io/justthehelper/" target="_blank" rel="noopener noreferrer">
+                <div class="house-ad-copy">
+                    <strong>JustTheHelper</strong>
+                    <span>Welcome, verify, reminders, and paid private-thread tickets for Discord.</span>
+                </div>
+                <span class="house-ad-cta">Learn more</span>
+            </a>
+        </div>
     </div>
 
     <footer class="footer">
