@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Collect Clock</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -30,12 +30,21 @@
             padding: 0;
         }
 
+        html {
+            -webkit-text-size-adjust: 100%;
+        }
+
         body {
             font-family: var(--font);
             background-color: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.5;
             font-size: 15px;
+            overflow-x: clip;
+        }
+
+        img {
+            max-width: 100%;
         }
 
         .header {
@@ -44,6 +53,9 @@
             z-index: 40;
             text-align: center;
             padding: 0.85rem 1rem 0.75rem;
+            padding-top: max(0.85rem, env(safe-area-inset-top));
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
             border-bottom: 1px solid var(--border-color);
             background: rgba(6, 11, 19, 0.78);
             backdrop-filter: blur(14px);
@@ -96,6 +108,8 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 1.25rem 1rem 2rem;
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
         }
 
         .section-heading {
@@ -121,7 +135,7 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
             gap: 1.5rem;
         }
 
@@ -183,8 +197,10 @@
             transition: transform 150ms ease;
         }
 
-        .card:hover {
-            transform: translateY(-2px);
+        @media (hover: hover) {
+            .card:hover {
+                transform: translateY(-2px);
+            }
         }
 
         .card.ready {
@@ -213,6 +229,8 @@
             align-items: center;
             justify-content: center;
             gap: 8px;
+            flex-wrap: wrap;
+            word-break: break-word;
         }
 
         .favicon {
@@ -232,13 +250,14 @@
 
         .hide-toggle {
             position: absolute;
-            top: 8px;
-            right: 8px;
+            top: 4px;
+            right: 4px;
             border: none;
             background: transparent;
             color: var(--text-secondary);
             border-radius: 6px;
-            padding: 2px 6px;
+            padding: 8px 10px;
+            min-height: 36px;
             font-size: 0.7rem;
             font-weight: 500;
             letter-spacing: 0.02em;
@@ -271,7 +290,7 @@
             border-radius: 6px;
             padding: 4px 6px;
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 16px;
         }
 
         .hours-input:focus {
@@ -311,6 +330,8 @@
             justify-content: center;
             align-items: center;
             padding: 10px 12px;
+            padding-left: max(12px, env(safe-area-inset-left));
+            padding-right: max(12px, env(safe-area-inset-right));
             text-decoration: none;
         }
 
@@ -319,21 +340,16 @@
             border-bottom: 1px solid var(--border-color);
         }
 
-        .promo-banner.bottom {
-            background: var(--bg-primary);
-            border-top: 1px solid var(--border-color);
-        }
-
         .promo-banner img.banner-frame {
             width: min(728px, 100%);
         }
 
-        .promo-banner.bottom img.banner-frame {
-            width: min(468px, 100%);
-        }
-
-        .house-ad-section {
-            margin-top: 2.5rem;
+        .house-ad-wrap {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0.25rem 1rem 0.5rem;
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
         }
 
         .house-ad {
@@ -351,8 +367,10 @@
             transition: transform 150ms ease;
         }
 
-        .house-ad:hover {
-            transform: translateY(-2px);
+        @media (hover: hover) {
+            .house-ad:hover {
+                transform: translateY(-2px);
+            }
         }
 
         .house-ad-copy {
@@ -382,18 +400,15 @@
             font-weight: 700;
             letter-spacing: 0.04em;
             text-transform: uppercase;
-        }
-
-        @media (max-width: 640px) {
-            .house-ad {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+            text-align: center;
         }
 
         .footer {
             text-align: center;
             padding: 2.5rem 1rem 2rem;
+            padding-bottom: max(2rem, env(safe-area-inset-bottom));
+            padding-left: max(1rem, env(safe-area-inset-left));
+            padding-right: max(1rem, env(safe-area-inset-right));
             margin-top: 1rem;
         }
 
@@ -489,7 +504,7 @@
             color: var(--text-primary);
             border-radius: 6px;
             padding: 8px 10px;
-            font-size: 0.95rem;
+            font-size: 16px;
             font-family: inherit;
             margin-bottom: 12px;
         }
@@ -570,7 +585,7 @@
 
         .toast {
             position: fixed;
-            bottom: 24px;
+            bottom: max(16px, env(safe-area-inset-bottom));
             left: 50%;
             transform: translateX(-50%);
             background: var(--text-accent);
@@ -578,18 +593,129 @@
             padding: 12px 20px;
             border-radius: 12px;
             font-weight: 700;
-            z-index: 30;
+            z-index: 50;
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
             display: none;
             max-width: calc(100% - 32px);
         }
 
         @media (max-width: 768px) {
-            .container {
-                padding: 1rem;
+            .header {
+                padding: 0.55rem 0.85rem 0.5rem;
+                padding-top: max(0.55rem, env(safe-area-inset-top));
             }
+
+            .header h1 {
+                font-size: 1.2rem;
+            }
+
+            .header .subtitle {
+                font-size: 0.75rem;
+                line-height: 1.35;
+            }
+
+            .header-actions {
+                margin-top: 0.45rem;
+            }
+
+            .hidden-toggle {
+                min-height: 36px;
+                padding: 7px 12px;
+            }
+
+            .container {
+                padding: 0.9rem 0.85rem 1.4rem;
+                padding-left: max(0.85rem, env(safe-area-inset-left));
+                padding-right: max(0.85rem, env(safe-area-inset-right));
+            }
+
+            .section + .section {
+                margin-top: 1.75rem;
+            }
+
             .grid {
                 grid-template-columns: 1fr;
+                gap: 0.85rem;
+            }
+
+            .card {
+                padding: 1.15rem 0.95rem 1rem;
+                padding-top: 2rem;
+            }
+
+            .timer-check {
+                width: 22px;
+                height: 22px;
+            }
+
+            .countdown {
+                min-width: 0;
+            }
+
+            .mid-banner img.banner-frame {
+                aspect-ratio: 16 / 7;
+            }
+
+            .promo-banner {
+                padding: 8px 10px;
+                padding-left: max(10px, env(safe-area-inset-left));
+                padding-right: max(10px, env(safe-area-inset-right));
+            }
+
+            .house-ad-wrap {
+                padding: 0.15rem 0.85rem 0.35rem;
+                padding-left: max(0.85rem, env(safe-area-inset-left));
+                padding-right: max(0.85rem, env(safe-area-inset-right));
+            }
+
+            .house-ad {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 1rem;
+                gap: 0.75rem;
+            }
+
+            .house-ad-cta {
+                width: 100%;
+                padding: 10px 14px;
+            }
+
+            .modal-overlay {
+                padding: 12px;
+                padding-top: max(12px, env(safe-area-inset-top));
+                padding-bottom: max(12px, env(safe-area-inset-bottom));
+                align-items: flex-end;
+            }
+
+            .modal {
+                max-height: min(92dvh, 100%);
+                overflow: auto;
+                padding: 1.15rem;
+            }
+
+            .modal-actions {
+                flex-wrap: wrap;
+            }
+
+            .modal-actions button {
+                min-height: 40px;
+            }
+
+            .footer {
+                padding: 1.75rem 0.85rem 1.5rem;
+                padding-bottom: max(1.5rem, env(safe-area-inset-bottom));
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .card,
+            .house-ad {
+                transition: none;
+            }
+
+            .card:hover,
+            .house-ad:hover {
+                transform: none;
             }
         }
     </style>
@@ -625,22 +751,18 @@
             <h2 class="section-heading">Get Paid To Sites</h2>
             <div id="paid-grid" class="grid"></div>
         </section>
-
-        <section class="section house-ad-section">
-            <span class="ad-label">From us</span>
-            <a class="house-ad" href="https://jmenichole.github.io/justthebuilder/" target="_blank" rel="noopener noreferrer">
-                <div class="house-ad-copy">
-                    <strong>JustTheBuilder</strong>
-                    <span>AI Discord server setup in under a minute. Free to design, $0.99 to build.</span>
-                </div>
-                <span class="house-ad-cta">Add to server</span>
-            </a>
-        </section>
     </main>
 
-    <a class="promo-banner bottom" href="https://2captcha.com/auth/register/?from=25952984" target="_blank" rel="noopener noreferrer">
-        <img class="banner-frame" src="https://2captcha.com/referral-banners/2captcha/09.svg" width="468" height="60" loading="lazy" alt="2Captcha">
-    </a>
+    <div class="house-ad-wrap">
+        <span class="ad-label">From us</span>
+        <a class="house-ad" href="https://jmenichole.github.io/justthebuilder/" target="_blank" rel="noopener noreferrer">
+            <div class="house-ad-copy">
+                <strong>JustTheBuilder</strong>
+                <span>AI Discord server setup in under a minute. Free to design, $0.99 to build.</span>
+            </div>
+            <span class="house-ad-cta">Add to server</span>
+        </a>
+    </div>
 
     <footer class="footer">
         <p><a href="https://jmenichole.github.io/Portfolio/" target="_blank" rel="noopener noreferrer">made for degens by degens &lt;3 </a></p>
