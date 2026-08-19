@@ -332,6 +332,65 @@
             width: min(468px, 100%);
         }
 
+        .house-ad-section {
+            margin-top: 2.5rem;
+        }
+
+        .house-ad {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+            width: 100%;
+            padding: 1.1rem 1.25rem;
+            text-decoration: none;
+            color: inherit;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            transition: transform 150ms ease;
+        }
+
+        .house-ad:hover {
+            transform: translateY(-2px);
+        }
+
+        .house-ad-copy {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+            min-width: 0;
+        }
+
+        .house-ad-copy strong {
+            font-size: var(--card-name);
+            font-weight: 600;
+        }
+
+        .house-ad-copy span {
+            color: var(--text-secondary);
+            font-size: var(--helper);
+        }
+
+        .house-ad-cta {
+            flex-shrink: 0;
+            background: var(--text-accent);
+            color: var(--bg-primary);
+            border-radius: 999px;
+            padding: 8px 14px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+        }
+
+        @media (max-width: 640px) {
+            .house-ad {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
         .footer {
             text-align: center;
             padding: 2.5rem 1rem 2rem;
@@ -565,6 +624,17 @@
         <section class="section">
             <h2 class="section-heading">Get Paid To Sites</h2>
             <div id="paid-grid" class="grid"></div>
+        </section>
+
+        <section class="section house-ad-section">
+            <span class="ad-label">From us</span>
+            <a class="house-ad" href="https://jmenichole.github.io/justthebuilder/" target="_blank" rel="noopener noreferrer">
+                <div class="house-ad-copy">
+                    <strong>JustTheBuilder</strong>
+                    <span>AI Discord server setup in under a minute. Free to design, $0.99 to build.</span>
+                </div>
+                <span class="house-ad-cta">Add to server</span>
+            </a>
         </section>
     </main>
 
