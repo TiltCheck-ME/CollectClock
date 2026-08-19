@@ -49,6 +49,25 @@
             font-size: 1.1rem;
         }
 
+        .hidden-toggle {
+            margin-top: 1rem;
+            border: 1px solid var(--border-color);
+            background: transparent;
+            color: var(--text-secondary);
+            border-radius: 999px;
+            padding: 6px 14px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            cursor: pointer;
+        }
+
+        .hidden-toggle[aria-pressed="true"] {
+            border-color: var(--text-accent);
+            color: var(--text-accent);
+        }
+
         .container {
             max-width: 1200px;
             margin: 0 auto;
@@ -78,7 +97,9 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 1.5rem;
+            padding-top: 2.4rem;
             color: inherit;
+            position: relative;
             transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
             display: flex;
             flex-direction: column;
@@ -117,25 +138,39 @@
             flex-wrap: wrap;
         }
 
-        .timer-toggle {
+        .hide-toggle {
+            position: absolute;
+            top: 8px;
+            right: 8px;
             border: 1px solid var(--border-color);
             background: transparent;
             color: var(--text-secondary);
             border-radius: 999px;
-            padding: 4px 12px;
-            font-size: 0.72rem;
+            padding: 3px 10px;
+            font-size: 0.68rem;
             font-weight: 700;
             letter-spacing: 0.04em;
             text-transform: uppercase;
             cursor: pointer;
-            min-width: 3.6rem;
-            flex-shrink: 0;
         }
 
-        .timer-toggle[aria-pressed="true"] {
+        .hide-toggle:hover {
+            border-color: var(--text-accent);
+            color: var(--text-accent);
+        }
+
+        .card.is-hidden .hide-toggle {
             border-color: var(--text-accent);
             background: var(--text-accent);
             color: var(--bg-primary);
+        }
+
+        .timer-check {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--text-accent);
+            cursor: pointer;
+            flex-shrink: 0;
         }
 
         .hours-input {
@@ -233,7 +268,8 @@
 
     <header class="header">
         <h1>Collect Clock</h1>
-        <p>Click a name to open the site. Tap On to start a timer — 24 hours unless you change it.</p>
+        <p>Click a name to open the site. Check the box to start a timer — 24 hours unless you change it. Off hides a site from the list.</p>
+        <button type="button" class="hidden-toggle" id="hiddenToggle" hidden>Hidden (0)</button>
     </header>
 
     <main class="container">
@@ -336,14 +372,15 @@
         }
 
         function normalizeVisit(raw) {
-            if (!raw) return { startedAt: null, hours: 24, active: false };
+            if (!raw) return { startedAt: null, hours: 24, active: false, hidden: false };
             if (typeof raw === "number") {
-                return { startedAt: raw, hours: 24, active: Date.now() < raw + 24 * 3600000 };
+                return { startedAt: raw, hours: 24, active: Date.now() < raw + 24 * 3600000, hidden: false };
             }
             return {
                 startedAt: typeof raw.startedAt === "number" ? raw.startedAt : null,
                 hours: parseHours(raw.hours),
-                active: !!raw.active
+                active: !!raw.active,
+                hidden: !!raw.hidden
             };
         }
 
@@ -395,15 +432,18 @@
 
             const countdown = card.querySelector(".countdown");
             const meta = card.querySelector(".meta");
-            const toggle = card.querySelector(".timer-toggle");
+            const checkbox = card.querySelector(".timer-check");
             const hoursInput = card.querySelector(".hours-input");
+            const hideBtn = card.querySelector(".hide-toggle");
 
             card.classList.toggle("on-cooldown", rem > 0);
+            card.classList.toggle("is-hidden", !!visit.hidden);
             if (countdown) countdown.textContent = rem > 0 ? fmt(rem) : "Ready";
             if (meta) meta.textContent = formatVisited(visit);
-            if (toggle) {
-                toggle.setAttribute("aria-pressed", rem > 0 ? "true" : "false");
-                toggle.textContent = rem > 0 ? "On" : "Off";
+            if (checkbox) checkbox.checked = rem > 0;
+            if (hideBtn) {
+                hideBtn.textContent = visit.hidden ? "On" : "Off";
+                hideBtn.title = visit.hidden ? "Show this site in the list" : "Hide this site from the list";
             }
             if (hoursInput && document.activeElement !== hoursInput) {
                 hoursInput.value = visit.hours;
@@ -415,10 +455,11 @@
             card.className = "card";
             card.dataset.name = link.name;
             card.innerHTML = `
+                <button type="button" class="hide-toggle" title="Hide this site from the list">Off</button>
                 <h3><a target="_blank" rel="noopener noreferrer"></a></h3>
                 <div class="desc"></div>
                 <div class="timer-row">
-                    <button type="button" class="timer-toggle" aria-pressed="false" title="Start or stop the timer">Off</button>
+                    <input type="checkbox" class="timer-check" title="Start or stop the timer">
                     <input type="number" class="hours-input" min="1" max="168" value="24" title="Timer length in hours">
                     <span class="hours-suffix">h</span>
                     <span class="countdown">Ready</span>
@@ -436,17 +477,17 @@
                 desc.remove();
             }
 
-            const toggle = card.querySelector(".timer-toggle");
+            const checkbox = card.querySelector(".timer-check");
             const hoursInput = card.querySelector(".hours-input");
+            const hideBtn = card.querySelector(".hide-toggle");
             applyCardState(card, link.name, visits);
 
-            toggle.addEventListener("click", () => {
+            checkbox.addEventListener("change", () => {
                 const next = loadVisits();
                 const visit = normalizeVisit(next[link.name]);
                 visit.hours = parseHours(hoursInput.value);
                 hoursInput.value = visit.hours;
-                const turningOn = toggle.getAttribute("aria-pressed") !== "true";
-                if (turningOn) {
+                if (checkbox.checked) {
                     visit.startedAt = Date.now();
                     visit.active = true;
                 } else {
@@ -455,6 +496,15 @@
                 next[link.name] = visit;
                 saveVisits(next);
                 applyCardState(card, link.name, next);
+            });
+
+            hideBtn.addEventListener("click", () => {
+                const next = loadVisits();
+                const visit = normalizeVisit(next[link.name]);
+                visit.hidden = !visit.hidden;
+                next[link.name] = visit;
+                saveVisits(next);
+                renderAll();
             });
 
             const saveHours = () => {
@@ -472,12 +522,40 @@
             return card;
         }
 
+        let showHidden = false;
+
+        function allLinks() {
+            return bonusLinks.concat(paidSites);
+        }
+
+        function hiddenCount(visits) {
+            const stored = visits || loadVisits();
+            return allLinks().filter((link) => normalizeVisit(stored[link.name]).hidden).length;
+        }
+
+        function updateHiddenButton() {
+            const btn = document.getElementById("hiddenToggle");
+            if (!btn) return;
+            const n = hiddenCount();
+            btn.hidden = n === 0 && !showHidden;
+            btn.setAttribute("aria-pressed", showHidden ? "true" : "false");
+            btn.textContent = showHidden ? `Showing hidden (${n})` : `Hidden (${n})`;
+        }
+
         function renderSection(gridId, links) {
             const grid = document.getElementById(gridId);
             if (!grid) return;
             grid.innerHTML = "";
             const visits = loadVisits();
-            links.forEach((link) => grid.appendChild(createCard(link, visits)));
+            links
+                .filter((link) => showHidden || !normalizeVisit(visits[link.name]).hidden)
+                .forEach((link) => grid.appendChild(createCard(link, visits)));
+        }
+
+        function renderAll() {
+            renderSection("links-grid", bonusLinks);
+            renderSection("paid-grid", paidSites);
+            updateHiddenButton();
         }
 
         function tickCountdowns() {
@@ -488,8 +566,14 @@
         }
 
         document.addEventListener("DOMContentLoaded", () => {
-            renderSection("links-grid", bonusLinks);
-            renderSection("paid-grid", paidSites);
+            renderAll();
+            const hiddenBtn = document.getElementById("hiddenToggle");
+            if (hiddenBtn) {
+                hiddenBtn.addEventListener("click", () => {
+                    showHidden = !showHidden;
+                    renderAll();
+                });
+            }
             setInterval(tickCountdowns, 1000);
             document.addEventListener("visibilitychange", () => {
                 if (!document.hidden) tickCountdowns();
