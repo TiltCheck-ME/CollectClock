@@ -297,8 +297,126 @@
             transition: color 0.2s ease;
         }
 
-        .footer a:hover {
+        .footer a:hover,
+        .footer-link:hover {
             color: var(--text-accent);
+        }
+
+        .footer-link {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            cursor: pointer;
+            padding: 0;
+            font-family: inherit;
+        }
+
+        .footer p + p {
+            margin-top: 0.75rem;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 80;
+            padding: 20px;
+            padding-bottom: 4.5rem;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 420px;
+            padding: 1.5rem;
+        }
+
+        .modal h2 {
+            margin: 0 0 0.4rem;
+            color: var(--text-accent);
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .modal p.hint {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 4px;
+        }
+
+        .modal input,
+        .modal textarea {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 6px;
+            padding: 8px 10px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            margin-bottom: 12px;
+        }
+
+        .modal textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .modal input:focus,
+        .modal textarea:focus {
+            outline: none;
+            border-color: var(--text-accent);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .modal-actions button {
+            border-radius: 999px;
+            padding: 8px 16px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .modal-cancel {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+
+        .modal-submit {
+            background: var(--text-accent);
+            border: none;
+            color: var(--bg-primary);
         }
 
         .toast {
@@ -360,7 +478,27 @@
 
     <footer class="footer">
         <p><a href="https://jmenichole.github.io/Portfolio/" target="_blank" rel="noopener noreferrer">made for degens by degens &lt;3 </a></p>
+        <p><button type="button" class="footer-link" id="advertiseBtn">Advertise with us</button></p>
     </footer>
+
+    <div class="modal-overlay" id="advertiseModal">
+        <div class="modal" role="dialog" aria-labelledby="advertiseTitle">
+            <h2 id="advertiseTitle">Advertise with us</h2>
+            <p class="hint">Send a note about banner or listing placements. This opens your email app — no account needed.</p>
+            <form id="advertiseForm">
+                <label for="adName">Name</label>
+                <input id="adName" name="name" type="text" autocomplete="name">
+                <label for="adContact">Your email or Discord</label>
+                <input id="adContact" name="contact" type="text" autocomplete="email" required>
+                <label for="adMessage">Message</label>
+                <textarea id="adMessage" name="message" required placeholder="What do you want to promote?"></textarea>
+                <div class="modal-actions">
+                    <button type="button" class="modal-cancel" id="advertiseCancel">Cancel</button>
+                    <button type="submit" class="modal-submit">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <div id="toast" class="toast" role="status"></div>
 
@@ -442,6 +580,7 @@
 
         const STORAGE_KEY = "collectClockVisits";
         const NOTIFY_KEY = "collectClockNotify";
+        const AD_EMAIL = "j.chapman7@yahoo.com";
         const runningNames = new Set();
         let toastTimer = null;
 
@@ -724,6 +863,41 @@
             });
         }
 
+        function setupAdvertiseForm() {
+            const overlay = document.getElementById("advertiseModal");
+            const openBtn = document.getElementById("advertiseBtn");
+            const cancelBtn = document.getElementById("advertiseCancel");
+            const form = document.getElementById("advertiseForm");
+            if (!overlay || !openBtn || !form) return;
+
+            const close = () => overlay.classList.remove("open");
+            openBtn.addEventListener("click", () => overlay.classList.add("open"));
+            if (cancelBtn) cancelBtn.addEventListener("click", close);
+            overlay.addEventListener("click", (e) => {
+                if (e.target === overlay) close();
+            });
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") close();
+            });
+
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const name = document.getElementById("adName").value.trim();
+                const contact = document.getElementById("adContact").value.trim();
+                const message = document.getElementById("adMessage").value.trim();
+                const body = [
+                    name ? `Name: ${name}` : "",
+                    `Contact: ${contact}`,
+                    "",
+                    message
+                ].filter(Boolean).join("\n");
+                const mailto = `mailto:${AD_EMAIL}?subject=${encodeURIComponent("Collect Clock advertising")}&body=${encodeURIComponent(body)}`;
+                window.location.href = mailto;
+                close();
+                showToast("Opening your email app");
+            });
+        }
+
         document.addEventListener("DOMContentLoaded", () => {
             renderAll();
             tickCountdowns();
@@ -741,6 +915,7 @@
                 });
             }
             updateNotifyButton();
+            setupAdvertiseForm();
             setInterval(tickCountdowns, 1000);
             document.addEventListener("visibilitychange", () => {
                 if (!document.hidden) tickCountdowns();
