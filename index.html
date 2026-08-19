@@ -78,7 +78,6 @@
             border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 1.5rem;
-            text-decoration: none;
             color: inherit;
             transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
             display: flex;
@@ -98,11 +97,55 @@
             font-size: 1.25rem;
             color: var(--text-primary);
             margin: 0;
+        }
+
+        .card h3 a {
+            color: inherit;
+            text-decoration: none;
             transition: color 0.2s ease;
         }
 
-        .card:hover h3 {
+        .card:hover h3 a {
             color: var(--text-accent);
+        }
+
+        .timer-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .timer-toggle {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--text-accent);
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .hours-input {
+            width: 3.4rem;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            border-radius: 6px;
+            padding: 4px 6px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        .hours-input:focus {
+            outline: none;
+            border-color: var(--text-accent);
+        }
+
+        .hours-suffix {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+            text-transform: uppercase;
         }
 
         .countdown {
@@ -112,11 +155,12 @@
             text-transform: uppercase;
             font-variant-numeric: tabular-nums;
             color: var(--text-accent);
+            min-width: 7.5rem;
         }
 
         .card.on-cooldown {
             border-color: var(--clicked-border);
-            opacity: 0.7;
+            opacity: 0.85;
         }
 
         .card.on-cooldown .countdown {
@@ -132,6 +176,11 @@
             font-size: 0.85rem;
             color: var(--text-secondary);
             line-height: 1.35;
+        }
+
+        .card .meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
         }
 
         .footer {
@@ -171,7 +220,7 @@
 
     <header class="header">
         <h1>Collect Clock</h1>
-        <p>Click a link to collect. This device starts a 24-hour countdown until the next bonus.</p>
+        <p>Click a name to open the site. Check the box to start a timer — 24 hours unless you change it.</p>
     </header>
 
     <main class="container">
@@ -267,7 +316,23 @@
         ];
 
         const STORAGE_KEY = "collectClockVisits";
-        const COOLDOWN_MS = 24 * 60 * 60 * 1000;
+
+        function parseHours(value) {
+            const n = parseInt(value, 10);
+            return Number.isFinite(n) && n > 0 ? n : 24;
+        }
+
+        function normalizeVisit(raw) {
+            if (!raw) return { startedAt: null, hours: 24, active: false };
+            if (typeof raw === "number") {
+                return { startedAt: raw, hours: 24, active: Date.now() < raw + 24 * 3600000 };
+            }
+            return {
+                startedAt: typeof raw.startedAt === "number" ? raw.startedAt : null,
+                hours: parseHours(raw.hours),
+                active: !!raw.active
+            };
+        }
 
         function loadVisits() {
             try {
@@ -282,10 +347,9 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(visits));
         }
 
-        function remainingMs(name, visits) {
-            const ts = visits[name];
-            if (!ts) return 0;
-            return Math.max(0, ts + COOLDOWN_MS - Date.now());
+        function remainingMs(visit) {
+            if (!visit || !visit.active || !visit.startedAt) return 0;
+            return Math.max(0, visit.startedAt + parseHours(visit.hours) * 3600000 - Date.now());
         }
 
         function fmt(ms) {
@@ -298,56 +362,95 @@
             return `${s}s`;
         }
 
-        function formatVisited(ts) {
-            if (!ts) return "Not visited";
-            const d = new Date(ts);
+        function formatVisited(visit) {
+            if (!visit || !visit.startedAt) return "Not started";
+            const d = new Date(visit.startedAt);
             const time = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
-            if (d.toDateString() === new Date().toDateString()) return `Visited ${time}`;
-            return `Visited ${d.toLocaleDateString([], { month: "short", day: "numeric" })} ${time}`;
+            if (d.toDateString() === new Date().toDateString()) return `Started ${time}`;
+            return `Started ${d.toLocaleDateString([], { month: "short", day: "numeric" })} ${time}`;
         }
 
         function applyCardState(card, name, visits) {
-            const rem = remainingMs(name, visits);
+            const visit = normalizeVisit(visits[name]);
+            let rem = remainingMs(visit);
+            if (visit.active && visit.startedAt && rem === 0) {
+                visit.active = false;
+                visits[name] = visit;
+                saveVisits(visits);
+            }
+            rem = remainingMs(visit);
+
             const countdown = card.querySelector(".countdown");
             const meta = card.querySelector(".meta");
+            const checkbox = card.querySelector(".timer-toggle");
+            const hoursInput = card.querySelector(".hours-input");
+
             card.classList.toggle("on-cooldown", rem > 0);
             if (countdown) countdown.textContent = rem > 0 ? fmt(rem) : "Ready";
-            if (meta) meta.textContent = formatVisited(visits[name]);
+            if (meta) meta.textContent = formatVisited(visit);
+            if (checkbox) checkbox.checked = rem > 0;
+            if (hoursInput && document.activeElement !== hoursInput) {
+                hoursInput.value = visit.hours;
+            }
         }
 
         function createCard(link, visits) {
-            const card = document.createElement("a");
-            card.href = link.url;
+            const card = document.createElement("article");
             card.className = "card";
-            card.target = "_blank";
-            card.rel = "noopener noreferrer";
             card.dataset.name = link.name;
             card.innerHTML = `
-                <h3></h3>
+                <h3><a target="_blank" rel="noopener noreferrer"></a></h3>
                 <div class="desc"></div>
-                <div class="countdown"></div>
+                <div class="timer-row">
+                    <input type="checkbox" class="timer-toggle" title="Start or stop the timer">
+                    <input type="number" class="hours-input" min="1" max="168" value="24" title="Timer length in hours">
+                    <span class="hours-suffix">h</span>
+                    <span class="countdown">Ready</span>
+                </div>
                 <div class="meta"></div>
             `;
-            card.querySelector("h3").textContent = link.name;
+            const titleLink = card.querySelector("h3 a");
+            titleLink.href = link.url;
+            titleLink.textContent = link.name;
+
             const desc = card.querySelector(".desc");
             if (link.desc) {
                 desc.textContent = link.desc;
             } else {
                 desc.remove();
             }
+
+            const checkbox = card.querySelector(".timer-toggle");
+            const hoursInput = card.querySelector(".hours-input");
             applyCardState(card, link.name, visits);
 
-            const markVisited = () => {
+            checkbox.addEventListener("change", () => {
                 const next = loadVisits();
-                next[link.name] = Date.now();
+                const visit = normalizeVisit(next[link.name]);
+                visit.hours = parseHours(hoursInput.value);
+                hoursInput.value = visit.hours;
+                if (checkbox.checked) {
+                    visit.startedAt = Date.now();
+                    visit.active = true;
+                } else {
+                    visit.active = false;
+                }
+                next[link.name] = visit;
+                saveVisits(next);
+                applyCardState(card, link.name, next);
+            });
+
+            const saveHours = () => {
+                const next = loadVisits();
+                const visit = normalizeVisit(next[link.name]);
+                visit.hours = parseHours(hoursInput.value);
+                hoursInput.value = visit.hours;
+                next[link.name] = visit;
                 saveVisits(next);
                 applyCardState(card, link.name, next);
             };
-
-            card.addEventListener("click", markVisited);
-            card.addEventListener("auxclick", (e) => {
-                if (e.button === 1) markVisited();
-            });
+            hoursInput.addEventListener("change", saveHours);
+            hoursInput.addEventListener("blur", saveHours);
 
             return card;
         }
