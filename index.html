@@ -6,14 +6,14 @@
     <title>Bonus Links Directory</title>
     <style>
         :root {
-            /* Colors pulled directly from your CollectClock page */
-            --bg-primary: #060b13; 
-            --bg-secondary: #0a101d; 
+            --bg-primary: #060b13;
+            --bg-secondary: #0a101d;
             --text-primary: #ffffff;
-            --text-accent: #00ff66; /* Neon green */
-            --text-secondary: #596585; /* Muted purple-blue */
+            --text-accent: #00ff66;
+            --text-secondary: #596585;
             --border-color: #151c2b;
-            --clicked-border: #8a2be2; /* BlueViolet - color for clicked links */
+            --clicked-border: #8a2be2;
+            --soon: #ffb020;
         }
 
         * {
@@ -31,7 +31,7 @@
 
         .header {
             text-align: center;
-            padding: 3rem 1rem;
+            padding: 3rem 1rem 1.5rem;
             border-bottom: 1px solid var(--border-color);
             background-color: var(--bg-primary);
         }
@@ -55,6 +55,18 @@
             padding: 2rem;
         }
 
+        .section-heading {
+            color: var(--text-accent);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            font-size: 0.95rem;
+            margin: 0 0 1.25rem;
+        }
+
+        .section + .section {
+            margin-top: 2.5rem;
+        }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
@@ -68,11 +80,12 @@
             padding: 1.5rem;
             text-decoration: none;
             color: inherit;
-            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
             display: flex;
             flex-direction: column;
             justify-content: center;
             text-align: center;
+            gap: 0.6rem;
         }
 
         .card:hover {
@@ -92,17 +105,33 @@
             color: var(--text-accent);
         }
 
-        /* --- NEW: Style for links clicked today --- */
-        .card.clicked-today {
+        .countdown {
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-variant-numeric: tabular-nums;
+            color: var(--text-accent);
+        }
+
+        .card.on-cooldown {
             border-color: var(--clicked-border);
-            opacity: 0.6; /* Dims the card slightly so you know it's done */
+            opacity: 0.7;
         }
-        
-        .card.clicked-today:hover {
+
+        .card.on-cooldown .countdown {
+            color: var(--soon);
+        }
+
+        .card.on-cooldown:hover {
             border-color: var(--text-accent);
-            opacity: 1; /* Brightens back up on hover */
+            opacity: 1;
         }
-        /* ------------------------------------------ */
+
+        .card .meta {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
 
         .footer {
             text-align: center;
@@ -141,12 +170,19 @@
 
     <header class="header">
         <h1>Casino Collecting Links</h1>
+        <p>Click a link to collect. This device starts a 24-hour countdown until the next bonus.</p>
     </header>
 
     <main class="container">
-        <div id="links-grid" class="grid">
-            <!-- Cards will be injected here via JavaScript -->
-        </div>
+        <section class="section">
+            <h2 class="section-heading">Casino Bonuses</h2>
+            <div id="links-grid" class="grid"></div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-heading">Get Paid To Sites</h2>
+            <div id="paid-grid" class="grid"></div>
+        </section>
     </main>
 
     <footer class="footer">
@@ -158,9 +194,9 @@
             { name: "Stake.us", url: "https://stake.us/?c=Jmenichole" },
             { name: "CardCrush", url: "https://www.cardcrush.com/lp/raf?r=db061927%2F45375369" },
             { name: "Yotta", url: "https://join.withyotta.com/JMENICHOLE0" },
-            { name: "BinkBet", url: "https://binkbet.com/jmenichole",
+            { name: "BinkBet", url: "https://binkbet.com/jmenichole" },
             { name: "Coverd", url: "https://apps.apple.com/us/app/coverd/id6741347396" },
-            { name: "Joya", url: "https://joya.us/?referral_code=b15fe37b1741d912",
+            { name: "Joya", url: "https://joya.us/?referral_code=b15fe37b1741d912" },
             { name: "Winera", url: "https://winera.us?referralCode=Vf8jRF#signup" },
             { name: "Acebet", url: "https://acebet.cc/welcome/r/jmenichole" },
             { name: "Nuts.gg", url: "https://nuts.gg/play/jmenichole" },
@@ -217,46 +253,120 @@
             { name: "Kickr.com", url: "https://kickr.com/signup/doxe8c09" },
             { name: "Gamba.com", url: "https://gamba.com?c=Jme" },
             { name: "Winna", url: "https://winna.com/?r=jmenichole" },
-            { name: "MetaWin.com", url: "https://metawin.com/jmenichole007/" ,
+            { name: "MetaWin.com", url: "https://metawin.com/jmenichole007/" }
         ];
 
-        function renderLinks() {
-            const grid = document.getElementById('links-grid');
-            
-            // Get today's date as a string (e.g., "Sun Aug 02 2026")
-            const today = new Date().toDateString();
-            
-            bonusLinks.forEach(link => {
-                const card = document.createElement('a');
-                card.href = link.url;
-                card.className = 'card';
-                card.target = '_blank';
-                card.rel = 'noopener noreferrer';
+        const paidSites = [
+            { name: "FreeCash", url: "https://freecash.com/r/jmenichole" },
+            { name: "EarnLab", url: "https://earnlab.com/r/jmenichole" },
+            { name: "Earnopolis", url: "https://earnopolis.com/r/?r=jmenichole" },
+            { name: "Handshake Move Program", url: "https://joinhandshake.com/move-program/referral?referralCode=E67C78&utm_source=web&utm_campaign=hai_referral_page_share&utm_medium=share&utm_content=hai_referral_page" },
+            { name: "2Captcha", url: "https://2captcha.com/auth/register/?from=25952984" },
+            { name: "CPR.gg", url: "https://cpr.gg/r/WORYDP" }
+        ];
 
-                // Check if this specific link was already clicked today
-                const lastClicked = localStorage.getItem('clicked_' + link.name);
-                if (lastClicked === today) {
-                    card.classList.add('clicked-today');
-                }
+        const STORAGE_KEY = "collectClockVisits";
+        const COOLDOWN_MS = 24 * 60 * 60 * 1000;
 
-                // When clicked, save today's date to storage and update style instantly
-                card.addEventListener('click', () => {
-                    localStorage.setItem('clicked_' + link.name, today);
-                    card.classList.add('clicked-today');
-                });
+        function loadVisits() {
+            try {
+                const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+                return parsed && typeof parsed === "object" ? parsed : {};
+            } catch (e) {
+                return {};
+            }
+        }
 
-                card.innerHTML = `
-                    <div class="card-content">
-                        <h3>${link.name}</h3>
-                    </div>
-                `;
-                
-                grid.appendChild(card);
+        function saveVisits(visits) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(visits));
+        }
+
+        function remainingMs(name, visits) {
+            const ts = visits[name];
+            if (!ts) return 0;
+            return Math.max(0, ts + COOLDOWN_MS - Date.now());
+        }
+
+        function fmt(ms) {
+            const totalSec = Math.max(0, Math.ceil(ms / 1000));
+            const h = Math.floor(totalSec / 3600);
+            const m = Math.floor((totalSec % 3600) / 60);
+            const s = totalSec % 60;
+            if (h > 0) return `${h}h ${String(m).padStart(2, "0")}m ${String(s).padStart(2, "0")}s`;
+            if (m > 0) return `${m}m ${String(s).padStart(2, "0")}s`;
+            return `${s}s`;
+        }
+
+        function formatVisited(ts) {
+            if (!ts) return "Not visited";
+            const d = new Date(ts);
+            const time = d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+            if (d.toDateString() === new Date().toDateString()) return `Visited ${time}`;
+            return `Visited ${d.toLocaleDateString([], { month: "short", day: "numeric" })} ${time}`;
+        }
+
+        function applyCardState(card, name, visits) {
+            const rem = remainingMs(name, visits);
+            const countdown = card.querySelector(".countdown");
+            const meta = card.querySelector(".meta");
+            card.classList.toggle("on-cooldown", rem > 0);
+            if (countdown) countdown.textContent = rem > 0 ? fmt(rem) : "Ready";
+            if (meta) meta.textContent = formatVisited(visits[name]);
+        }
+
+        function createCard(link, visits) {
+            const card = document.createElement("a");
+            card.href = link.url;
+            card.className = "card";
+            card.target = "_blank";
+            card.rel = "noopener noreferrer";
+            card.dataset.name = link.name;
+            card.innerHTML = `
+                <h3></h3>
+                <div class="countdown"></div>
+                <div class="meta"></div>
+            `;
+            card.querySelector("h3").textContent = link.name;
+            applyCardState(card, link.name, visits);
+
+            const markVisited = () => {
+                const next = loadVisits();
+                next[link.name] = Date.now();
+                saveVisits(next);
+                applyCardState(card, link.name, next);
+            };
+
+            card.addEventListener("click", markVisited);
+            card.addEventListener("auxclick", (e) => {
+                if (e.button === 1) markVisited();
+            });
+
+            return card;
+        }
+
+        function renderSection(gridId, links) {
+            const grid = document.getElementById(gridId);
+            if (!grid) return;
+            grid.innerHTML = "";
+            const visits = loadVisits();
+            links.forEach((link) => grid.appendChild(createCard(link, visits)));
+        }
+
+        function tickCountdowns() {
+            const visits = loadVisits();
+            document.querySelectorAll(".card[data-name]").forEach((card) => {
+                applyCardState(card, card.dataset.name, visits);
             });
         }
 
-        document.addEventListener('DOMContentLoaded', renderLinks);
+        document.addEventListener("DOMContentLoaded", () => {
+            renderSection("links-grid", bonusLinks);
+            renderSection("paid-grid", paidSites);
+            setInterval(tickCountdowns, 1000);
+            document.addEventListener("visibilitychange", () => {
+                if (!document.hidden) tickCountdowns();
+            });
+        });
     </script>
 </body>
 </html>
-   
