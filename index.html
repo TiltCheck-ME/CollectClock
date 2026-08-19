@@ -49,8 +49,15 @@
             font-size: 1.1rem;
         }
 
-        .hidden-toggle {
+        .header-actions {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
             margin-top: 1rem;
+        }
+
+        .hidden-toggle {
             border: 1px solid var(--border-color);
             background: transparent;
             color: var(--text-secondary);
@@ -254,6 +261,22 @@
             color: var(--text-accent);
         }
 
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--text-accent);
+            color: var(--bg-primary);
+            padding: 12px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            z-index: 30;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+            display: none;
+            max-width: calc(100% - 32px);
+        }
+
         @media (max-width: 768px) {
             .container {
                 padding: 1rem;
@@ -269,7 +292,10 @@
     <header class="header">
         <h1>Collect Clock</h1>
         <p>Click a name to open the site. Check the box to start a timer — 24 hours unless you change it. Off hides a site from the list.</p>
-        <button type="button" class="hidden-toggle" id="hiddenToggle" hidden>Hidden (0)</button>
+        <div class="header-actions">
+            <button type="button" class="hidden-toggle" id="notifyToggle">Alerts off</button>
+            <button type="button" class="hidden-toggle" id="hiddenToggle" hidden>Hidden (0)</button>
+        </div>
     </header>
 
     <main class="container">
@@ -287,6 +313,8 @@
     <footer class="footer">
         <p><a href="https://jmenichole.github.io/Portfolio/" target="_blank" rel="noopener noreferrer">made for degens by degens &lt;3 </a></p>
     </footer>
+
+    <div id="toast" class="toast" role="status"></div>
 
     <script>
         const bonusLinks = [
@@ -365,6 +393,78 @@
         ];
 
         const STORAGE_KEY = "collectClockVisits";
+        const NOTIFY_KEY = "collectClockNotify";
+        const runningNames = new Set();
+        let toastTimer = null;
+
+        function alertsWanted() {
+            return localStorage.getItem(NOTIFY_KEY) === "on";
+        }
+
+        function canNotify() {
+            return typeof Notification !== "undefined" && Notification.permission === "granted";
+        }
+
+        function updateNotifyButton() {
+            const btn = document.getElementById("notifyToggle");
+            if (!btn) return;
+            if (typeof Notification === "undefined") {
+                btn.hidden = true;
+                return;
+            }
+            const on = alertsWanted() && canNotify();
+            btn.setAttribute("aria-pressed", on ? "true" : "false");
+            btn.textContent = on ? "Alerts on" : "Alerts off";
+            if (Notification.permission === "denied") {
+                btn.textContent = "Alerts blocked";
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById("toast");
+            if (!toast) return;
+            toast.textContent = message;
+            toast.style.display = "block";
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.style.display = "none";
+            }, 5000);
+        }
+
+        function notifyReady(name) {
+            const message = `${name} is ready to collect`;
+            showToast(message);
+            if (alertsWanted() && canNotify()) {
+                try {
+                    new Notification("Collect Clock", { body: message });
+                } catch (e) {}
+            }
+        }
+
+        async function toggleAlerts() {
+            if (typeof Notification === "undefined") return;
+            if (Notification.permission === "denied") {
+                showToast("Notifications are blocked in the browser");
+                updateNotifyButton();
+                return;
+            }
+            if (!alertsWanted() || !canNotify()) {
+                if (Notification.permission !== "granted") {
+                    const result = await Notification.requestPermission();
+                    if (result !== "granted") {
+                        localStorage.setItem(NOTIFY_KEY, "off");
+                        updateNotifyButton();
+                        return;
+                    }
+                }
+                localStorage.setItem(NOTIFY_KEY, "on");
+                showToast("Alerts on — you'll be notified when a timer ends");
+            } else {
+                localStorage.setItem(NOTIFY_KEY, "off");
+                showToast("Alerts off");
+            }
+            updateNotifyButton();
+        }
 
         function parseHours(value) {
             const n = parseInt(value, 10);
@@ -420,15 +520,25 @@
             return `Started ${d.toLocaleDateString([], { month: "short", day: "numeric" })} ${time}`;
         }
 
-        function applyCardState(card, name, visits) {
+        function settleTimer(name, visits) {
             const visit = normalizeVisit(visits[name]);
-            let rem = remainingMs(visit);
+            const rem = remainingMs(visit);
             if (visit.active && visit.startedAt && rem === 0) {
+                if (runningNames.has(name)) notifyReady(name);
                 visit.active = false;
                 visits[name] = visit;
                 saveVisits(visits);
+                runningNames.delete(name);
+                return visit;
             }
-            rem = remainingMs(visit);
+            if (rem > 0) runningNames.add(name);
+            else runningNames.delete(name);
+            return visit;
+        }
+
+        function applyCardState(card, name, visits) {
+            const visit = normalizeVisit(visits[name]);
+            const rem = remainingMs(visit);
 
             const countdown = card.querySelector(".countdown");
             const meta = card.querySelector(".meta");
@@ -560,6 +670,7 @@
 
         function tickCountdowns() {
             const visits = loadVisits();
+            allLinks().forEach((link) => settleTimer(link.name, visits));
             document.querySelectorAll(".card[data-name]").forEach((card) => {
                 applyCardState(card, card.dataset.name, visits);
             });
@@ -567,6 +678,7 @@
 
         document.addEventListener("DOMContentLoaded", () => {
             renderAll();
+            tickCountdowns();
             const hiddenBtn = document.getElementById("hiddenToggle");
             if (hiddenBtn) {
                 hiddenBtn.addEventListener("click", () => {
@@ -574,6 +686,13 @@
                     renderAll();
                 });
             }
+            const notifyBtn = document.getElementById("notifyToggle");
+            if (notifyBtn) {
+                notifyBtn.addEventListener("click", () => {
+                    toggleAlerts();
+                });
+            }
+            updateNotifyButton();
             setInterval(tickCountdowns, 1000);
             document.addEventListener("visibilitychange", () => {
                 if (!document.hidden) tickCountdowns();
