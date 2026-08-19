@@ -134,7 +134,7 @@
 
         .mid-banner .banner-slot {
             width: 100%;
-            max-width: 728px;
+            max-width: none;
         }
 
         .ad-label {
@@ -158,8 +158,12 @@
         }
 
         .mid-banner img.banner-frame {
-            max-height: 220px;
-            object-fit: contain;
+            max-width: 100%;
+            width: 100%;
+            height: auto;
+            aspect-ratio: 21 / 6;
+            object-fit: cover;
+            object-position: center;
         }
 
         .card {
@@ -1002,8 +1006,6 @@
             img.src = banner.src;
             img.alt = banner.alt;
             img.loading = "lazy";
-            img.width = 728;
-            img.height = 220;
             link.appendChild(img);
             slot.appendChild(label);
             slot.appendChild(link);
