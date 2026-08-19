@@ -238,9 +238,49 @@
             color: var(--text-secondary);
         }
 
+        .promo-banner {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+            padding: 0.85rem 1rem;
+            font-weight: 800;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
+            font-size: 0.95rem;
+        }
+
+        .promo-banner span {
+            font-weight: 500;
+            text-transform: none;
+            letter-spacing: 0;
+            opacity: 0.85;
+            margin-left: 0.4rem;
+        }
+
+        .promo-banner.top {
+            background: #1a3a2a;
+            color: var(--text-accent);
+            border-bottom: 1px solid rgba(0, 255, 102, 0.25);
+        }
+
+        .promo-banner.bottom {
+            position: fixed;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #142033;
+            color: #9aa4ff;
+            border-top: 1px solid rgba(154, 164, 255, 0.3);
+            z-index: 50;
+        }
+
+        .promo-banner:hover {
+            filter: brightness(1.15);
+        }
+
         .footer {
             text-align: center;
-            padding: 4rem 1rem 2rem 1rem;
+            padding: 4rem 1rem 5rem 1rem;
             margin-top: 2rem;
         }
 
@@ -298,6 +338,10 @@
         </div>
     </header>
 
+    <a class="promo-banner top" href="https://stake.us/?c=Jmenichole" target="_blank" rel="noopener noreferrer">
+        Stake.us <span>Daily bonuses &amp; reloads</span>
+    </a>
+
     <main class="container">
         <section class="section">
             <h2 class="section-heading">Casino Bonuses</h2>
@@ -309,6 +353,10 @@
             <div id="paid-grid" class="grid"></div>
         </section>
     </main>
+
+    <a class="promo-banner bottom" href="https://earnlab.com/r/jmenichole" target="_blank" rel="noopener noreferrer">
+        EarnLab <span>Offers &amp; surveys that pay cash</span>
+    </a>
 
     <footer class="footer">
         <p><a href="https://jmenichole.github.io/Portfolio/" target="_blank" rel="noopener noreferrer">made for degens by degens &lt;3 </a></p>
