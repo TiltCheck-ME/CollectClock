@@ -21,6 +21,13 @@ assert.match(html, /id="links-grid"/);
 assert.match(html, /id="intl-grid"/);
 assert.match(html, /id="paid-grid"/);
 assert.match(script, /Verb Data/, "paid sites list must still include Verb Data");
+assert.match(script, /you set the price/i, "Verb Data should describe paid data uploads, not surveys");
+assert.doesNotMatch(script, /Get paid for daily surveys/, "Verb Data should not be described as surveys");
+assert.match(script, /name: "Copper"/);
+assert.doesNotMatch(script, /like FreeCash/i, "Copper should not compare itself to FreeCash");
+assert.match(html, /JustTheBuilder/, "JustTheBuilder house ad should remain");
+assert.doesNotMatch(html, /JustTheHelper/, "JustTheHelper card should be removed");
+assert.doesNotMatch(html, /JustTheBots Discord/, "JustTheBots Discord card should be removed");
 
 try {
     new Function(script);
