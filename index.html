@@ -63,11 +63,12 @@
             padding-top: max(0.85rem, env(safe-area-inset-top));
             padding-left: max(1rem, env(safe-area-inset-left));
             padding-right: max(1rem, env(safe-area-inset-right));
-            border-bottom: 1px solid var(--border-color);
-            background: rgba(6, 11, 19, 0.78);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-        }
+           border-bottom: 1px solid var(--border-color);
+  background: rgba(6, 11, 19, 0.78);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4); /* ADD THIS LINE */
+}
 
         .header h1 {
             margin: 0;
@@ -223,19 +224,21 @@
             transition: transform 150ms ease;
         }
 
-        @media (hover: hover) {
-            .card:hover {
-                transform: translateY(-2px);
-            }
-        }
+       @media (hover: hover) {
+  .card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 255, 102, 0.08); /* ADD THIS LINE */
+  }
+}
 
         .card.ready {
             border-left-color: var(--text-accent);
         }
 
-        .card.on-cooldown {
-            border-left-color: var(--soon);
-        }
+      .card.on-cooldown {
+  border-left-color: var(--soon);
+  opacity: 0.65; /* ADD THIS LINE */
+}
 
         .card.on-cooldown .countdown {
             color: var(--soon);
@@ -300,29 +303,30 @@
             opacity: 0.85;
         }
 
-        .timer-check {
-            width: 18px;
-            height: 18px;
-            accent-color: var(--text-accent);
-            cursor: pointer;
-            flex-shrink: 0;
-        }
+       .timer-check {
+  width: 24px; /* CHANGED FROM 18px */
+  height: 24px; /* CHANGED FROM 18px */
+  accent-color: var(--text-accent);
+  cursor: pointer;
+  flex-shrink: 0; 
+}
 
-        .hours-input {
-            width: 3.4rem;
-            background: rgba(0, 0, 0, 0.35);
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            border-radius: 6px;
-            padding: 4px 6px;
-            text-align: center;
-            font-size: 16px;
-        }
-
-        .hours-input:focus {
-            outline: none;
-            border-color: var(--text-accent);
-        }
+     .hours-input {
+  width: 3.4rem;
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+  border-radius: 6px;
+  padding: 4px 6px;
+  text-align: center;
+  font-size: 16px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease; /* ADD THIS LINE */
+} 
+.hours-input:focus {
+  outline: none;
+  border-color: var(--text-accent);
+  box-shadow: 0 0 8px rgba(0, 255, 102, 0.2); /* ADD THIS LINE */
+}
 
         .hours-suffix {
             font-size: 0.8rem;
@@ -705,10 +709,10 @@
                 padding-top: 2rem;
             }
 
-            .timer-check {
-                width: 22px;
-                height: 22px;
-            }
+          .timer-check {
+  width: 28px; /* CHANGED FROM 22px */
+  height: 28px; /* CHANGED FROM 22px */
+}
 
             .countdown {
                 min-width: 0;
