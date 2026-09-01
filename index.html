@@ -39,6 +39,7 @@
 
         html {
             -webkit-text-size-adjust: 100%;
+            color-scheme: dark;
         }
 
         body {
@@ -109,7 +110,6 @@
             display: inline-flex;
             align-items: center;
         }
-        
 
         .hidden-toggle[aria-pressed="true"] {
             border-color: var(--text-accent);
@@ -147,8 +147,8 @@
 
         .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
+            gap: 1rem;
         }
 
         .mid-banner {
@@ -211,17 +211,17 @@
             background-color: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-left: 3px solid transparent;
-            border-radius: 8px;
-            padding: 1.35rem 1.25rem 1.25rem;
-            padding-top: 2.1rem;
+            border-radius: 10px;
+            padding: 0.9rem 1rem 0.85rem;
             color: inherit;
             position: relative;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            text-align: center;
-            gap: 0.55rem;
-            transition: transform 150ms ease;
+            justify-content: flex-start;
+            text-align: left;
+            gap: 0.4rem;
+            min-height: 0;
+            transition: transform 150ms ease, border-color 150ms ease, box-shadow 150ms ease;
         }
 
         @media (hover: hover) {
@@ -237,7 +237,6 @@
 
         .card.on-cooldown {
             border-left-color: var(--soon);
-            opacity: 0.65;
         }
 
         .card.on-cooldown .countdown {
@@ -256,10 +255,11 @@
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 8px;
             flex-wrap: wrap;
             word-break: break-word;
+            padding-right: 2.6rem;
         }
 
         .favicon {
@@ -272,27 +272,33 @@
         .timer-row {
             display: flex;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             gap: 8px;
             flex-wrap: wrap;
+            margin-top: 0.15rem;
+            padding: 0.5rem 0.65rem;
+            background: rgba(0, 0, 0, 0.28);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
         }
 
         .hide-toggle {
             position: absolute;
-            top: 4px;
-            right: 4px;
+            top: 6px;
+            right: 6px;
             border: none;
             background: transparent;
             color: var(--text-secondary);
             border-radius: 6px;
-            padding: 8px 10px;
-            min-height: 36px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            letter-spacing: 0.02em;
+            padding: 4px 8px;
+            min-height: 28px;
+            font-size: 0.65rem;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
             cursor: pointer;
             font-family: inherit;
-            opacity: 0.5;
+            opacity: 0.45;
         }
 
         .hide-toggle:hover {
@@ -303,23 +309,54 @@
             opacity: 0.85;
         }
 
-        .timer-check {
-            width: 24px;
-            height: 24px;
-            accent-color: var(--text-accent);
+        .timer-check,
+        .budget-list input[type="checkbox"] {
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            width: 18px;
+            height: 18px;
+            margin: 0;
+            padding: 0;
+            border: 1.5px solid rgba(0, 255, 102, 0.35);
+            border-radius: 4px;
+            background-color: #05080f;
+            background-image: none;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 12px 12px;
+            box-shadow: none;
+            display: inline-block;
+            vertical-align: middle;
             cursor: pointer;
             flex-shrink: 0;
+            color: transparent;
+            forced-color-adjust: none;
+        }
+
+        .timer-check:checked,
+        .budget-list input[type="checkbox"]:checked {
+            background-color: var(--text-accent);
+            border-color: var(--text-accent);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='none' stroke='%23060b13' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round' d='M3.5 8.5l3 3 6-6'/%3E%3C/svg%3E");
+        }
+
+        .timer-check:focus-visible,
+        .budget-list input[type="checkbox"]:focus-visible {
+            outline: 2px solid var(--text-accent);
+            outline-offset: 2px;
         }
 
         .hours-input {
             width: 3.4rem;
-            background: rgba(0, 0, 0, 0.35);
-            border: 1px solid var(--border-color);
+            background: #05080f;
+            border: 1px solid #3d4d66;
             color: var(--text-primary);
             border-radius: 6px;
             padding: 4px 6px;
             text-align: center;
             font-size: 16px;
+            color-scheme: dark;
             transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
@@ -342,7 +379,7 @@
             letter-spacing: 0.02em;
             font-variant-numeric: tabular-nums;
             color: var(--text-accent);
-            min-width: 7.5rem;
+            margin-left: auto;
         }
 
         .card .desc {
@@ -600,12 +637,9 @@
             cursor: pointer;
         }
 
-        .budget-list input {
-            width: 16px;
-            height: 16px;
-            margin: 0;
-            accent-color: var(--text-accent);
-            flex-shrink: 0;
+        .budget-list input[type="checkbox"] {
+            width: 1.05rem;
+            height: 1.05rem;
         }
 
         .budget-list .price {
@@ -706,13 +740,12 @@
             }
 
             .card {
-                padding: 1.15rem 0.95rem 1rem;
-                padding-top: 2rem;
+                padding: 0.85rem 0.9rem 0.8rem;
             }
 
             .timer-check {
-                width: 28px;
-                height: 28px;
+                width: 20px;
+                height: 20px;
             }
 
             .countdown {
@@ -791,7 +824,7 @@
 
     <header class="header">
         <h1>Collect Clock</h1>
-        <p class="subtitle">Click a name to open the site. Check the box to start a 24h timer. Off hides a site.</p>
+        <p class="subtitle">Click a name to open the site. Check the box to start a 24h timer. Hide takes a site off the list.</p>
         <div class="header-actions">
             <a class="hidden-toggle" href="https://discord.gg/NEePze3rZd" target="_blank" rel="noopener noreferrer">Discord</a>
             <button type="button" class="hidden-toggle" id="notifyToggle">Alerts off</button>
@@ -830,20 +863,6 @@
                     <span>AI Discord server setup in under a minute. Free to design, $0.99 to build.</span>
                 </div>
                 <span class="house-ad-cta">Add to server</span>
-            </a>
-            <a class="house-ad" href="https://jmenichole.github.io/justthehelper/" target="_blank" rel="noopener noreferrer">
-                <div class="house-ad-copy">
-                    <strong>JustTheHelper</strong>
-                    <span>Welcome, verify, reminders, and paid private-thread tickets for Discord.</span>
-                </div>
-                <span class="house-ad-cta">Learn more</span>
-            </a>
-            <a class="house-ad" href="https://discord.gg/NEePze3rZd" target="_blank" rel="noopener noreferrer">
-                <div class="house-ad-copy">
-                    <strong>JustTheBots Discord</strong>
-                    <span>Collect Clock, JustTheBuilder, and JustTheHelper in one server.</span>
-                </div>
-                <span class="house-ad-cta">Join Discord</span>
             </a>
         </div>
     </div>
@@ -990,13 +1009,13 @@
         ];
 
         const paidSites = [
-            { name: "Verb Data", url: "https://verb-data.com/signup?ref=VG2UYZUV", desc: "Get paid for daily surveys" },
+            { name: "Verb Data", url: "https://verb-data.com/signup?ref=VG2UYZUV", desc: "Get paid for data uploads and info — you set the price" },
             { name: "FreeCash", url: "https://freecash.com/r/jmenichole", desc: "Surveys, offers, and games that pay cash" },
             { name: "EarnLab", url: "https://earnlab.com/r/jmenichole", desc: "Complete offers and surveys for cash" },
             { name: "Earnopolis", url: "https://earnopolis.com/r/?r=jmenichole", desc: "Get paid for offers and tasks" },
             { name: "Handshake", url: "https://joinhandshake.com/move-program/referral?referralCode=E67C78&utm_source=web&utm_campaign=hai_referral_page_share&utm_medium=share&utm_content=hai_referral", desc: "Gig economy platform for verified users" },
             { name: "2Captcha", url: "https://2captcha.com/auth/register/?from=25952984", desc: "Get paid to solve captchas" },
-            { name: "Copper", url: "https://cpr.gg/r/WORYDP", desc: "Surveys and offers, like FreeCash" }
+            { name: "Copper", url: "https://cpr.gg/r/WORYDP", desc: "Surveys and offers" }
         ];
 
         const STORAGE_KEY = "collectClockVisits";
@@ -1166,7 +1185,7 @@
             if (meta) meta.textContent = formatVisited(visit);
             if (checkbox) checkbox.checked = rem > 0;
             if (hideBtn) {
-                hideBtn.textContent = visit.hidden ? "On" : "Off";
+                hideBtn.textContent = visit.hidden ? "Show" : "Hide";
                 hideBtn.title = visit.hidden ? "Show this site in the list" : "Hide this site from the list";
             }
             if (hoursInput && document.activeElement !== hoursInput) {
@@ -1179,7 +1198,7 @@
             card.className = "card";
             card.dataset.name = link.name;
             card.innerHTML = `
-                <button type="button" class="hide-toggle" title="Hide this site from the list">Off</button>
+                <button type="button" class="hide-toggle" title="Hide this site from the list">Hide</button>
                 <h3><a target="_blank" rel="noopener noreferrer"></a></h3>
                 <div class="desc"></div>
                 ${withTimer ? `
