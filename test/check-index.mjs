@@ -28,6 +28,8 @@ assert.doesNotMatch(script, /like FreeCash/i, "Copper should not compare itself 
 assert.match(html, /JustTheBuilder/, "JustTheBuilder house ad should remain");
 assert.doesNotMatch(html, /JustTheHelper/, "JustTheHelper card should be removed");
 assert.doesNotMatch(html, /JustTheBots Discord/, "JustTheBots Discord card should be removed");
+assert.doesNotMatch(html, />Discord<\/a>/, "header Discord button should be removed");
+assert.doesNotMatch(html, /discord\.gg/, "Discord invite link should be removed from the page");
 
 try {
     new Function(script);
