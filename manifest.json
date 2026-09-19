@@ -1,18 +1,11 @@
 {
   "name": "Collect Clock",
   "short_name": "Collect Clock",
-  "description": "Track casino bonus timers and Get Paid To sites.",
+  "description": "A private dashboard for bonus timers, daily claims, and Get Paid To links.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#060b13",
-  "theme_color": "#060b13",
-  "icons": [
-    {
-      "src": "assets/icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    }
-  ]
+  "background_color": "#07111f",
+  "theme_color": "#07111f",
+  "icons": [{"src":"assets/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
 }
