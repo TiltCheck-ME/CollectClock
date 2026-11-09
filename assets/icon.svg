@@ -1,5 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
-  <rect width="192" height="192" rx="42" fill="#060b13"/>
-  <circle cx="96" cy="96" r="64" fill="none" stroke="#00ff66" stroke-width="10"/>
-  <path d="M96 54v46l34 22" fill="none" stroke="#00ff66" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect width="192" height="192" rx="42" fill="#161616"/>
+  <g transform="rotate(-8 96 96)">
+    <circle cx="96" cy="96" r="70" fill="#ffd23f" stroke="#fffaf0" stroke-width="6"/>
+    <circle cx="96" cy="96" r="61" fill="none" stroke="#161616" stroke-width="5" stroke-dasharray="7 6"/>
+    <circle cx="96" cy="96" r="50" fill="#ff3d8b" stroke="#161616" stroke-width="6"/>
+    <g stroke="#fffaf0" stroke-width="5" stroke-linecap="round">
+      <line x1="96" y1="58" x2="96" y2="64"/><line x1="134" y1="96" x2="128" y2="96"/><line x1="96" y1="134" x2="96" y2="128"/><line x1="58" y1="96" x2="64" y2="96"/>
+    </g>
+    <path d="M96 96V70M96 96l18 12" fill="none" stroke="#fffaf0" stroke-width="8" stroke-linecap="round"/>
+    <circle cx="96" cy="96" r="7" fill="#161616" stroke="#fffaf0" stroke-width="3"/>
+    <path d="M150 34l5 11 12 1-9 8 3 12-11-6-11 6 3-12-9-8 12-1z" fill="#fffaf0" stroke="#161616" stroke-width="3" stroke-linejoin="round"/>
+  </g>
 </svg>
