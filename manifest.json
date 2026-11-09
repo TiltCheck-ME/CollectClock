@@ -1,11 +1,37 @@
 {
-  "name": "Collect Clock",
-  "short_name": "Collect Clock",
-  "description": "A private dashboard for bonus timers, daily claims, and Get Paid To links.",
+  "name": "CollectClock",
+  "short_name": "CollectClock",
+  "description": "Every daily bonus in one spot. Tap, collect, come back tomorrow.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "background_color": "#161616",
   "theme_color": "#161616",
-  "icons": [{"src":"assets/icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}]
+  "icons": [
+    {
+      "src": "assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ],
+  "id": "./"
 }
