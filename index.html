@@ -202,7 +202,7 @@ async function refreshAll(){const b=document.querySelector('#refreshBtn');if(b.c
 async function loadDrops(){try{const r=await fetch(API+'/drops');const d=await r.json();drops=(d.drops||[]).filter(o=>Date.now()-o.ts<48*3600e3).sort((a,b)=>b.ts-a.ts);render()}catch{}}
 
 let trust={};
-function trustFlag(x){const f=trust[String(x.brand).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')];if(!f||!f.length)return '';return `<div class="trust-flag">⚠ ${f.map(o=>`${o.reporters} × ${esc(o.label.toLowerCase())}`).join(' · ')} <span>(30 days)</span></div>`}
+function trustFlag(x){const f=trust[String(x.brand).toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')];if(!f||!f.length)return '';return `<div class="trust-flag">🚩 ${f.map(o=>o.staff?`${esc(o.label)} · verified`:`${o.reporters} × ${esc(o.label.toLowerCase())}`).join(' · ')}${f.some(o=>!o.staff)?' <span>(30 days)</span>':''}</div>`}
 async function loadTrust(){try{const d=await (await fetch(API+'/casino-reports/summary')).json();trust=d.casinos||{};render()}catch{}}
 let reporting=null;
 function openReport(name){if(!state.session){if(confirm('Reports are tied to a Discord sign-in so they can be trusted. Sign in now?'))document.querySelector('#loginBtn').click();return}reporting=name;document.querySelector('#rpCasino').textContent=name;document.querySelector('#reportForm').reset();document.querySelector('#reportDialog').showModal()}
