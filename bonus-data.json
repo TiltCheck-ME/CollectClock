@@ -1,81 +1,562 @@
 [
-  {"brand":"TrustDice","bonus":"Free coins + 25% rakeback","url":"https://trustdice.win/faucet/?ref=u_jmenichole","verified":"2025-11-04","code":null},
-  {"brand":"Stake.us","bonus":"10,000 GC + 1 Stake Cash (SC)","url":"https://stake.us/?c=Jmenichole","verified":"2025-11-04","code":null},
-  {"brand":"Bitsler","bonus":"0.0001+ BTC faucet","url":"https://www.bitsler.io/?ref=jmenichole","verified":"2025-11-04","code":null},
-  {"brand":"Rolla","bonus":"Daily Free Play","url":"https://www.rolla.com/?raf=3873","verified":"2025-11-04","code":null},
-  {"brand":"Punt","bonus":"1,000 GC + 0.10 SC every hour (up to 24,000 GC + 2.4 SC/day)","url":"https://punt.com/c/cg60pd","verified":"2025-11-04","code":null},
-  {"brand":"Shuffle.us","bonus":"Daily Free Play","url":"https://shuffle.us?r=Rl93OJoflX","verified":"2025-11-04","code":null},
-  {"brand":"WOW Vegas","bonus":"~750–175,000+ WOW Coins and ~0.1–3.5+ SC (by VIP level)","url":"https://www.wowvegas.com/?raf=3615494","verified":"2025-11-04","code":null},
-  {"brand":"Pulsz","bonus":"2,500 GC + 0.30 SC (rising with streak)","url":"https://www.pulsz.com/?invited_by=utfk4r","verified":"2025-11-04","code":"PULSE10"},
-  {"brand":"Modo","bonus":"Daily Login Bonus","url":"https://modo.us?referralCode=61MN6A","verified":"2025-11-04","code":null},
-  {"brand":"McLuck","bonus":"2,500 GC + up to 2.5 SC (random)","url":"https://www.mcluck.com/lp/raf?r=61119407%2F908900038","verified":"2025-11-04","code":null},
-  {"brand":"Crown Coins","bonus":"5,000 GC (Day 1) up to 100,000 GC (Day 30)","url":"https://crowncoinscasino.com/?utm_campaign=59048bf4-dbeb-4c58-b690-d7ad11bdb847&utm_source=friends","verified":"2025-11-04","code":null},
-  {"brand":"Chanced","bonus":"~5,000–20,000 Gold Coins + up to 1 Sweeps Coin","url":"https://chanced.com/c/ysa096","verified":"2025-11-04","code":null},
-  {"brand":"Pulsz Bingo","bonus":"Daily Bingo Bonus","url":"https://www.pulszbingo.com/?invited_by=eg6mbf","verified":"2025-11-04","code":null},
-  {"brand":"Zula Casino","bonus":"10,000 GC + 1 SC","url":"https://www.zulacasino.com/signup/221ddd92-862e-45d8-acc0-4cd2c26f7cdd","verified":"2025-11-04","code":null},
-  {"brand":"Fortune Coins","bonus":"Up to 300,000 GC + 100 FC (≈1 SC) per 7-day cycle","url":"https://www.fortunecoins.com/signup/3c08936f-8979-4f87-b377-efdbff519029","verified":"2025-11-04","code":null},
-  {"brand":"High 5 Casino","bonus":"~0.1 SC per day (plus small GC/diamond bonuses)","url":"https://high5casino.com/gc?adId=INV001%3AJmenichole","verified":"2025-11-04","code":"HIGH5DAILY"},
-  {"brand":"Scrooge Casino","bonus":"Daily Free Credits","url":"https://refer.scrooge.casino/674fb6c5fbffe157e92556c8-1740545357394","verified":"2025-11-04","code":null},
-  {"brand":"American Luck","bonus":"Daily Free Coins","url":"https://americanluck.com/signup/e360918f-8986-4dec-9823-a902d3f4936a","verified":"2025-11-04","code":null},
-  {"brand":"Chumba Casino","bonus":"200,000 GC + 1 SC","url":"https://chumbacasino.com","verified":"2025-11-04","code":"CHUMBAFREE5"},
-  {"brand":"Global Poker","bonus":"1,000 GC (base) up to 2,500 GC (Day 7 streak)","url":"https://globalpoker.com","verified":"2025-11-04","code":null},
-  {"brand":"LuckyLand Slots","bonus":"2,400 GC + 0.3 SC (Days 1–6); 1.0 SC (Day 7) + 400 GC every 4h","url":"https://luckyland.com","verified":"2025-11-04","code":null},
-  {"brand":"Sportzino","bonus":"Daily Sports Bonus","url":"https://sportzino.com/signup/8a105ba6-7ada-45c8-b021-f478ac03c7c4","verified":"2025-11-04","code":null},
-  {"brand":"Hello Millions","bonus":"~1,500 GC + 0.2 SC per daily spin","url":"https://www.hellomillions.com/lp/raf?r=26d6760f%2F1236643867","verified":"2025-11-04","code":null},
-  {"brand":"Mega Bonanza","bonus":"1,500 GC + 0.20 SC","url":"https://www.megabonanza.com/?r=72781897","verified":"2025-11-04","code":null},
-  {"brand":"Real Prize","bonus":"Base 1,500 GC + 0.30 SC (increases via VIP to 25k GC + 5 SC)","url":"https://www.realprize.com/refer/317136","verified":"2025-11-04","code":null},
-  {"brand":"LuckyBird","bonus":"~2,000 GC + 0.2 SC (rising to 1 SC at higher VIP)","url":"https://luckybird.vip","verified":"2025-11-04","code":null},
-  {"brand":"PlayFame","bonus":"1,500 GC + 0.2–2 SC (varies/random)","url":"https://www.playfame.com/lp/raf?r=1275975417","verified":"2025-11-04","code":null},
-  {"brand":"Jackpota","bonus":"1,500 GC + 0.20 SC","url":"https://www.jackpota.com/?r=85453282","verified":"2025-11-04","code":null},
-  {"brand":"Clubs Poker","bonus":"Daily Poker Bonus","url":"https://play.clubs.poker/?referralCode=104192","verified":"2025-11-04","code":null},
-  {"brand":"Spree","bonus":"Daily Free Spins","url":"https://spree.com/?r=1450539","verified":"2025-11-04","code":null},
-  {"brand":"FortuneWheelz","bonus":"Day 1: 20 GC + 20 Fortune Coins; up to 10 free spins (Day 7)","url":"https://fortunewheelz.com/?invited_by=P36ZS6","verified":"2025-11-04","code":null},
-  {"brand":"Zoot","bonus":"~1,000 GC daily (plus occasional 0.5 SC)","url":"https://getzoot.us/?referralCode=ZOOTwithJMENICHOLE","verified":"2025-11-04","code":null},
-  {"brand":"Funrize","bonus":"Daily Free Spins","url":"https://funrize.com","verified":"2025-11-04","code":"FUN100"},
-  {"brand":"CardCrush","bonus":"Daily rewards and offers","url":"https://www.cardcrush.com/lp/raf?r=db061927%2F45375369","verified":"2025-11-04","code":null},
-  {"brand":"Yotta","bonus":"Earn rewards and bonuses","url":"https://join.withyotta.com/JMENICHOLE0","verified":"2025-11-04","code":null},
-  {"brand":"BinkBet","bonus":"Daily rewards and payouts","url":"https://bink.bet/jmenichole","verified":"2025-11-04","code":null},
-  {"brand":"Coverd","bonus":"Rewards app and payouts","url":"https://apps.apple.com/us/app/coverd/id6741347396","verified":"2025-11-04","code":null},
-  {"brand":"Joya","bonus":"Offers and rewards","url":"https://joya.us/?referral_code=b15fe37b1741d912","verified":"2025-11-04","code":null},
-  {"brand":"Winera","bonus":"Rewards and bonuses","url":"https://winera.us?referralCode=Vf8jRF#signup","verified":"2025-11-04","code":null},
-  {"brand":"Acebet","bonus":"Promotions and rewards","url":"https://acebet.cc/welcome/r/jmenichole","verified":"2025-11-04","code":null},
-  {"brand":"Nuts.gg","bonus":"Rewards and giveaways","url":"https://nuts.gg/play/jmenichole","verified":"2025-11-04","code":null},
-  {"brand":"Sharkroll","bonus":"Rewards and payouts","url":"https://www.sharkroll.io/en/?ref=A120A9538458","verified":"2025-11-04","code":null},
-  {"brand":"Coinsback Casino","bonus":"Rewards and cashback offers","url":"https://www.coinsbackcasino.com/invite/1556026?utm_source=copy&utm_medium=referral&utm_campaign=member-referral","verified":"2025-11-04","code":null},
-  {"brand":"Qzino","bonus":"Rewards platform and earnings","url":"https://qzino.ai?r=QZER6326443","verified":"2025-11-04","code":null},
-  {"brand":"FireSevens","bonus":"Daily rewards and payouts","url":"https://firesevens.com/?invited_by=BEQM7P","verified":"2025-11-04","code":null},
-  {"brand":"Jumbo88","bonus":"Rewards and bonus offers","url":"https://www.jumbo88.com/signup?referralCode=6uff79","verified":"2025-11-04","code":null},
-  {"brand":"SpinBlitz","bonus":"Daily rewards and payouts","url":"https://www.spinblitz.com/lp/raf?r=606f64a3%2F1246446739","verified":"2025-11-04","code":null},
-  {"brand":"MyPrize.us","bonus":"Rewards and prize payouts","url":"https://myprize.us/invite/jmenichole","verified":"2025-11-04","code":null},
-  {"brand":"Lone Star Casino","bonus":"Daily bonuses and rewards","url":"https://lonestarcasino.com/refer/678504","verified":"2025-11-04","code":null},
-  {"brand":"SpinPals","bonus":"Reward offers and bonuses","url":"https://www.spinpals.com?referralcode=e851e1a8-c455-4a59-954d-b7fe0bbad04c","verified":"2025-11-04","code":null},
-  {"brand":"Spinsala","bonus":"Daily rewards and bonuses","url":"https://spinsala.com/en?invite=daym","verified":"2025-11-04","code":null},
-  {"brand":"Legendz","bonus":"Rewards and bonuses","url":"https://legendz.com/?referred_by_id=221602","verified":"2025-11-04","code":null},
-  {"brand":"Clash.gg","bonus":"Rewards and giveaways","url":"https://clash.gg/r/stakestats","verified":"2025-11-04","code":null},
-  {"brand":"Cases.gg","bonus":"Rewards and giveaways","url":"https://www.cases.gg/r/JMENICHOLE","verified":"2025-11-04","code":null},
-  {"brand":"Jemlit","bonus":"Earn rewards and payouts","url":"https://jemlit.com/en/a/Jmenichole","verified":"2025-11-04","code":null},
-  {"brand":"RoxyMoxy","bonus":"Bonus rewards and payouts","url":"https://roxymoxy.com/home?invite=f94f874427","verified":"2025-11-04","code":null},
-  {"brand":"LuckyBits Vegas","bonus":"Rewards and bonuses","url":"https://luckybitsvegas.com/gc?adId=INV001%3Ajmenichole","verified":"2025-11-04","code":null},
-  {"brand":"PrizePicks","bonus":"Daily game rewards","url":"https://app.prizepicks.com/sign-up?invite_code=PR-N0MTQX8&source=iosShare","verified":"2025-11-04","code":null},
-  {"brand":"Dabble","bonus":"Rewards and game bonuses","url":"https://click.dabble.com/GaFA/js1v7hqv","verified":"2025-11-04","code":null},
-  {"brand":"VegaWin","bonus":"Daily login bonus + free spins promos","url":"https://vegawin.com","verified":"2026-11-09","code":null},
-  {"brand":"Good Vibes Casino","bonus":"Daily login bonus","url":"https://goodvibescasino.com","verified":"2026-11-09","code":null},
-  {"brand":"Bankrolla","bonus":"Daily free plays","url":"https://bankrolla.com","verified":"2026-11-09","code":null},
-  {"brand":"Spindoo","bonus":"Daily login bonus","url":"https://www.spindoo.us","verified":"2026-11-09","code":null},
-  {"brand":"Dara Casino","bonus":"Daily login bonus + monthly Lucky Drop","url":"https://daracasino.com","verified":"2026-11-09","code":null},
-  {"brand":"Gold Machine","bonus":"Daily login bonus","url":"https://www.goldmachine.com","verified":"2026-11-09","code":null},
-  {"brand":"EpicSweep","bonus":"Daily login bonus","url":"https://epicsweep.us","verified":"2026-11-09","code":null},
-  {"brand":"TheBoss.us","bonus":"Daily login bonus + mystery gifts","url":"https://www.theboss.us","verified":"2026-11-09","code":null},
-  {"brand":"Win Bonanza","bonus":"Daily login bonus","url":"https://winbonanza.com","verified":"2026-11-09","code":null},
-  {"brand":"Playtana","bonus":"Daily free coins + free dice","url":"https://playtana.com","verified":"2026-11-09","code":null},
-  {"brand":"Sidepot","bonus":"Daily missions (up to 100 SC)","url":"https://sidepot.us","verified":"2026-11-09","code":null},
-  {"brand":"LuckyRush","bonus":"Daily bonus","url":"https://luckyrush.io","verified":"2026-11-09","code":null},
-  {"brand":"Vegas Bonanza","bonus":"Daily login streak bonus","url":"https://vegasbonanza.com","verified":"2026-11-09","code":null},
-  {"brand":"Cooked.us","bonus":"Daily login bonus + SC races","url":"https://cooked.us","verified":"2026-11-09","code":null},
-  {"brand":"MetaWin.us","bonus":"Daily login bonus + instant rewards","url":"https://metawin.us","verified":"2026-11-09","code":null},
-  {"brand":"Sweepstakes Casino","bonus":"Daily login bonus","url":"https://sweepstakescasino.com","verified":"2026-11-09","code":null},
-  {"brand":"Bangcoins","bonus":"Daily login bonus","url":"https://bangcoins.com","verified":"2026-11-09","code":null},
-  {"brand":"Rolly","bonus":"Daily login bonus","url":"https://rolly.io","verified":"2026-11-09","code":null},
-  {"brand":"LuckySlots.us","bonus":"Daily login bonus","url":"https://luckyslots.us","verified":"2026-11-09","code":null},
-  {"brand":"LuckXpress","bonus":"Daily reward","url":"https://luckxpresscasino.com","verified":"2026-11-09","code":null}
+  {
+    "brand": "TrustDice",
+    "bonus": "Free coins + 25% rakeback",
+    "url": "https://trustdice.win/faucet/?ref=u_jmenichole",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Stake.us",
+    "bonus": "10,000 GC + 1 Stake Cash (SC)",
+    "url": "https://stake.us/?c=Jmenichole",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Bitsler",
+    "bonus": "0.0001+ BTC faucet",
+    "url": "https://www.bitsler.io/?ref=jmenichole",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Rolla",
+    "bonus": "Daily Free Play",
+    "url": "https://www.rolla.com/?raf=3873",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Punt",
+    "bonus": "1,000 GC + 0.10 SC every hour (up to 24,000 GC + 2.4 SC/day)",
+    "url": "https://punt.com/c/cg60pd",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Shuffle.us",
+    "bonus": "Daily Free Play",
+    "url": "https://shuffle.us?r=Rl93OJoflX",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "WOW Vegas",
+    "bonus": "~750\u2013175,000+ WOW Coins and ~0.1\u20133.5+ SC (by VIP level)",
+    "url": "https://www.wowvegas.com/?raf=3615494",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Pulsz",
+    "bonus": "2,500 GC + 0.30 SC (rising with streak)",
+    "url": "https://www.pulsz.com/?invited_by=utfk4r",
+    "verified": "2025-11-04",
+    "code": "PULSE10"
+  },
+  {
+    "brand": "Modo",
+    "bonus": "Daily Login Bonus",
+    "url": "https://modo.us?referralCode=61MN6A",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "McLuck",
+    "bonus": "2,500 GC + up to 2.5 SC (random)",
+    "url": "https://www.mcluck.com/lp/raf?r=61119407%2F908900038",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Crown Coins",
+    "bonus": "5,000 GC (Day 1) up to 100,000 GC (Day 30)",
+    "url": "https://crowncoinscasino.com/?utm_campaign=59048bf4-dbeb-4c58-b690-d7ad11bdb847&utm_source=friends",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Chanced",
+    "bonus": "~5,000\u201320,000 Gold Coins + up to 1 Sweeps Coin",
+    "url": "https://chanced.com/c/ysa096",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Pulsz Bingo",
+    "bonus": "Daily Bingo Bonus",
+    "url": "https://www.pulszbingo.com/?invited_by=eg6mbf",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Zula Casino",
+    "bonus": "10,000 GC + 1 SC",
+    "url": "https://www.zulacasino.com/signup/221ddd92-862e-45d8-acc0-4cd2c26f7cdd",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Fortune Coins",
+    "bonus": "Up to 300,000 GC + 100 FC (\u22481 SC) per 7-day cycle",
+    "url": "https://www.fortunecoins.com/signup/3c08936f-8979-4f87-b377-efdbff519029",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "High 5 Casino",
+    "bonus": "~0.1 SC per day (plus small GC/diamond bonuses)",
+    "url": "https://high5casino.com/gc?adId=INV001%3AJmenichole",
+    "verified": "2025-11-04",
+    "code": "HIGH5DAILY"
+  },
+  {
+    "brand": "Scrooge Casino",
+    "bonus": "Daily Free Credits",
+    "url": "https://refer.scrooge.casino/674fb6c5fbffe157e92556c8-1740545357394",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "American Luck",
+    "bonus": "Daily Free Coins",
+    "url": "https://americanluck.com/signup/e360918f-8986-4dec-9823-a902d3f4936a",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Chumba Casino",
+    "bonus": "200,000 GC + 1 SC",
+    "url": "https://chumbacasino.com",
+    "verified": "2025-11-04",
+    "code": "CHUMBAFREE5"
+  },
+  {
+    "brand": "Global Poker",
+    "bonus": "1,000 GC (base) up to 2,500 GC (Day 7 streak)",
+    "url": "https://globalpoker.com",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "LuckyLand Slots",
+    "bonus": "2,400 GC + 0.3 SC (Days 1\u20136); 1.0 SC (Day 7) + 400 GC every 4h",
+    "url": "https://luckyland.com",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Sportzino",
+    "bonus": "Daily Sports Bonus",
+    "url": "https://sportzino.com/signup/8a105ba6-7ada-45c8-b021-f478ac03c7c4",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Hello Millions",
+    "bonus": "~1,500 GC + 0.2 SC per daily spin",
+    "url": "https://www.hellomillions.com/lp/raf?r=26d6760f%2F1236643867",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Mega Bonanza",
+    "bonus": "1,500 GC + 0.20 SC",
+    "url": "https://www.megabonanza.com/?r=72781897",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Real Prize",
+    "bonus": "Base 1,500 GC + 0.30 SC (increases via VIP to 25k GC + 5 SC)",
+    "url": "https://www.realprize.com/refer/317136",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "LuckyBird",
+    "bonus": "~2,000 GC + 0.2 SC (rising to 1 SC at higher VIP)",
+    "url": "https://luckybird.vip",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "PlayFame",
+    "bonus": "1,500 GC + 0.2\u20132 SC (varies/random)",
+    "url": "https://www.playfame.com/lp/raf?r=1275975417",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Jackpota",
+    "bonus": "1,500 GC + 0.20 SC",
+    "url": "https://www.jackpota.com/?r=85453282",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Clubs Poker",
+    "bonus": "Daily Poker Bonus",
+    "url": "https://play.clubs.poker/?referralCode=104192",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Spree",
+    "bonus": "Daily Free Spins",
+    "url": "https://spree.com/?r=1450539",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "FortuneWheelz",
+    "bonus": "Day 1: 20 GC + 20 Fortune Coins; up to 10 free spins (Day 7)",
+    "url": "https://fortunewheelz.com/?invited_by=P36ZS6",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Zoot",
+    "bonus": "~1,000 GC daily (plus occasional 0.5 SC)",
+    "url": "https://getzoot.us/?referralCode=ZOOTwithJMENICHOLE",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Funrize",
+    "bonus": "Daily Free Spins",
+    "url": "https://funrize.com",
+    "verified": "2025-11-04",
+    "code": "FUN100"
+  },
+  {
+    "brand": "CardCrush",
+    "bonus": "Daily rewards and offers",
+    "url": "https://www.cardcrush.com/lp/raf?r=db061927%2F45375369",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Yotta",
+    "bonus": "Earn rewards and bonuses",
+    "url": "https://join.withyotta.com/JMENICHOLE0",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "BinkBet",
+    "bonus": "Daily rewards and payouts",
+    "url": "https://bink.bet/jmenichole",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Coverd",
+    "bonus": "Rewards app and payouts",
+    "url": "https://apps.apple.com/us/app/coverd/id6741347396",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Joya",
+    "bonus": "Offers and rewards",
+    "url": "https://joya.us/?referral_code=b15fe37b1741d912",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Winera",
+    "bonus": "Rewards and bonuses",
+    "url": "https://winera.us?referralCode=Vf8jRF#signup",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Acebet",
+    "bonus": "Promotions and rewards",
+    "url": "https://acebet.cc/welcome/r/jmenichole",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Nuts.gg",
+    "bonus": "Rewards and giveaways",
+    "url": "https://nuts.gg/play/jmenichole",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Sharkroll",
+    "bonus": "Rewards and payouts",
+    "url": "https://www.sharkroll.io/en/?ref=A120A9538458",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Coinsback Casino",
+    "bonus": "Rewards and cashback offers",
+    "url": "https://www.coinsbackcasino.com/invite/1556026?utm_source=copy&utm_medium=referral&utm_campaign=member-referral",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Qzino",
+    "bonus": "Rewards platform and earnings",
+    "url": "https://qzino.ai?r=QZER6326443",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "FireSevens",
+    "bonus": "Daily rewards and payouts",
+    "url": "https://firesevens.com/?invited_by=BEQM7P",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Jumbo88",
+    "bonus": "Rewards and bonus offers",
+    "url": "https://www.jumbo88.com/signup?referralCode=6uff79",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "SpinBlitz",
+    "bonus": "Daily rewards and payouts",
+    "url": "https://www.spinblitz.com/lp/raf?r=606f64a3%2F1246446739",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "MyPrize.us",
+    "bonus": "Rewards and prize payouts",
+    "url": "https://myprize.us/invite/jmenichole",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Lone Star Casino",
+    "bonus": "Daily bonuses and rewards",
+    "url": "https://lonestarcasino.com/refer/678504",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "SpinPals",
+    "bonus": "Reward offers and bonuses",
+    "url": "https://www.spinpals.com?referralcode=e851e1a8-c455-4a59-954d-b7fe0bbad04c",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Spinsala",
+    "bonus": "Daily rewards and bonuses",
+    "url": "https://spinsala.com/en?invite=daym",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Legendz",
+    "bonus": "Rewards and bonuses",
+    "url": "https://legendz.com/?referred_by_id=221602",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Clash.gg",
+    "bonus": "Rewards and giveaways",
+    "url": "https://clash.gg/r/stakestats",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Cases.gg",
+    "bonus": "Rewards and giveaways",
+    "url": "https://www.cases.gg/r/JMENICHOLE",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Jemlit",
+    "bonus": "Earn rewards and payouts",
+    "url": "https://jemlit.com/en/a/Jmenichole",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "RoxyMoxy",
+    "bonus": "Bonus rewards and payouts",
+    "url": "https://roxymoxy.com/home?invite=f94f874427",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "LuckyBits Vegas",
+    "bonus": "Rewards and bonuses",
+    "url": "https://luckybitsvegas.com/gc?adId=INV001%3Ajmenichole",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "PrizePicks",
+    "bonus": "Daily game rewards",
+    "url": "https://app.prizepicks.com/sign-up?invite_code=PR-N0MTQX8&source=iosShare",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "Dabble",
+    "bonus": "Rewards and game bonuses",
+    "url": "https://click.dabble.com/GaFA/js1v7hqv",
+    "verified": "2025-11-04",
+    "code": null
+  },
+  {
+    "brand": "VegaWin",
+    "bonus": "Daily login bonus + free spins promos",
+    "url": "https://vegawin.com",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "Good Vibes Casino",
+    "bonus": "Daily login bonus",
+    "url": "https://goodvibescasino.com",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "Bankrolla",
+    "bonus": "Daily free plays",
+    "url": "https://bankrolla.com",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "Spindoo",
+    "bonus": "Daily login bonus",
+    "url": "https://www.spindoo.us",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "Dara Casino",
+    "bonus": "Daily login bonus + monthly Lucky Drop",
+    "url": "https://daracasino.com",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "Gold Machine",
+    "bonus": "Daily login bonus",
+    "url": "https://www.goldmachine.com",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "EpicSweep",
+    "bonus": "Daily login bonus",
+    "url": "https://epicsweep.us",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "TheBoss.us",
+    "bonus": "Daily login bonus + mystery gifts",
+    "url": "https://www.theboss.us",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "Win Bonanza",
+    "bonus": "Daily login bonus",
+    "url": "https://winbonanza.com",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "Playtana",
+    "bonus": "Daily free coins + free dice",
+    "url": "https://playtana.com",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "Sidepot",
+    "bonus": "Daily missions (up to 100 SC)",
+    "url": "https://sidepot.us",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "LuckyRush",
+    "bonus": "Daily bonus",
+    "url": "https://luckyrush.io",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "Vegas Bonanza",
+    "bonus": "Daily login streak bonus",
+    "url": "https://vegasbonanza.com",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "Cooked.us",
+    "bonus": "Daily login bonus + SC races",
+    "url": "https://cooked.us",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "MetaWin.us",
+    "bonus": "Daily login bonus + instant rewards",
+    "url": "https://metawin.us",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "Sweepstakes Casino",
+    "bonus": "Daily login bonus",
+    "url": "https://sweepstakescasino.com",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "Bangcoins",
+    "bonus": "Daily login bonus",
+    "url": "https://bangcoins.com",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "Rolly",
+    "bonus": "Daily login bonus",
+    "url": "https://rolly.io",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "LuckySlots.us",
+    "bonus": "Daily login bonus",
+    "url": "https://luckyslots.us",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "LuckXpress",
+    "bonus": "Daily reward",
+    "url": "https://luckxpresscasino.com",
+    "verified": "2026-11-09",
+    "code": null
+  },
+  {
+    "brand": "Royal Slots",
+    "bonus": "Free coins on sign up",
+    "url": "https://dl.srappledl.com/?channel_id=101001&iv_code=4158025",
+    "verified": "2026-11-09",
+    "code": "4158025"
+  }
 ]
