@@ -43,6 +43,9 @@ assert.doesNotMatch(html, /discord\.gg/, "invites come from the API, not hard-co
 assert.match(admin, /<meta name="robots" content="noindex/, "admin page must be noindex");
 assert.match(admin, /\/admin\/stats/, "admin page reads /admin/stats");
 assert.doesNotMatch(html, /admin\.html/, "admin page must not be linked from the main page");
+assert.match(html, /ko-fi\.com\/jmenichole7\/shop/, "advertise sheet links the Ko-fi shop");
+assert.match(html, /DgeYJvpRQGmYgyXQNqm2nGxwoxABa43dvQY5HJU57ET1/, "advertise sheet shows the Solana address");
+assert.doesNotMatch(html, /advertise@example\.com|Google Form/, "placeholder advertise form is gone");
 assert.match(sw, /const CACHE='collect-clock-v\d+'/);
 
 console.log(`index.html: ${scripts.length} inline scripts parse, no top-level name clashes; admin.html ok`);
