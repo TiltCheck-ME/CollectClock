@@ -1,22 +1,8 @@
 [
   {
-    "brand": "TrustDice",
-    "bonus": "Free coins + 25% rakeback",
-    "url": "https://trustdice.win/faucet/?ref=u_jmenichole",
-    "verified": "2025-11-04",
-    "code": null
-  },
-  {
     "brand": "Stake.us",
     "bonus": "10,000 GC + 1 Stake Cash (SC)",
     "url": "https://stake.us/?c=Jmenichole",
-    "verified": "2025-11-04",
-    "code": null
-  },
-  {
-    "brand": "Bitsler",
-    "bonus": "0.0001+ BTC faucet",
-    "url": "https://www.bitsler.io/?ref=jmenichole",
     "verified": "2025-11-04",
     "code": null
   },
@@ -175,13 +161,6 @@
     "code": null
   },
   {
-    "brand": "LuckyBird",
-    "bonus": "~2,000 GC + 0.2 SC (rising to 1 SC at higher VIP)",
-    "url": "https://luckybird.vip",
-    "verified": "2025-11-04",
-    "code": null
-  },
-  {
     "brand": "PlayFame",
     "bonus": "1,500 GC + 0.2\u20132 SC (varies/random)",
     "url": "https://www.playfame.com/lp/raf?r=1275975417",
@@ -234,20 +213,6 @@
     "brand": "CardCrush",
     "bonus": "Daily rewards and offers",
     "url": "https://www.cardcrush.com/lp/raf?r=db061927%2F45375369",
-    "verified": "2025-11-04",
-    "code": null
-  },
-  {
-    "brand": "Yotta",
-    "bonus": "Earn rewards and bonuses",
-    "url": "https://join.withyotta.com/JMENICHOLE0",
-    "verified": "2025-11-04",
-    "code": null
-  },
-  {
-    "brand": "BinkBet",
-    "bonus": "Daily rewards and payouts",
-    "url": "https://bink.bet/jmenichole",
     "verified": "2025-11-04",
     "code": null
   },
@@ -311,13 +276,6 @@
     "brand": "FireSevens",
     "bonus": "Daily rewards and payouts",
     "url": "https://firesevens.com/?invited_by=BEQM7P",
-    "verified": "2025-11-04",
-    "code": null
-  },
-  {
-    "brand": "Jumbo88",
-    "bonus": "Rewards and bonus offers",
-    "url": "https://www.jumbo88.com/signup?referralCode=6uff79",
     "verified": "2025-11-04",
     "code": null
   },
@@ -441,27 +399,6 @@
     "code": null
   },
   {
-    "brand": "Dara Casino",
-    "bonus": "Daily login bonus + monthly Lucky Drop",
-    "url": "https://daracasino.com",
-    "verified": "2026-11-09",
-    "code": null
-  },
-  {
-    "brand": "Gold Machine",
-    "bonus": "Daily login bonus",
-    "url": "https://www.goldmachine.com",
-    "verified": "2026-11-09",
-    "code": null
-  },
-  {
-    "brand": "EpicSweep",
-    "bonus": "Daily login bonus",
-    "url": "https://epicsweep.us",
-    "verified": "2026-11-09",
-    "code": null
-  },
-  {
     "brand": "TheBoss.us",
     "bonus": "Daily login bonus + mystery gifts",
     "url": "https://www.theboss.us",
@@ -490,13 +427,6 @@
     "code": null
   },
   {
-    "brand": "LuckyRush",
-    "bonus": "Daily bonus",
-    "url": "https://luckyrush.io",
-    "verified": "2026-11-09",
-    "code": null
-  },
-  {
     "brand": "Vegas Bonanza",
     "bonus": "Daily login streak bonus",
     "url": "https://vegasbonanza.com",
@@ -518,13 +448,6 @@
     "code": null
   },
   {
-    "brand": "Sweepstakes Casino",
-    "bonus": "Daily login bonus",
-    "url": "https://sweepstakescasino.com",
-    "verified": "2026-11-09",
-    "code": null
-  },
-  {
     "brand": "Bangcoins",
     "bonus": "Daily login bonus",
     "url": "https://bangcoins.com",
@@ -537,26 +460,5 @@
     "url": "https://rolly.io",
     "verified": "2026-11-09",
     "code": null
-  },
-  {
-    "brand": "LuckySlots.us",
-    "bonus": "Daily login bonus",
-    "url": "https://luckyslots.us",
-    "verified": "2026-11-09",
-    "code": null
-  },
-  {
-    "brand": "LuckXpress",
-    "bonus": "Daily reward",
-    "url": "https://luckxpresscasino.com",
-    "verified": "2026-11-09",
-    "code": null
-  },
-  {
-    "brand": "Royal Slots",
-    "bonus": "Free coins on sign up",
-    "url": "https://dl.srappledl.com/?channel_id=101001&iv_code=4158025",
-    "verified": "2026-11-09",
-    "code": "4158025"
   }
 ]
