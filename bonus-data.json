@@ -137,7 +137,8 @@
     "bonus": "Daily Sports Bonus",
     "url": "https://sportzino.com/signup/8a105ba6-7ada-45c8-b021-f478ac03c7c4",
     "verified": "2025-11-04",
-    "code": null
+    "code": null,
+    "sport": true
   },
   {
     "brand": "Hello Millions",
@@ -361,14 +362,16 @@
     "bonus": "Daily game rewards",
     "url": "https://app.prizepicks.com/sign-up?invite_code=PR-N0MTQX8&source=iosShare",
     "verified": "2025-11-04",
-    "code": null
+    "code": null,
+    "sport": true
   },
   {
     "brand": "Dabble",
     "bonus": "Rewards and game bonuses",
     "url": "https://click.dabble.com/GaFA/js1v7hqv",
     "verified": "2025-11-04",
-    "code": null
+    "code": null,
+    "sport": true
   },
   {
     "brand": "VegaWin",
