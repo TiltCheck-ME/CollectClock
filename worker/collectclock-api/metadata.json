@@ -1,0 +1,16 @@
+{
+  "main_module": "index.js",
+  "compatibility_date": "2026-11-01",
+  "bindings": [
+    {
+      "type": "kv_namespace",
+      "name": "CC",
+      "namespace_id": "4b50603d72ec4d59adc09676998184a8"
+    }
+  ],
+  "keep_bindings": [
+    "secret_text",
+    "plain_text",
+    "json"
+  ]
+}
