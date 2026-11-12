@@ -10,4 +10,4 @@ It was deployed code-only and lived outside the repo until now.
 Deploy is code-only: upload `index.js` to the script's `/content` endpoint so bindings,
 secrets and vars stay as they are. Do not deploy from a draft PR.
 
-Tests: `node --test worker/collectclock-api/test/`
+Tests: `node --test worker/collectclock-api/test/*.test.mjs`

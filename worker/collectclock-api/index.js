@@ -1,4 +1,4 @@
-// CollectClock API: Discord webhook proxy + Discord-login sync of collected timers.
+// CollectClock API: Discord webhook proxy + Discord-login sync of collected timers + TiltCheck player settings.
 const SITE = 'https://tiltcheck-me.github.io';
 const SITE_PATH = '/CollectClock/';
 
@@ -26,6 +26,151 @@ async function userFor(env, req) {
 }
 
 function clean(s, n) { return String(s || '').replace(/@/g, '@\u200b').slice(0, n); }
+
+
+// ---- Player settings for the TiltCheck extension + tiltcheck.me dashboard ----
+// One flat object per Discord user, stored at tcset:<discord id>. GET returns it, PUT merges a
+// validated patch into it. Auth: a CollectClock session OR the player's Discord access token
+// (what tiltcheck.me and the extension already hold). Keep in step with
+// tiltcheck-monorepo apps/chrome-extension/src/player-settings.ts (PLAYER_SETTINGS_RULES).
+const SETTINGS_MAX_BYTES = 8192;
+const TC_ORIGINS = ['https://tiltcheck.me', 'https://www.tiltcheck.me', SITE];
+const SLUG_RE = /^[a-z0-9][a-z0-9_-]*$/;
+const GOAL_ID_RE = /^[A-Za-z0-9_.-]{1,40}$/;
+const num = (min, max, int) => ({ t: 'num', min, max, int });
+const SETTINGS_SCHEMA = {
+  enabled: { t: 'bool' },
+  clickCheck: { t: 'bool' },
+  tiltSensitivity: { t: 'enum', v: ['conservative', 'moderate', 'degen'] },
+  sneakyBet: { t: 'bool' },
+  sneakyBetThreshold: num(0.01, 1000),
+  timeCheck: { t: 'bool' },
+  hourlyWage: num(5, 2000, true),
+  timeCheckHours: num(0.5, 24),
+  depositBlock: { t: 'bool' },
+  autoBreak: { t: 'bool' },
+  autoBreakHours: num(1, 720, true),
+  autoBreakScore: num(50, 95, true),
+  keepTheWin: { t: 'bool' },
+  winSkim: { t: 'bool' },
+  winSkimPercent: num(10, 90, true),
+  winSkimMinProfit: num(10, 10000, true),
+  cashoutGoals: { t: 'bool' },
+  goals: { t: 'goals', max: 10 },
+  bonusTracker: { t: 'bool' },
+  bonusName: { t: 'str', max: 60 },
+  bonusTargetWager: num(0, 100000000),
+  bonusMaxBet: num(0, 1000000),
+  bonusBlockOver: { t: 'bool' },
+  nopeList: { t: 'bool' },
+  nopeGames: { t: 'slugs', max: 64, len: 48 },
+  nopeCategories: { t: 'slugs', max: 24, len: 32 },
+  sounds: { t: 'bool' },
+  soundVolume: num(0, 1),
+};
+function checkSetting(rule, v) {
+  switch (rule.t) {
+    case 'bool': return typeof v === 'boolean' ? { ok: v } : null;
+    case 'num':
+      if (typeof v !== 'number' || !Number.isFinite(v) || v < rule.min || v > rule.max) return null;
+      if (rule.int && !Number.isInteger(v)) return null;
+      return { ok: v };
+    case 'enum': return rule.v.includes(v) ? { ok: v } : null;
+    case 'str':
+      if (typeof v !== 'string' || v.length > rule.max || /[\u0000-\u001f<>]/.test(v)) return null;
+      return { ok: v.trim() };
+    case 'slugs':
+      if (!Array.isArray(v) || v.length > rule.max) return null;
+      if (!v.every(x => typeof x === 'string' && x.length <= rule.len && SLUG_RE.test(x))) return null;
+      return { ok: [...new Set(v)] };
+    case 'goals': {
+      if (!Array.isArray(v) || v.length > rule.max) return null;
+      const out = [];
+      for (const g of v) {
+        if (!g || typeof g !== 'object' || Array.isArray(g)) return null;
+        const extra = Object.keys(g).filter(k => !['id', 'name', 'targetAmount', 'metric', 'enabled'].includes(k));
+        if (extra.length) return null;
+        if (typeof g.id !== 'string' || !GOAL_ID_RE.test(g.id)) return null;
+        if (typeof g.name !== 'string' || !g.name.trim() || g.name.length > 40 || /[\u0000-\u001f<>]/.test(g.name)) return null;
+        if (typeof g.targetAmount !== 'number' || !Number.isFinite(g.targetAmount) || g.targetAmount < 1 || g.targetAmount > 10000000) return null;
+        if (g.metric !== undefined && g.metric !== 'balance' && g.metric !== 'profit') return null;
+        if (g.enabled !== undefined && typeof g.enabled !== 'boolean') return null;
+        out.push({ id: g.id, name: g.name.trim(), targetAmount: g.targetAmount, metric: g.metric === 'profit' ? 'profit' : 'balance', enabled: g.enabled !== false });
+      }
+      return { ok: out };
+    }
+  }
+  return null;
+}
+// Only functions are exported: the live worker already exports parseDrop the same way.
+// Strict: unknown keys or bad values reject the whole patch, naming the first offender.
+export function validateSettingsPatch(patch) {
+  if (!patch || typeof patch !== 'object' || Array.isArray(patch)) return { error: 'settings must be an object' };
+  const out = {};
+  for (const [k, v] of Object.entries(patch)) {
+    const rule = SETTINGS_SCHEMA[k];
+    if (!rule) return { error: `unknown setting: ${String(k).slice(0, 40)}` };
+    const r = checkSetting(rule, v);
+    if (!r) return { error: `bad value for ${k}` };
+    out[k] = r.ok;
+  }
+  return { settings: out };
+}
+async function sha256Hex(s) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(s));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+// Signed-in Discord user for /settings: CollectClock session first, else verify the Discord token
+// with Discord once and cache token-hash -> id for 15 minutes (the raw token is never stored).
+export async function settingsUser(env, req, ip, fetchImpl = fetch) {
+  const sess = await userFor(env, req);
+  if (sess) return sess;
+  const tok = (req.headers.get('Authorization') || '').replace(/^Bearer\s+/i, '').trim();
+  if (tok.length < 20 || tok.length > 256 || !/^[A-Za-z0-9._~+/=-]+$/.test(tok)) return null;
+  const key = 'dtok:' + (await sha256Hex('tc-settings:' + tok));
+  const cached = await env.CC.get(key);
+  if (cached) return cached;
+  if (await limited(env, 'dtokv:' + ip, 60, 3600)) return null;
+  const r = await fetchImpl('https://discord.com/api/v10/users/@me', { headers: { Authorization: 'Bearer ' + tok } });
+  if (!r.ok) return null;
+  const me = await r.json().catch(() => null);
+  if (!me || !/^[0-9]{5,25}$/.test(String(me.id || ''))) return null;
+  await env.CC.put(key, String(me.id), { expirationTtl: 900 });
+  return String(me.id);
+}
+function settingsCors(req, body, status = 200) {
+  const o = req.headers.get('Origin');
+  const h = new Headers({ 'Content-Type': 'application/json', 'Cache-Control': 'no-store', Vary: 'Origin' });
+  if (o && TC_ORIGINS.includes(o)) {
+    h.set('Access-Control-Allow-Origin', o);
+    h.set('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    h.set('Access-Control-Allow-Methods', 'GET, PUT, OPTIONS');
+    h.set('Access-Control-Max-Age', '600');
+  }
+  return new Response(body === null ? null : JSON.stringify(body), { status, headers: h });
+}
+export async function handleSettings(req, env, ip, fetchImpl = fetch) {
+  if (req.method === 'OPTIONS') return settingsCors(req, null, 204);
+  if (req.method !== 'GET' && req.method !== 'PUT') return settingsCors(req, { error: 'GET or PUT' }, 405);
+  const uid = await settingsUser(env, req, ip, fetchImpl);
+  if (!uid) return settingsCors(req, { error: 'not signed in' }, 401);
+  const key = 'tcset:' + uid;
+  const stored = JSON.parse((await env.CC.get(key)) || 'null') || { settings: {}, updatedAt: null };
+  if (req.method === 'GET') return settingsCors(req, { settings: stored.settings || {}, updatedAt: stored.updatedAt || null });
+  if (await limited(env, 'tcset:' + uid, 120, 3600)) return settingsCors(req, { error: 'slow down' }, 429);
+  const len = Number(req.headers.get('Content-Length') || 0);
+  if (len > SETTINGS_MAX_BYTES) return settingsCors(req, { error: 'too big' }, 413);
+  const text = await req.text();
+  if (text.length > SETTINGS_MAX_BYTES) return settingsCors(req, { error: 'too big' }, 413);
+  let body; try { body = JSON.parse(text); } catch { return settingsCors(req, { error: 'bad json' }, 400); }
+  const v = validateSettingsPatch(body && body.settings);
+  if (v.error) return settingsCors(req, { error: v.error }, 400);
+  const next = { settings: { ...(stored.settings || {}), ...v.settings }, updatedAt: Date.now() };
+  const out = JSON.stringify(next);
+  if (out.length > SETTINGS_MAX_BYTES) return settingsCors(req, { error: 'too big' }, 413);
+  await env.CC.put(key, out);
+  return settingsCors(req, { ok: true, settings: next.settings, updatedAt: next.updatedAt });
+}
 
 
 const DROP_CHANNEL = '1488256038665981982';
@@ -307,6 +452,7 @@ export default {
   async scheduled(evt, env, ctx) { ctx.waitUntil(Promise.all([pullDrops(env), roleSweep(env), trustSweep(env)])); },
   async fetch(req, env) {
     const url = new URL(req.url);
+    if (url.pathname === '/settings') return handleSettings(req, env, req.headers.get('CF-Connecting-IP') || 'x');
 
     if (url.pathname === '/casino-report' && req.method === 'POST') {
       const uid = await userFor(env, req);
