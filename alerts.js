@@ -11,6 +11,29 @@
   const iosVer = () => { const m = navigator.userAgent.match(/OS (\d+)_(\d+)/); return m ? Number(m[1]) + Number(m[2]) / 100 : null; };
   const pushCapable = () => 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window;
 
+  // ---------- built-in site schedules (confirmed Nov 12 2026; Central time, DST-aware) ----------
+  // Mirror of PRESETS in collectclock-api src/push.js. The server fills site, label, link and zone from its own copy;
+  // the phone only sends {on, preset} plus an edited anchor or times. Stored under prefs.sites['preset:<id>'].
+  const PRESET_TZ = 'America/Chicago';
+  const PRESETS = {
+    'nuts-giveaway': { site: 'Nuts.gg', label: 'Giveaway', every: 30, anchor: '00:00', url: 'https://nuts.gg/play/jmenichole', when: 'Every 30 min, at :00 and :30' },
+    'bink-bingo': { site: 'Bink', label: 'Bingo', times: ['10:00', '15:00', '18:00', '21:00'], url: 'https://bink.bet/', when: '10 am, 3 pm, 6 pm and 9 pm' },
+    'bink-freeroll': { site: 'Bink', label: 'Freeroll', times: ['13:00', '19:00'], url: 'https://bink.bet/', when: '1 pm and 7 pm' },
+    'bink-guess': { site: 'Bink', label: 'Number guessing', every: 20, anchor: '00:00', url: 'https://bink.bet/', when: 'Every 20 min', editAnchor: true },
+    'bink-race': { site: 'Bink', label: 'Race', every: 30, anchor: '00:05', url: 'https://bink.bet/', when: 'At :05 and :35 every hour' },
+  };
+  const presetKey = id => 'preset:' + id;
+  const presetsFor = site => Object.keys(PRESETS).filter(id => PRESETS[id].site === site);
+  const presetSites = () => [...new Set(Object.values(PRESETS).map(p => p.site))];
+  function presetRule(id, old) {
+    const d = PRESETS[id], r = { on: true, preset: id, site: d.site, label: d.label, url: d.url, tz: PRESET_TZ };
+    if (d.times) r.times = (old && old.times) || d.times.slice(); else { r.every = (old && old.every) || d.every; r.anchor = (old && old.anchor) || d.anchor; }
+    return r;
+  }
+  const HHMM = /^([01]\d|2[0-3]):[0-5]\d$/;
+  const parseTimes = v => [...new Set(String(v || '').split(/[\s,]+/).map(x => { const m = x.match(/^(\d{1,2}):(\d{2})$/); return m ? m[1].padStart(2, '0') + ':' + m[2] : ''; }).filter(x => HHMM.test(x)))].sort().slice(0, 24);
+  const clock12 = t => { const [h, m] = t.split(':').map(Number); return `${h % 12 || 12}${m ? ':' + String(m).padStart(2, '0') : ''} ${h < 12 ? 'am' : 'pm'}`; };
+
   // ---------- state ----------
   function P() {
     state.push = state.push || {};
@@ -113,6 +136,7 @@
 .al-status{display:grid;gap:8px;background:var(--bg);border:2px solid var(--ink);border-radius:12px;padding:10px 12px;font-size:.88rem}.al-status .btns{display:flex;flex-wrap:wrap;gap:8px}
 .al-ios{border:2px solid var(--ink);border-radius:12px;background:var(--yellow);padding:10px 12px;font-size:.88rem;display:grid;gap:6px}.al-ios ol{margin:0;padding-left:1.2em;display:grid;gap:3px}.al-ios svg{vertical-align:-3px}
 .al-note{font-size:.76rem;color:var(--muted)}
+.al-presets{display:grid;gap:6px;border-top:1px dashed var(--ink);padding-top:6px}.al-pre{display:grid;gap:6px;font-size:.88rem}.al-pre .al-top{font-weight:600}
 .card-bell{border:0;background:none;color:inherit;font:inherit;font-size:.9rem;padding:2px 4px;margin:-4px 0;border-radius:6px;cursor:pointer;opacity:.55}.card-bell.on{opacity:1}
 .card.al-flash{animation:alFlash 1.6s ease-out 2}@keyframes alFlash{0%{box-shadow:0 0 0 6px var(--pink)}100%{box-shadow:5px 5px 0 var(--ink)}}
 .fl-btn[hidden]{display:none}`;
@@ -150,15 +174,30 @@
   }
   const siteList = () => (typeof catalog !== 'undefined' ? catalog : []).filter(x => !x.sponsored && !isVisit(x));
   function modeHtml(rule) {
-    const fixed = !!rule.every;
-    return `<select data-k="mode" aria-label="Timer type"><option value="">When I collect</option>${EVERY.map(m => `<option value="${m}"${rule.every === m ? ' selected' : ''}>Fixed clock: ${everyLabel(m).toLowerCase()}</option>`).join('')}</select>
-<span data-k="fixed" style="display:${fixed ? 'contents' : 'none'}">from <input type="time" data-k="anchor" value="${esc(rule.anchor || '00:00')}" aria-label="Lined up with"> <input type="text" data-k="label" maxlength="24" placeholder="what (e.g. giveaway)" value="${esc(rule.label || '')}" aria-label="What happens"></span>`;
+    const fixed = !!rule.every, daily = !!rule.times;
+    return `<select data-k="mode" aria-label="Timer type"><option value="">When I collect</option>${EVERY.map(m => `<option value="${m}"${rule.every === m ? ' selected' : ''}>Fixed clock: ${everyLabel(m).toLowerCase()}</option>`).join('')}<option value="times"${daily ? ' selected' : ''}>Fixed clock: set times each day</option></select>
+<span style="display:${fixed ? 'contents' : 'none'}">from <input type="time" data-k="anchor" value="${esc(rule.anchor || '00:00')}" aria-label="Lined up with"></span><span style="display:${daily ? 'contents' : 'none'}">at <input type="text" data-k="times" inputmode="numeric" placeholder="10:00, 15:00" value="${esc((rule.times || []).join(', '))}" aria-label="Times each day (24-hour, comma separated)"></span><span style="display:${fixed || daily ? 'contents' : 'none'}"> <input type="text" data-k="label" maxlength="24" placeholder="what (e.g. giveaway)" value="${esc(rule.label || '')}" aria-label="What happens"></span>`;
   }
+  // A built-in schedule row: its own switch, plain timing, and (where it makes sense) an editable start.
+  function presetHtml(id) {
+    const d = PRESETS[id], r = P().prefs.sites[presetKey(id)] || {};
+    const edit = r.on && d.editAnchor ? `<div class="al-more">Lined up with <input type="time" data-k="anchor" value="${esc(r.anchor || d.anchor)}" aria-label="${esc(d.label)} lined up with"> <span class="al-note">(Central)</span></div>` : '';
+    const when = d.editAnchor && r.on && r.anchor && r.anchor !== d.anchor ? `Every ${r.every} min from ${esc(r.anchor)}` : d.when;
+    return `<div class="al-pre${r.on ? ' on' : ''}" data-preset="${esc(id)}"><div class="al-top"><span>${esc(d.label)}<span class="al-note"> · ${when} Central</span></span><label class="al-sw"><input type="checkbox" data-k="pon" ${r.on ? 'checked' : ''} aria-label="${esc(d.site)} ${esc(d.label)} alerts"><i></i></label></div>${edit}</div>`;
+  }
+  const presetBlock = site => { const ids = presetsFor(site); return ids.length ? `<div class="al-presets"><span class="al-note">Site schedule${ids.length > 1 ? 's' : ''}</span>${ids.map(presetHtml).join('')}</div>` : ''; };
   function paintSites() {
     const sites = P().prefs.sites, q = $('#alSearch').value.trim().toLowerCase();
-    const list = siteList().filter(x => !q || x.brand.toLowerCase().includes(q));
-    list.sort((a, b) => (!!(sites[b.brand] && sites[b.brand].on)) - (!!(sites[a.brand] && sites[a.brand].on)));
-    $('#alSites').innerHTML = list.map(x => { const r = sites[x.brand] || {}; return `<div class="al-row${r.on ? ' on' : ''}" data-site="${esc(x.brand)}"><div class="al-top"><span>${esc(x.brand)}</span><label class="al-sw"><input type="checkbox" data-k="on" ${r.on ? 'checked' : ''} aria-label="Alerts for ${esc(x.brand)}"><i></i></label></div>${r.on ? `<div class="al-more">${modeHtml(r)}</div>` : ''}</div>`; }).join('') || '<span class="al-note">No sites match.</span>';
+    const cards = siteList();
+    const extra = presetSites().filter(n => !cards.some(x => x.brand === n)).map(n => ({ brand: n, presetOnly: true }));
+    const anyOn = name => !!(sites[name] && sites[name].on) || presetsFor(name).some(id => sites[presetKey(id)] && sites[presetKey(id)].on);
+    const list = extra.concat(cards).filter(x => !q || x.brand.toLowerCase().includes(q));
+    list.sort((a, b) => anyOn(b.brand) - anyOn(a.brand));
+    $('#alSites').innerHTML = list.map(x => {
+      if (x.presetOnly) return `<div class="al-row${anyOn(x.brand) ? ' on' : ''}" data-group="${esc(x.brand)}"><div class="al-top"><span>${esc(x.brand)}</span></div>${presetBlock(x.brand)}</div>`;
+      const r = sites[x.brand] || {};
+      return `<div class="al-row${anyOn(x.brand) ? ' on' : ''}" data-site="${esc(x.brand)}"><div class="al-top"><span>${esc(x.brand)}${presetsFor(x.brand).length ? '<span class="al-note"> · your collect timer</span>' : ''}</span><label class="al-sw"><input type="checkbox" data-k="on" ${r.on ? 'checked' : ''} aria-label="Alerts for ${esc(x.brand)}"><i></i></label></div>${r.on ? `<div class="al-more">${modeHtml(r)}</div>` : ''}${presetBlock(x.brand)}</div>`;
+    }).join('') || '<span class="al-note">No sites match.</span>';
     const custom = Object.entries(sites).filter(([, r]) => r.custom);
     $('#alCustom').innerHTML = custom.map(([name, r]) => `<div class="al-row on" data-site="${esc(name)}" data-custom="1"><div class="al-top"><span>${esc(name)}</span><button type="button" class="btn small" data-k="remove">Remove</button></div><div class="al-more">${modeHtml(r).replace('<option value="">When I collect</option>', '')}<input type="url" data-k="url" placeholder="link (optional)" value="${esc(r.url || '')}" aria-label="Link"></div></div>`).join('');
   }
@@ -184,11 +223,26 @@
   dlg.addEventListener('change', e => {
     const t = e.target, p = P();
     if (t.id === 'alQuietOn' || t.id === 'alQuietA' || t.id === 'alQuietB') { p.prefs.quiet = { on: $('#alQuietOn').checked, start: $('#alQuietA').value || '23:00', end: $('#alQuietB').value || '08:00' }; savePrefs(); return; }
+    const pre = t.closest('[data-preset]');
+    if (pre) {
+      const id = pre.dataset.preset, key = presetKey(id), d = PRESETS[id];
+      if (t.dataset.k === 'pon') { if (t.checked) p.prefs.sites[key] = presetRule(id); else delete p.prefs.sites[key]; savePrefs(); paintSites(); render(); return; }
+      const r = p.prefs.sites[key]; if (!r) return;
+      if (t.dataset.k === 'anchor' && d.editAnchor) { r.anchor = HHMM.test(t.value) ? t.value : d.anchor; savePrefs(); paintSites(); }
+      return;
+    }
     const row = t.closest('[data-site]'); if (!row) return;
     const name = row.dataset.site, k = t.dataset.k;
     const r = p.prefs.sites[name] || (p.prefs.sites[name] = {});
     if (k === 'on') { if (t.checked) r.on = true; else delete p.prefs.sites[name]; savePrefs(); paintSites(); render(); return; }
-    if (k === 'mode') { const m = Number(t.value); if (m) { r.every = m; r.anchor = r.anchor || '00:00'; } else { delete r.every; delete r.anchor; delete r.label; } savePrefs(); paintSites(); return; }
+    if (k === 'mode') {
+      const m = Number(t.value);
+      if (t.value === 'times') { delete r.every; delete r.anchor; r.times = r.times && r.times.length ? r.times : ['12:00']; }
+      else if (m) { delete r.times; r.every = m; r.anchor = r.anchor || '00:00'; }
+      else { delete r.every; delete r.anchor; delete r.times; delete r.label; }
+      savePrefs(); paintSites(); return;
+    }
+    if (k === 'times') { const v = parseTimes(t.value); if (v.length) r.times = v; t.value = (r.times || []).join(', '); }
     if (k === 'anchor') r.anchor = t.value || '00:00';
     if (k === 'label') r.label = t.value.trim().slice(0, 24);
     if (k === 'url') r.url = /^https?:\/\/\S+\.\S+/.test(t.value.trim()) ? t.value.trim() : '';
@@ -222,7 +276,7 @@
       const a = c.querySelector('[data-brand]'); if (!a) return;
       const name = a.dataset.brand; const x = catalog.find(i => i.brand === name); if (!x || isVisit(x)) return; const top = c.querySelector('.ticket-top > span:last-child');
       if (!top || top.querySelector('.card-bell')) return;
-      const on = !!(sites[name] && sites[name].on);
+      const on = !!(sites[name] && sites[name].on) || presetsFor(name).some(id => sites[presetKey(id)] && sites[presetKey(id)].on);
       top.insertAdjacentHTML('afterbegin', `<button type="button" class="card-bell${on ? ' on' : ''}" data-alerts="${esc(name)}" aria-label="Alerts for ${esc(name)}${on ? ' (on)' : ''}" title="Alerts">${on ? '🔔' : '🔕'}</button> `);
     });
   }
@@ -231,46 +285,81 @@
   render = function () { baseRender.apply(this, arguments); decorate(); }; // eslint-disable-line no-global-assign
 
   // ---------- notification click: focus the site's card with its collect link ----------
-  function focusSite(site) {
+  function focusSite(site, key) {
     if (!site) return;
     const go = (tries) => {
       const c = [...document.querySelectorAll('#grid .card')].find(el => { const a = el.querySelector('[data-brand]'); return a && a.dataset.brand === site; });
       if (!c && tries > 0) return setTimeout(() => go(tries - 1), 400);
       if (c) { c.scrollIntoView({ behavior: 'smooth', block: 'center' }); c.classList.add('al-flash'); setTimeout(() => c.classList.remove('al-flash'), 3400); }
-      const x = siteList().find(i => i.brand === site), r = P().prefs.sites[site] || {};
-      const link = x ? claimUrl(x) : r.url;
+      const sites = P().prefs.sites, r = (key && sites[key]) || sites[site] || {};
+      const pd = r.preset && PRESETS[r.preset];
+      const x = siteList().find(i => i.brand === site);
+      const link = x ? claimUrl(x) : (r.url || (pd && pd.url));
+      const fixed = !!(r.every || r.times);
       document.querySelector('#installSheet')?.remove();
       const d = document.createElement('div'); d.id = 'installSheet'; d.className = 'install-sheet'; d.setAttribute('role', 'dialog');
-      d.innerHTML = `<img src="assets/icon-180.png" alt="" class="is-icon"><div class="is-txt"><strong>${esc(site)}</strong><span>${x && !r.every ? 'Your timer is up.' : 'From your alert.'}</span></div><div class="is-btns">${link ? `<button class="btn collect" id="alGo">${x && !r.every ? 'Collect' : 'Open'}</button>` : ''}<button class="btn small" id="alNo">Close</button></div>`;
+      d.innerHTML = `<img src="assets/icon-180.png" alt="" class="is-icon"><div class="is-txt"><strong>${esc(site)}</strong><span>${x && !fixed ? 'Your timer is up.' : pd ? esc(pd.label) + ' · from your alert.' : 'From your alert.'}</span></div><div class="is-btns">${link ? `<button class="btn collect" id="alGo">${x && !fixed ? 'Collect' : 'Open'}</button>` : ''}<button class="btn small" id="alNo">Close</button></div>`;
       document.body.appendChild(d);
       d.querySelector('#alNo').onclick = () => d.remove();
       const g = d.querySelector('#alGo');
-      if (g) g.onclick = () => { d.remove(); if (x && !r.every && isReady(x)) claim(site, link); else window.open(link, '_blank', 'noopener'); };
+      if (g) g.onclick = () => { d.remove(); if (x && !fixed && isReady(x)) claim(site, link); else window.open(link, '_blank', 'noopener'); };
     };
     go(10);
   }
   function fromHash() {
     const m = location.hash.match(/cc_site=([^&]+)/);
     if (!m) return;
+    const k = location.hash.match(/cc_key=([^&]+)/);
     history.replaceState(null, '', location.pathname + location.search);
-    focusSite(decodeURIComponent(m[1]));
+    focusSite(decodeURIComponent(m[1]), k ? decodeURIComponent(k[1]) : '');
   }
-  if (navigator.serviceWorker) navigator.serviceWorker.addEventListener('message', e => { if (e.data && e.data.type === 'cc-focus') focusSite(e.data.site); });
+  if (navigator.serviceWorker) navigator.serviceWorker.addEventListener('message', e => { if (e.data && e.data.type === 'cc-focus') focusSite(e.data.site, e.data.key); });
   window.addEventListener('hashchange', fromHash);
   setTimeout(fromHash, 600);
 
   // ---------- floating countdown ----------
   const mod = (a, n) => ((a % n) + n) % n;
-  function nextFixed(rule, now) {
-    const [h, m] = rule.anchor.split(':').map(Number), A = h * 60 + m;
-    const t = new Date(Math.ceil(now / 60000) * 60000);
-    const lm = t.getHours() * 60 + t.getMinutes();
-    return t.getTime() + mod(A - lm, rule.every) * 60000;
+  // Same per-minute matching as the server (collectclock-api recurringTimes), so the countdown and the push agree,
+  // including across DST. Offsets are cached per zone and quarter hour, and each rule's next time is memoized.
+  const fmts = {}, offs = new Map();
+  function offMin(tz, ms) {
+    const q = Math.floor(ms / 900000), k = tz + '|' + q;
+    if (offs.has(k)) return offs.get(k);
+    let v = -new Date(q * 900000).getTimezoneOffset();
+    if (tz) try {
+      const f = fmts[tz] || (fmts[tz] = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'longOffset' }));
+      const s = f.formatToParts(new Date(q * 900000)).find(p => p.type === 'timeZoneName').value, m = s.match(/GMT([+-])(\d{2}):?(\d{2})?/);
+      v = m ? (m[1] === '-' ? -1 : 1) * (Number(m[2]) * 60 + Number(m[3] || 0)) : 0;
+    } catch {}
+    if (offs.size > 4000) offs.clear();
+    offs.set(k, v); return v;
   }
+  const hmn = s => Number(s.slice(0, 2)) * 60 + Number(s.slice(3, 5));
+  function matchAt(rule, tz, t) {
+    const times = rule.times ? rule.times.map(hmn) : null, I = rule.every, A = rule.anchor ? hmn(rule.anchor) : 0;
+    const hit = lm => (times ? times.includes(lm) : mod(lm - A, I) === 0);
+    const o = offMin(tz, t), lm = mod(t / 60000 + o, 1440);
+    if (!(times || I >= 120)) return hit(lm);
+    const before = offMin(tz, t - 60000);
+    if (o > before) { for (let g = 0; g <= o - before; g++) if (hit(mod(lm - g, 1440))) return true; return false; }
+    if (!hit(lm)) return false;
+    const old = offMin(tz, t - 180 * 60000);
+    return !(old > o && offMin(tz, t - (old - o) * 60000) === old);
+  }
+  const nextMemo = new Map();
+  function nextFixed(rule, now, tz) {
+    tz = tz || rule.tz || tzName();
+    const k = JSON.stringify([rule.every, rule.anchor, rule.times, tz]), hit = nextMemo.get(k);
+    if (hit && hit.from <= now && hit.t > now) return hit.t; // nothing can fall between from and t
+    let t = Math.ceil(now / 60000) * 60000;
+    for (let i = 0; i < 2 * 1440 && !matchAt(rule, tz, t); i++) t += 60000;
+    nextMemo.set(k, { from: now, t }); return t;
+  }
+  const ruleName = (name, r) => (r.site ? `${r.site} ${r.label || ''}`.trim() : r.label ? `${name} ${r.label}` : name);
   function upcoming(now = Date.now()) {
     const out = [];
     for (const [name, t] of Object.entries(state.timers || {})) if (t && t.endsAt > now && !(state.hidden || []).includes(name)) out.push({ name, at: t.endsAt });
-    for (const [name, r] of Object.entries(P().prefs.sites)) if (r.on && r.every) out.push({ name: r.label ? `${name} ${r.label}` : name, at: nextFixed(r, now) });
+    for (const [name, r] of Object.entries(P().prefs.sites)) if (r.on && (r.every || r.times)) out.push({ name: ruleName(name, r), at: nextFixed(r, now) });
     return out.sort((a, b) => a.at - b.at).slice(0, 2);
   }
   const mmss = ms => { let s = Math.max(0, Math.ceil(ms / 1000)); const h = Math.floor(s / 3600); s %= 3600; const m = Math.floor(s / 60); s %= 60; return (h ? h + ':' + String(m).padStart(2, '0') : m) + ':' + String(s).padStart(2, '0'); };
@@ -336,5 +425,5 @@
   paintBell();
   try { render(); } catch {}
   checkSub();
-  window.ccAlerts = { upcoming, nextFixed, focusSite, paint, openAlerts };
+  window.ccAlerts = { upcoming, nextFixed, focusSite, paint, openAlerts, PRESETS, presetRule, parseTimes };
 })();
